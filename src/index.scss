@@ -1,0 +1,88 @@
+@import './vendor/normalize.css';
+@import './vendor/fonts/fonts.css';
+
+body {
+  font-family: 'Inter', 'sans-serif';
+  font-style: normal;
+  background-color: #EAF0FA;
+}
+
+img {
+  /* pointer-events: none; */
+  user-select: none;
+}
+
+input:focus,
+button:focus {
+  outline: 0;
+}
+
+input {
+  border: none;
+}
+
+;
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 148%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  margin: 0;
+  padding: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0;
+  /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #BFCBE0;
+  border-radius: 20px;
+  border: 1px solid #F8FAFD;
+}
+
+textarea::-webkit-scrollbar {
+  width: 4px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #F8FAFD;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #BFCBE0;
+  border-radius: 20px;
+  border: 1px solid #F8FAFD;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
