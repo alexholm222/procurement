@@ -1,0 +1,70 @@
+.window {
+    grid-area: doc;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    box-sizing: border-box;
+    background-color: #FFF;
+    border-radius: 8px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    margin: 0;
+    margin-bottom: 16px;
+}
+
+.files {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.file {
+    width: calc(50% - 6px);
+    height: 62px;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #ECF2FC;
+    background: #F8FAFD;
+    display: flex;
+    align-items: center;
+}
+
+.block_text {
+    width: 100%;
+    margin-left: 8px;
+    box-sizing: border-box;
+
+    p {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 18px;
+        margin-bottom: 2px;
+    }
+
+    span {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        color: #71869D;
+    }
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    svg {
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}

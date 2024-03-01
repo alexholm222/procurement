@@ -1,0 +1,165 @@
+.goods {
+    grid-area: pos;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 28px;
+    box-sizing: border-box;
+    background-color: #FFF;
+    border-radius: 8px;
+
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    margin: 0;
+}
+
+.table {
+    background-color: #F8FAFD;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+
+
+}
+
+.header {
+    width: 100%;
+    font-size: 14px;
+    box-sizing: border-box;
+    display: flex;
+    color: #71869D;
+    height: 48px;
+
+}
+
+.cell {
+    padding: 16px 12px;
+    box-sizing: border-box;
+    display: flex;
+    align-self: center;
+}
+
+.sub {
+    display: flex;
+    align-items: center;
+    padding: 20px 12px 12px;
+    max-width: 48px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.pos {
+    max-width: 48px;
+    padding-left: 16px;
+    width: 100%;
+}
+
+.name {
+    max-width: 440px;
+    width: 100%;
+}
+
+.type {
+    max-width: 147px;
+    width: 100%;
+}
+
+
+.num {
+    max-width: 76px;
+    width: 100%;
+}
+
+
+.price {
+    max-width: 117px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+
+.total {
+    max-width: 117px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.delete {
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    border-top: 1px solid #EAF0FA;
+    box-sizing: border-box;
+    height: 54px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    display: flex;
+    align-items: center;
+
+    &_empty {
+        justify-content: center;
+        color: #71869D;
+        font-size: 14px;
+        width: 100%;
+    }
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 8px 20px 8px 12px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #002CFB;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+    color: #002CFB;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        color: #0028E5;
+        border-color: #0028E5;
+    }
+
+    svg {
+        margin-right: 6px;
+    }
+}
+
+.text {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.15px;
+}
