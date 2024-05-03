@@ -25,6 +25,7 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    user-select: none;
 }
 
 .arrow {
@@ -89,6 +90,7 @@
     cursor: pointer;
     transition: all 0.15s;
     border-radius: 4px;
+    order: 1;
 
     &:hover {
         background-color: rgba(212, 223, 243, 0.3);

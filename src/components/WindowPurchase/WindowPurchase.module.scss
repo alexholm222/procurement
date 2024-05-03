@@ -1,5 +1,32 @@
 .window {
     width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--color-bg);
+    overflow-y: auto;
+    opacity: 0;
+    filter: blur(1px);
+    transition:
+        opacity 0.1s,
+        filter 0.25s;
+
+    &_anim {
+        opacity: 1;
+        filter: blur(0);
+
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1558px;
+    margin: 40px auto;
+    position: relative;
+}
+
+.main {
     display: grid;
     align-items: flex-start;
     grid-template-areas: 'param log'
@@ -9,6 +36,7 @@
     grid-template-columns: 1fr 484px;
     grid-template-rows: repeat(3, min-content);
     gap: 16px;
+
 }
 
 .param {
@@ -29,4 +57,70 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     margin: 0;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 28px;
+    }
+}
+
+
+.buttons {
+    height: 44px;
+    display: flex;
+    gap: 12px;
+}
+
+.button {
+    height: 100%;
+    padding: 12px 24px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    svg {
+        margin-left: 8px;
+    }
+
+    &_main {
+        background-color: #002CFB;
+        color: #FFFFFF;
+
+        &:hover {
+            background-color: #0028E5;
+        }
+    }
+
+    &_add {
+        color: #002CFB;
+        border: 1px solid #002CFB;
+        box-sizing: border-box;
+
+        &:hover {
+            color: #0028E5;
+            border-color: #0028E5;
+        }
+    }
+
+    &_cancle {
+        color: #E75A5A;
+        border: 1px solid #E75A5A;
+        box-sizing: border-box;
+
+        &:hover {
+            color: #c94a4a;
+            border-color: #c94a4a;
+        }
+    }
 }

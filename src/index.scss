@@ -1,10 +1,11 @@
 @import './vendor/normalize.css';
 @import './vendor/fonts/fonts.css';
+@import './vendor/constants.scss';
 
 body {
   font-family: 'Inter', 'sans-serif';
   font-style: normal;
-  background-color: #EAF0FA;
+  background-color: var(--color-bg);
 }
 
 img {
@@ -68,6 +69,20 @@ body::-webkit-scrollbar-thumb {
   border: 1px solid #F8FAFD;
 }
 
+div::-webkit-scrollbar {
+  width: 8px;
+}
+
+div::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #BFCBE0;
+  border-radius: 20px;
+  border: 1px solid #F8FAFD;
+}
+
 textarea::-webkit-scrollbar {
   width: 4px;
 }
@@ -83,6 +98,6 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 html {
-  scroll-behavior: smooth;
+ /*  scroll-behavior: smooth; */
 }
 

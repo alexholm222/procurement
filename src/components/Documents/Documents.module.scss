@@ -19,20 +19,36 @@
 
 .files {
     display: flex;
-    gap: 12px;
+    /* gap: 12px; */
     flex-wrap: wrap;
+    margin-bottom: 12px;
+    height: 0;
+    transition: all 0.3s;
 }
 
 .file {
-    width: calc(50% - 6px);
-    height: 62px;
-    padding: 12px;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    width: 0;
     box-sizing: border-box;
     border-radius: 8px;
-    border: 1px solid #ECF2FC;
+    border: 0px solid #ECF2FC;
     background: #F8FAFD;
     display: flex;
     align-items: center;
+    opacity: 0;
+    transition: all 0.3s;
+    overflow: hidden;
+
+    &_anim {
+        border: 1px solid #ECF2FC;
+        height: 62px;
+        padding: 12px;
+        opacity: 1;
+        width: calc(50% - 6px);
+    }
 }
 
 .block_text {
@@ -66,5 +82,20 @@
         &:hover {
             opacity: 0.7;
         }
+    }
+}
+
+.link {
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    &:active {
+        color: inherit;
+    }
+
+    &:visited {
+        color: inherit;
     }
 }

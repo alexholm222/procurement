@@ -105,23 +105,46 @@
     margin: 0;
     display: flex;
     flex-direction: column;
+    min-height: 54px;
+
+    &_first {
+        max-height: 54px;
+    }
 }
 
 .item {
-    border-top: 1px solid #EAF0FA;
+    border-top: 1px solid #eaf0fa00;
     box-sizing: border-box;
-    height: 54px;
+    overflow: hidden;
+    height: 0;
     width: 100%;
     display: flex;
     align-items: center;
     display: flex;
     align-items: center;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
 
     &_empty {
         justify-content: center;
         color: #71869D;
         font-size: 14px;
         width: 100%;
+         border-top: 1px solid #EAF0FA;
+        opacity: 0;
+        height: 0;
+
+        &_anim {
+            opacity: 1;
+            height: 54px;
+           
+        }
+    }
+
+    &_anim {
+        border-top: 1px solid #EAF0FA;
+        opacity: 1;
+        height: 54px;
     }
 }
 

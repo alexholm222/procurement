@@ -27,7 +27,8 @@
     }
 
     &_date {
-        width: 122px;
+        width: 118px;
+        flex-shrink: 0;
     }
 
     &_pos {
@@ -37,17 +38,29 @@
 
     &_sum {
         width: 111px;
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 32px;
+        flex-shrink: 0;
     }
 
     &_buyer {
         width: 240px;
+        flex-shrink: 0;
     }
 
     &_seller {
-        width: 300px;
+        width: 290px;
+        flex-shrink: 0;
     }
 
     &_status {
-        width: 183px;
+        width: 173px;
     }
+}
+
+.purchases {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
 }

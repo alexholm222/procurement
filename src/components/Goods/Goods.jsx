@@ -1,30 +1,58 @@
 import s from './Goods.module.scss';
 import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
 import { ReactComponent as IconPlus } from '../../image/iconPlus.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddGood from '../AddGood/AddGood';
+import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
-function Goods() {
-    const [goods, setGoods] = useState([]);
-    const [openAdd, setOpenAdd] = useState(false);
-    console.log(goods)
-    function handleOpenAdd() {
-        setOpenAdd(true)
-    }
+function Good({ el, i, goods, setGoods }) {
+    const [anim, setAnim] = useState(false);
+    useEffect(() => {
+        setTimeout(() => {
+            setAnim(true);
+        })
+    }, []);
 
     function handleDeleteGood(e) {
-        const id = Number(e.currentTarget.id);
-        console.log(id)
-        const arrFilter = goods.filter(el => el.id !== id);
-        
+        const id = e.currentTarget.id;
+        const arrFilter = goods.filter(el => String(el.id) !== id);
+        console.log(arrFilter)
+        setAnim(false);
+        setTimeout(() => {
             setGoods(arrFilter)
-        
+        }, 200)
+    }
 
+    return (
+        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim}`}>
+            <div className={`${s.pos} ${s.cell}`}>{i + 1}</div>
+            <div className={`${s.name} ${s.cell}`}>{el.name}</div>
+            <div className={`${s.type} ${s.cell}`}>{el.unit}</div>
+            <div className={`${s.num} ${s.cell}`}>{el.quantity}</div>
+            <div className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
+            <div className={`${s.total} ${s.cell}`}>{addSpaceNumber(el.quantity * el.price)}</div>
+            <div className={`${s.delete} ${s.cell}`}>
+                <IconDelete id={el.id} onClick={handleDeleteGood} />
+            </div>
+        </li>
+    )
+}
+
+function Goods({scrollTopHeight, positions, setPositions, windowRef, sum, setSum}) {
+    const [openAdd, setOpenAdd] = useState(false);
+
+    useEffect(() => {
+        const sum = positions.reduce((acc, el) => acc + el.sum, 0);
+        setSum(sum);
+      }, [positions])
+
+    const handleOpenAdd = () => {
+        setOpenAdd(true)
     }
 
     return (
         <div className={s.goods}>
-            {openAdd && <AddGood setOpenAdd={setOpenAdd} setGoods={setGoods} goods={goods} />}
+            {openAdd && <AddGood scrollTopHeight={scrollTopHeight} setOpenAdd={setOpenAdd} setGoods={setPositions} goods={positions} windowRef={windowRef}/>}
             <h3 className={s.title}>Позиции</h3>
             <div className={s.table}>
                 <div className={s.header}>
@@ -51,21 +79,11 @@ function Goods() {
                         <p>Итого</p>
                     </div>
                 </div>
-                <ul className={s.list}>
-                    {goods.length === 0 && <li className={`${s.item} ${s.item_empty}`}>Нет позиций</li>}
+                <ul className={`${s.list} ${positions.length <= 1 && s.list_first}`}>
+                    { <li className={`${s.item} ${s.item_empty} ${positions.length === 0 && s.item_empty_anim}`}>Нет позиций</li>}
 
-                    {goods.map((el, index) => {
-                        return <li key={el.id} id={el.id} className={`${s.item}`}>
-                            <div className={`${s.pos} ${s.cell}`}>{index + 1}</div>
-                            <div className={`${s.name} ${s.cell}`}>{el.name}</div>
-                            <div className={`${s.type} ${s.cell}`}>{`Товар`}</div>
-                            <div className={`${s.num} ${s.cell}`}>{el.num}</div>
-                            <div className={`${s.price} ${s.cell}`}>{el.price}</div>
-                            <div className={`${s.total} ${s.cell}`}>{el.num * el.price}</div>
-                            <div className={`${s.delete} ${s.cell}`}>
-                                <IconDelete id={el.id} onClick={handleDeleteGood} />
-                            </div>
-                        </li>
+                    {positions.map((el, i) => {
+                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} />
                     })}
 
                 </ul>
@@ -75,7 +93,7 @@ function Goods() {
                     <IconPlus />
                     <p>Добавить позицию</p>
                 </button>
-                <p className={s.text}>Итого 16 000 ₽</p>
+                <p className={s.text}>Итого {addSpaceNumber(sum)} ₽</p>
             </div>
 
         </div>
