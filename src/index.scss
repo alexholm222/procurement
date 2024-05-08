@@ -97,6 +97,20 @@ textarea::-webkit-scrollbar-thumb {
   border: 1px solid #F8FAFD;
 }
 
+ul::-webkit-scrollbar {
+  width: 8px;
+}
+
+ul::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+ul::-webkit-scrollbar-thumb {
+  background-color: #BFCBE0;
+  border-radius: 20px;
+  border: 1px solid #F8FAFD;
+}
+
 html {
  /*  scroll-behavior: smooth; */
 }

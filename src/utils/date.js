@@ -76,3 +76,13 @@ export function HandledatePurchase(n) {
 
 return `${day} ${fMonth2} ${year}`
 }
+
+export function HandledateContract(n) {
+  const date = new Date(n);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate() - 1;
+  console.log(month, day)
+
+return `${day}.${month < 10 ? `0${month}` : month}.${year}`
+}

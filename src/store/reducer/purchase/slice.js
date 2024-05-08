@@ -4,7 +4,9 @@ const initialState = {
 	purchase: {},
 	payers: [],
 	vendors: [],
+	vendorsContracts: [],
 	categories: [],
+	items: [],
 };
 const purchaseSlice = createSlice({
 	name: 'purchase',
@@ -23,8 +25,16 @@ const purchaseSlice = createSlice({
 			state.vendors = action.payload;
 		},
 
+		setVendorsContracts(state, action) {
+			state.vendorsContracts = action.payload;
+		},
+
 		setCategories(state, action) {
 			state.categories = action.payload;
+		},
+
+		setItems(state, action) {
+			state.items = action.payload;
 		},
 	},
 });
@@ -33,7 +43,9 @@ export const {
 	setPurchase,
 	setPayers,
 	setVendors,
-	setCategories
+	setVendorsContracts,
+	setCategories,
+	setItems
 } = purchaseSlice.actions;
 
 export default purchaseSlice.reducer;

@@ -5,7 +5,7 @@ import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
 import FileLoader from '../FileLoader/FileLoader';
 import { baseUrl } from '../../Api/Api';
 
-const Document = ({ i, file, files, setFiles, type }) => {
+const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles }) => {
     const [animFile, setAnimFile] = useState(false);
     const [urlFile, setUrlFile] = useState('');
     const conditionDownload = file.type == 'existing' ? true : type !== 'existing' && file.name.slice(-3) !== 'pdf' ? file.name : false;
@@ -32,6 +32,7 @@ const Document = ({ i, file, files, setFiles, type }) => {
         if (idTarget == file.id) {
             setAnimFile(false);
             const filterArr = files.filter(el => el.id != file.id);
+            file.type == 'existing' && setDeleteFiles(prevState => [...prevState, file])
             setTimeout(() => {
                 setFiles(filterArr);
             }, 200)
@@ -47,7 +48,7 @@ const Document = ({ i, file, files, setFiles, type }) => {
                     <span>Загружено {file.date}</span>
                 </div>
             </a>
-            <div id={file.id} onClick={handleDelete} className={s.delete}>
+            <div id={file.id} onClick={handleDelete} className={`${s.delete} ${disabled && s.delete_disabled}`}>
                 <IconDelete />
             </div>
         </div>
@@ -55,19 +56,21 @@ const Document = ({ i, file, files, setFiles, type }) => {
 }
 
 
-const Documents = ({ documents, setDocuments }) => {
+const Documents = ({ documents, setDocuments, disabled, setDeleteFiles }) => {
     return (
         <div className={s.window}>
             <h3 className={s.title}>Документы</h3>
             <div style={{ height: `${Math.ceil(documents.length / 2) * 74}px` }} className={s.files}>
 
                 {documents.map((el, i) => {
-                    return <Document key={el.id} i={i} file={el} files={documents} setFiles={setDocuments} type={el.type ? el.type : ''} />
+                    return <Document key={el.id} i={i} file={el} files={documents} setFiles={setDocuments} type={el.type ? el.type : ''} disabled={disabled} setDeleteFiles={setDeleteFiles}/>
                 })}
 
             </div>
+            <div className={`${s.fileLoader} ${disabled && s.fileLoader_disabled}`}>
+                <FileLoader files={documents} setFiles={setDocuments} />
+            </div>
 
-            <FileLoader files={documents} setFiles={setDocuments} />
         </div>
     )
 };

@@ -1,6 +1,9 @@
 .options {
     max-width: 1002px;
    
+    &_disabled {
+        pointer-events: none;
+    }
 }
 
 .container {
@@ -96,6 +99,11 @@
         background-color: rgba(212, 223, 243, 0.3);
     }
 
+    
+    &_disabled {
+        color: #BFCBE0;
+    }
+
     &_active {
         background-color: #E6EAFF;
         color: #121922;
@@ -105,4 +113,5 @@
             color: #121922; 
         }
     }
+
 }

@@ -5,6 +5,15 @@
     line-height: 22px;
     border-top: 1px solid #EAF0FA;
     cursor: pointer;
+    transition: all 0.1s;
+
+    &:hover {
+        background-color: #F8FAFD;
+    }
+
+    &_hiden {
+        display: none;
+    }
 }
 
 .item {

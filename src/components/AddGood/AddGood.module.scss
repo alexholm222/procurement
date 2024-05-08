@@ -21,7 +21,7 @@
     display: flex;
     width: 735px;
     opacity: 0;
-    overflow: hidden;
+
     padding: 32px;
     box-sizing: border-box;
     flex-direction: column;
@@ -76,6 +76,7 @@
     display: flex;
     margin-bottom: 12px;
     align-items: center;
+    position: relative;
 
     &_list {
         border-radius: 6px 6px 0 6px;
@@ -130,6 +131,15 @@
         font-weight: 400;
         line-height: 22px;
     }
+
+    &_disabled {
+        pointer-events: none;
+
+        p {
+            color: var(--color-text-secondary);
+            user-select: none;
+        }
+    }
 }
 
 .container {
@@ -156,12 +166,17 @@
         gap: 32px;
         height: 90px;
         transition: all 0.2s ease-in-out;
-    
+
     }
 
     &_pattern {
-        transform: translateX(calc(-50%)); 
+        transform: translateX(calc(-50%));
         height: 178px;
+    }
+
+    &_big {
+        width: 100%;
+        overflow: hidden;
     }
 }
 
@@ -210,17 +225,51 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    height: 0;
+    max-height: 0;
+    height: fit-content;
     transition: all 0.15s ease-in-out;
     z-index: 1;
 
     &_open {
-        height: 114px;
+        max-height: 114px;
     }
 
     li {
         line-height: 22px;
         padding: 8px 10px;
+        transition: all 0.15s;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-tab-hover);
+        }
+    }
+}
+
+.pattern_list {
+    width: calc(100% - 117px);
+    position: absolute;
+    left: 0;
+    top: 46px;
+    max-height: 0;
+    height: fit-content;
+    background-color: var(--color-bg-card);
+    box-shadow: var(--box-shadow2);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    transition: all 0.25s ease-in-out;
+    z-index: 1;
+    border-radius: 0 0 4px 4px;
+
+    &_open {
+        max-height: 378px;
+    }
+
+    li {
+        line-height: 22px;
+        padding: 10px 16px;
         transition: all 0.15s;
         cursor: pointer;
 

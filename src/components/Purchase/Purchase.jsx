@@ -3,67 +3,99 @@ import { ReactComponent as IconFav } from '../../image/iconFav.svg';
 import { HandledatePurchaseList } from '../../utils/date';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import uuid from 'react-uuid';
 //slice 
 import { setPurchase } from '../../store/reducer/purchase/slice';
+//selector
+import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
 function Purchase({ el }) {
     const [status, setStatus] = useState(0);
+    const [purchase, setPurchaseUpdate] = useState(el);
+    const [hidenPurchase, setHidenPurchase] = useState(false);
     const dispatch = useDispatch();
-    const existingFiles = [{ id: uuid(), file: el.bill, name: el.bill.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill2, name: el.bill2.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill3, name: el.bill3.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill4, name: el.bill4.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill5, name: el.bill5.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill6, name: el.bill6.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: el.bill7, name: el.bill7.split('/').pop(), type: 'existing' },
-    ].filter(el => el.file && el.file !== null);
+    const existingFiles = [{ id: uuid(), file: purchase?.bill, name: purchase?.bill?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill2, name: purchase?.bill2?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill3, name: purchase?.bill3?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill4, name: purchase?.bill4?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill5, name: purchase?.bill5?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill6, name: purchase?.bill6?.split('/').pop(), type: 'existing' },
+    { id: uuid(), file: purchase?.bill7, name: purchase?.bill7?.split('/').pop(), type: 'existing' },
+    ].filter(purchase => purchase.file && purchase.file !== null);
+    const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
+    const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
+   
 
     useEffect(() => {
-        if (el.status == 1 || el.status == 2) {
+        const purchaseNew = purchaseUpdate?.findLast(el => el.id == purchase?.id);
+        if (purchaseUpdate?.length > 0 && purchaseNew) {
+            setPurchaseUpdate(purchaseNew);
+            return
+        }
+    }, [purchaseUpdate])
+
+    useEffect(() => {
+        const purchaseDelete = purchasesDelete?.find(el => el == purchase?.id);
+        purchaseDelete ? setHidenPurchase(true) : setHidenPurchase(false);
+    }, [purchasesDelete])
+
+    useEffect(() => {
+
+        if (purchase?.status == 0) {
+            setStatus(0);
+            return
+        }
+
+        if (purchase?.status == 1 || purchase?.status == 2) {
             setStatus(1);
             return
         }
 
-        if (el.status == 3 || el.status == 6) {
+        if (purchase?.status == 3 || purchase?.status == 6) {
             setStatus(2);
             return
         }
 
-        if (el.status == 4 || el.status == 5 || el.status == 7) {
+        if (purchase?.status == 4 || purchase?.status == 5 || purchase?.status == 7) {
             setStatus(3);
             return
         }
 
 
-        if (el.status == 9 || el.status == 8) {
+        if (purchase?.status == 9 || purchase?.status == 8) {
             setStatus(4);
             return
         }
-    }, [el]);
+    }, [purchase]);
 
     const handleOpenPurchase = (e) => {
         const id = e.currentTarget.id
         dispatch(setPurchase({
             id,
             open: true,
-            dateCreate: el.date_create,
-            payerId: el.payer_id,
-            categoryId: el.cat_id,
-            positions: el.items,
-            sum: el.sum,
-            existingFiles
+            dateCreate: purchase?.date_create,
+            payerId: purchase?.payer_id,
+            categoryId: purchase?.cat_id,
+            positions: purchase?.items,
+            isNal: purchase?.is_nal,
+            sum: purchase?.sum,
+            existingFiles,
+            status: purchase?.status,
+            reject: purchase?.is_reject,
+            vendorId: purchase?.stock_vendor_id,
+            contractVendorId: purchase?.stock_vendor_contracts_id,
         }))
     }
 
+
     return (
-        <div onClick={handleOpenPurchase} id={el.id} className={s.purchase}>
+        <div onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
             <div className={`${s.item} ${s.item_date}`}>
-                <p>{HandledatePurchaseList(el.date_create)}</p>
+                <p>{HandledatePurchaseList(purchase?.date_create)}</p>
             </div>
             <div className={`${s.item} ${s.item_pos}`}>
-                {el?.items.map((el) => {
+                {purchase?.items?.map((el) => {
                     return <div key={el.id} className={s.pos}>
                         <p>{el.name}</p>
                         {el.item_id !== 0 && <IconFav />}
@@ -72,14 +104,15 @@ function Purchase({ el }) {
                 })}
             </div>
             <div className={`${s.item} ${s.item_sum}`}>
-                <p>{addSpaceNumber(el.sum)}</p>
+                <p>{addSpaceNumber(purchase?.sum)}</p>
             </div>
             <div className={`${s.item} ${s.item_buyer}`}>
-                <p>{el.payer ? el.payer.name : ''}</p>
+                {purchase?.is_nal && <p>Наличные</p>}
+                <p>{purchase?.payer ? purchase?.payer.name : ''}</p>
             </div>
             <div className={`${s.item} ${s.item_seller}`}>
-                <p>{el.counterparty_name}</p>
-                <span>{el.counterparty_inn && 'ИНН'} {el.counterparty_inn}  {el.counterparty_kpp && 'КПП'} {el.counterparty_kpp}</span>
+                <p>{purchase?.counterparty_name}</p>
+                <span>{purchase?.counterparty_inn && 'ИНН'} {purchase?.counterparty_inn}  {purchase?.counterparty_kpp && 'КПП'} {purchase?.counterparty_kpp}</span>
             </div>
             <div className={`${s.item} ${s.item_status}`}>
                 <div className={`${s.status} ${status >= 1 && s.status_done}`}></div>

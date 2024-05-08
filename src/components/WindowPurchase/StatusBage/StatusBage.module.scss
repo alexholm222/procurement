@@ -1,0 +1,95 @@
+.bage {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+    border-radius: 4px;
+    background-color: var(--color-bg-card-inner);
+    color: var(--color-text-secondary);
+    width: fit-content;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 24px;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &_create {
+        border: 1.5px solid #BFCBE0;
+        color: #BFCBE0;
+        background: none;
+    }
+
+    &_blue {
+        background-color: rgba(0, 36, 203, 0.08);
+        color: #0024CB;
+
+        svg {
+            width: 16px;
+            height: 16px;
+
+            path {
+                fill: #0024CB;
+            }
+        }
+
+    }
+
+    &_done {
+        background-color: var(--color-bage-green);
+        color: #28A879;
+
+        svg {
+            height: 16px;
+            width: 16px;
+
+            path {
+                fill: #28A879;
+            }
+        }
+    }
+
+    &_reject {
+        background-color: var(--color-bage-red);
+        color: #E75A5A;
+
+        svg {
+            margin-top: -1px;
+            height: 14px;
+            width: 14px;
+        }
+    }
+
+    &_anim {
+        gap: 8px;
+        svg {
+            animation: load 10s linear infinite;
+            width: 14px;
+            height: 14px;
+            margin-left: -4px;
+        }
+
+        &_blue {
+            svg {
+                animation: load 10s linear infinite;
+                width: 12px;
+                height: 12px;
+
+                path {
+                    stroke: #0024CB;
+                }
+
+            }
+        }
+    }
+
+}
+
+@keyframes load {
+    from {
+        transform: rotate(360deg);
+    }
+}

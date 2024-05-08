@@ -15,7 +15,7 @@
 .rate {
     height: 100%;
     border-radius: 100px;
-    background-color: rgba(0, 44, 251, 0.10);
+    background-color: rgba(113, 134, 157, 0.20);
     position: relative;
     transition: all 0.2s ease-in-out;
 }
@@ -23,7 +23,7 @@
 .current {
     height: 100%;
     border-radius: 100px;
-    background-color: rgba(113, 134, 157, 0.20);
+    background-color: rgba(0, 44, 251, 0.10);
     position: absolute;
     top: 0;
     transition: all 0.2s ease-in-out;
@@ -59,10 +59,14 @@
 
     &_price {
         right: -24px;
+
+        &_right {
+            right: 0;
+        }
     }
 
     &_left {
-       color: var(--color-text-secondary);
+        color: var(--color-text-secondary);
     }
 
     &_right {

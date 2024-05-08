@@ -43,6 +43,7 @@
     box-sizing: border-box;
     display: flex;
     align-self: center;
+    transition: all 0.2s;
 }
 
 .sub {
@@ -52,6 +53,8 @@
     max-width: 48px;
     box-sizing: border-box;
     height: 100%;
+
+
 }
 
 .pos {
@@ -88,15 +91,28 @@
     max-width: 117px;
     width: 100%;
     justify-content: flex-end;
+    transition: all 0.2s;
+
+    &_2 {
+        max-width: 170px;
+    }
 }
 
 .delete {
     transition: all 0.2s;
     cursor: pointer;
 
-    &:hover {
-        opacity: 0.7;
+
+    &_disabled {
+        opacity: 0;
+        visibility: hidden;
+        width: 0;
+        padding: 0;
     }
+
+&:hover {
+    opacity: 0.7;
+}
 }
 
 .list {
@@ -130,14 +146,14 @@
         color: #71869D;
         font-size: 14px;
         width: 100%;
-         border-top: 1px solid #EAF0FA;
+        border-top: 1px solid #EAF0FA;
         opacity: 0;
         height: 0;
 
         &_anim {
             opacity: 1;
             height: 54px;
-           
+
         }
     }
 
@@ -169,6 +185,11 @@
     color: #002CFB;
     cursor: pointer;
     transition: all 0.2s;
+
+    &_disabled {
+        opacity: 0;
+        visibility: hidden;
+    }
 
     &:hover {
         color: #0028E5;

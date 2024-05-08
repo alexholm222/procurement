@@ -32,10 +32,22 @@ function FileLoader({ files, setFiles }) {
         }
     }, [files])
 
+    function getBase64(file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            console.log(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
+
     const handleWriteFile = (file) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
+            console.log(reader.result)
             setFiles((prevState) =>
                 [...prevState, {
                     id: uuid(),
@@ -43,6 +55,7 @@ function FileLoader({ files, setFiles }) {
                     name: file.name,
                     size: file.size / 1048576,
                     date: dateNow(),
+                    fileBase64: reader.result,
                 }]
             )
         };

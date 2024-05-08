@@ -1,0 +1,138 @@
+.vendor {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    max-height: 100px;
+    height: fit-content;
+    transition: all 0.2s;
+
+    &_hiden {
+        opacity: 0;
+        max-height: 0;
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &_vendor {
+        width: 500px;
+    }
+
+    &_contract {
+        width: 260px;
+    }
+}
+
+.sub {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--color-text-secondary);
+    user-select: none;
+}
+
+
+.block {
+    height: 67px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    background-color: var(--color-bg-card-inner);
+    padding: 12px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    transition: all 0.2s;
+    border: 1px solid #eaf0fa00;
+
+    &_disabled {
+        background: none;
+        border: 1px solid #EAF0FA;
+        svg {
+            opacity: 0;
+        }
+    }
+
+    p {
+        min-height: 20px;
+    }
+
+    input {
+        background: none;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+    }
+
+    &_dis {
+        pointer-events: none;
+        cursor: default;
+    }
+}
+
+.requisites {
+    display: flex;
+    gap: 8px;
+
+    p {
+        color: var(--color-text-secondary);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        /*   min-width: 140px; */
+    }
+}
+
+.list {
+    position: absolute;
+    width: 100%;
+    top: 66px;
+    left: 0;
+    z-index: 2;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg-card);
+    box-shadow: var(--box-shadow2);
+    overflow-y: auto;
+    max-height: 0;
+    height: fit-content;
+    transition: all 0.25s;
+    z-index: 1;
+
+    &_open {
+        max-height: 335px;
+    }
+
+    li {
+        line-height: 22px;
+        transition: all 0.15s;
+        cursor: pointer;
+        padding: 12px 16px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        &:hover {
+            background-color: var(--color-tab-hover);
+        }
+    }
+}
+
+.arrow {
+    position: absolute;
+    right: 16px;
+    top: 26px;
+    transition: all 0.15s;
+
+    &_hiden {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

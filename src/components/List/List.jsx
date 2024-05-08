@@ -16,7 +16,6 @@ function List({ purchases, setPurchases }) {
     const purchase = useSelector(purchaseSelector).purchase;
     const throttleInProgress = useRef();
     const listRef = useRef();
-   
 
     useEffect(() => {
         handlePurchasesList(cursorNext)
@@ -45,7 +44,7 @@ function List({ purchases, setPurchases }) {
                 .then(res => {
                     const data = res.data.data;
                     const cursor = res.data.next_page_url;
-                    setPurchases([...purchases, ...data]);
+                    setPurchases(prevState => [...prevState, ...data]);
                     setCursorNext(cursor);
                 })
                 .catch(err => console.log(err))
