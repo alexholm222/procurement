@@ -132,7 +132,7 @@
     border-top: 1px solid #eaf0fa00;
     box-sizing: border-box;
     overflow: hidden;
-    height: 0;
+    min-height: 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -152,7 +152,7 @@
 
         &_anim {
             opacity: 1;
-            height: 54px;
+            min-height: 54px;
 
         }
     }
@@ -160,7 +160,8 @@
     &_anim {
         border-top: 1px solid #EAF0FA;
         opacity: 1;
-        height: 54px;
+        min-height: 54px;
+        height: fit-content;
     }
 }
 

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import uuid from 'react-uuid';
 import { dateNow } from '../../utils/date';
 
-function FileLoader({ files, setFiles }) {
+function FileLoader({ files, setFiles, setSaveSuccess }) {
     const [error, setError] = useState(false);
     const [anim, setAnim] = useState('loader');
     const fileInputRef = useRef();
@@ -32,22 +32,13 @@ function FileLoader({ files, setFiles }) {
         }
     }, [files])
 
-    function getBase64(file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            console.log(reader.result);
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    }
 
     const handleWriteFile = (file) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
             console.log(reader.result)
+            setSaveSuccess(false)
             setFiles((prevState) =>
                 [...prevState, {
                     id: uuid(),

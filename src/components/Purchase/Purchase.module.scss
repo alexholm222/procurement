@@ -7,6 +7,7 @@
     cursor: pointer;
     transition: all 0.1s;
 
+
     &:hover {
         background-color: #F8FAFD;
     }
@@ -28,6 +29,7 @@
         width: 118px;
         text-wrap: nowrap;
         flex-shrink: 0;
+        position: relative;
     }
 
     &_pos {
@@ -81,14 +83,40 @@
     }
 }
 
+.attention {
+    position: absolute;
+    top: 18px;
+    left: -24px;
+    transition: all 0.15s;
+
+    &_hiden {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 .status {
     height: 6px;
     border-radius: 100px;
     background-color: #DFE5EF;
     width: 36px;
+    transition: all 0.15s;
 
     &_done {
         background-color: #2EA96E;
+    }
+
+    &_red {
+        background-color: #E75A5A;
+    }
+
+    &_yellow {
+       background-color: #FFC227; 
+    }
+
+    &_blue {
+        background-color: var(--color-button-accent);
+        opacity: 0.7;
     }
 }
 

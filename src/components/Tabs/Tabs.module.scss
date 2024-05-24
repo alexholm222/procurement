@@ -37,6 +37,7 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 22px;
+    user-select: none;
 
     &:hover {
         background-color: #F1F4F9;
@@ -45,6 +46,11 @@
     &_active {
         background-color: #F1F4F9;
         color: #121922;
+    }
+
+    &:disabled {
+        pointer-events: none;
+        opacity: 0.6;
     }
 }
 
@@ -59,6 +65,13 @@
     color: #FFFFFF;
     margin-left: 6px;
     margin-right: -2px;
+    position: relative;
+    transition: all 0.15s;
+
+    &_active {
+        background-color: #FFDE35;
+        color: #121922;
+    }
 }
 
 .filter {
@@ -74,6 +87,8 @@
     color: #71869D;
     cursor: pointer;
     transition: all 0.2s;
+    pointer-events: none;
+    opacity: 0.6;
 
     svg {
         margin-right: 6px;

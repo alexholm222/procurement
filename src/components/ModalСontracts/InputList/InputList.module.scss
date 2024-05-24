@@ -1,0 +1,140 @@
+.input {
+    width: 100%;
+    /* height: 46px; */
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-bg-card);
+    transition: all 0.15s;
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+
+    input {
+        padding: 12px 16px;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+
+    }
+
+    &_open {
+        border-radius: 4px 4px 0 0;
+
+        svg {
+            transform: rotate(180deg);
+        }
+    }
+
+    span {
+        color: var(--color-text-secondary);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+    }
+
+
+    svg {
+        transition: all 0.2s ease-in-out;
+    }
+
+    &_error {
+        border-color: #E75A5A;
+    }
+
+
+    &_disabled {
+        background: none;
+        border: 1px solid var(--color-border-input-dis);
+        cursor: default;
+
+        div {
+            pointer-events: none;
+        }
+
+        input {
+            background: inherit;
+        }
+    }
+}
+
+.list {
+    position: absolute;
+    left: -1px;
+    top: 45px;
+    height: min-content;
+    max-height: 0;
+    overflow: hidden;
+    background-color: var(--color-bg-card);
+    width: calc(100% + 2px);
+    box-sizing: border-box;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0 0 4px 4px;
+    z-index: 2;
+    transition: all 0.15s ease-in-out;
+    overflow: auto;
+
+    &_object {
+        top: 66px;
+    }
+
+    &_open {
+        max-height: 184px;
+        box-shadow: var(--box-shadow2);
+    }
+
+    li {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 12px 16px;
+        transition: all 0.15s;
+
+        &:hover {
+            background-color: var(--color-tab-hover);
+        }
+    }
+}
+
+.arrow {
+    height: 180%;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+.block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 3px;
+    border-radius: 4px;
+    padding: 12px 16px;
+    
+
+    input {
+        padding: 0;
+    }
+
+    &_inn {
+        display: flex;
+        gap: 4px;
+    }
+}
+
+.inn {
+    min-width: 126px;
+}

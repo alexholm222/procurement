@@ -3,7 +3,18 @@
     padding: 0 28px;
     box-sizing: border-box;
     background-color: #FFF;
+    margin-bottom: 40px;
     border-radius: 8px;
+    opacity: 0;
+    transition: all 0.15s ease-in-out;
+    &_anim {
+        opacity: 1;
+    }
+
+    &_disabled {
+        pointer-events: none;
+        opacity: 0.8;
+    }
 }
 
 .header {

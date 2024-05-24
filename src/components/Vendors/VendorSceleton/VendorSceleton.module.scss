@@ -1,0 +1,50 @@
+.block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 67px;
+    width: 500px;
+    overflow: hidden;
+    transition: all 0.1s ease-in-out;
+    position: absolute;
+    left: 17;
+    top: 13;
+    opacity: 0;
+    visibility: hidden;
+
+    &_vis {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    div {
+        display: flex;
+        box-sizing: border-box;
+    }
+}
+
+.number {
+    width: 254px;
+    height: 18px;
+    display: flex;
+ 
+
+    div {
+        height: 18px;
+        width: 254px;
+        position: relative;
+    }
+}
+
+.name {
+    width: 220px;
+    height: 16px;
+    cursor: pointer;
+  
+
+    div {
+        height: 16px;
+        width: 200px;
+        position: relative;
+    }
+}

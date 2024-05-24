@@ -31,7 +31,7 @@ function Good({ el, i, goods, setGoods, disabled }) {
             <div className={`${s.type} ${s.cell}`}>{el.type}</div>
             <div className={`${s.num} ${s.cell}`}>{el.quantity}</div>
             <div className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
-            <div className={`${s.total} ${disabled && s.total_2} ${s.cell}`}>{addSpaceNumber(el.quantity * el.price)}</div>
+            <div className={`${s.total} ${disabled && s.total_2} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
             <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled}`}>
                 <IconDelete id={el.id} onClick={handleDeleteGood} />
             </div>
@@ -45,6 +45,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
 
     useEffect(() => {
         const sum = positions.reduce((acc, el) => acc + el.sum, 0);
+        console.log(sum)
         setSum(sum);
     }, [positions])
 

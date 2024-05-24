@@ -11,7 +11,8 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const [disableRight, setDisabledRight] = useState(true);
     const [disabledEffect, setDisabledEffect] = useState(false);
     const [list, setList] = useState([]);
-    const [activeId, setActiveId] = useState(1 || '');
+    const [firstLoad, setFirstLoad] = useState(true);
+    const [activeId, setActiveId] = useState(payerId || '');
     const buttonRef = useRef();
     const buttonLast = useRef();
     const activeRef = useRef();
@@ -21,29 +22,31 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
     const positionActive = activeRef?.current?.getBoundingClientRect().left;
 
+    /*  console.log(type == 'payers' && lastType)
+     console.log(type == 'payers' && activeId) */
+
     useEffect(() => {
         if (type == 'categories') {
             setList(categories);
-            setCategoryId(Number(activeId));
+            /* setCategoryId(Number(activeId)); */
             purchaseId ? setActiveId(categoryId) : setActiveId(categories[0].id);
+            !purchaseId && setCategoryId(categories[0].id);
             return
         }
 
         if (type == 'payers') {
             setList(payers);
-            setPayerId(Number(activeId));
-            const payerNal = payers.find(el => el.payment_type == 'nal')
-            purchaseId ? setActiveId(isNal && !payerId  ? payerNal.id :  payerId) : setActiveId(payers[0].id);
+            /* setPayerId(Number(activeId)); */
+            const payerNal = payers.find(el => el.name.toLowerCase() == 'наличные')
+            /*  const activeId = purchaseId ? setActiveId(isNal && (!payerId || payerId == 0) ? payerNal.id : payerId) : setActiveId(payers[0].id);
+             console.log(payerNal) */
+            purchaseId ? setActiveId(isNal && (!payerId || payerId == 0) ? payerNal.id : payerId) : setActiveId(payers[0].id);
+            isNal && (!payerId || payerId == 0) && setPayerId(payerNal.id);
+            !purchaseId && setPayerId(payers[0].id);
             return
         }
     }, []);
 
-    /*   useEffect(() => {
-          if(positionActive && positionActive > 900) {
-              handleTypeRight();
-          }
-        
-      },[positionActive]) */
 
     useEffect(() => {
         if (position3 < 1200 && !disabledEffect) {
@@ -52,14 +55,25 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
             setDisabledRight(false)
         }
 
-    }, [position3, lastType, disabledEffect])
+    }, [position3, disabledEffect])
+
+    useEffect(() => {
+        const activebutton = list[list.length - 1]?.id == activeId ? position3 : positionActive;
+        if (activebutton > 1050 && firstLoad) {
+            handleTypeRight();
+            setFirstLoad(false);
+            return
+        }
+
+
+    }, [positionActive, position3, firstLoad])
 
 
     function handleSelectType(e) {
         const id = e.currentTarget.id;
         const payment = payers.find(el => el.id == id);
         type == 'payers' && setPayerId(Number(id));
-        type == 'payers' && setPaymentType(payment.payment_type);
+        type == 'payers' && (payment?.name?.toLowerCase() == 'наличные' ? setPaymentType('nal') : setPaymentType('beznal'));
         type == 'categories' && setCategoryId(Number(id));
         setActiveId(Number(id))
         const position = e.currentTarget.getBoundingClientRect().right
@@ -109,7 +123,9 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
                     <div className={s.block}>
                         <div className={s.center} style={{ transform: `translateX(${transformType}px)` }}>
                             {list.map((el, i) => {
-                                return <div key={el.id} ref={lastType === i ? buttonRef : i === list.length - 1 ? buttonLast : activeId === el.id ? activeRef : null} onClick={handleSelectType} id={el.id} className={`${s.button} ${disabled && s.button_disabled} ${activeId === el.id && s.button_active}`}>
+                                return <div key={el.id} ref={lastType === i ? buttonRef : i === list.length - 1 ? buttonLast : activeId === el.id ? activeRef : null}
+                                    onClick={handleSelectType} id={el.id}
+                                    className={`${s.button} ${disabled && s.button_disabled} ${activeId === el.id && s.button_active}`}>
                                     <p>{el.name}</p>
                                 </div>
                             })}

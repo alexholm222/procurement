@@ -1,0 +1,161 @@
+.block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 67px;
+    width: 500px;
+    overflow: hidden;
+    transition: all 0.1s ease-in-out;
+    position: absolute;
+    left: 17;
+    top: 13;
+    opacity: 1;
+    visibility: visible;
+
+    &_vis {
+        
+    }
+
+    div {
+        display: flex;
+        box-sizing: border-box;
+    }
+}
+
+.number {
+    width: 254px;
+    height: 18px;
+    display: flex;
+ 
+
+    div {
+        height: 18px;
+        width: 254px;
+        position: relative;
+    }
+}
+
+.name {
+    width: 220px;
+    height: 16px;
+    cursor: pointer;
+  
+
+    div {
+        height: 16px;
+        width: 200px;
+        position: relative;
+    }
+}
+
+.purchase {
+    display: flex;
+    line-height: 22px;
+    border-top: 1px solid #EAF0FA;
+    transition: all 0.1s;
+}
+
+.item {
+    padding: 16px 12px;
+    line-height: 22px;
+    box-sizing: border-box;
+
+
+    &_date {
+        width: 118px;
+        flex-shrink: 0;
+
+        div {
+            width: 68px;
+            height: 14px;
+            position: relative;
+        }
+    }
+
+    &_pos {
+        width: 100%;
+        max-width: 570px;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        gap: 12px;
+    }
+
+    &_sum {
+        width: 111px;
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 32px;
+        flex-shrink: 0;
+        div {
+            width: 64px;
+            height: 14px;
+            position: relative;
+        }
+    }
+    
+
+    &_buyer {
+        width: 240px;
+        flex-shrink: 0;
+        div {
+            width: 164px;
+            height: 14px;
+            position: relative;
+        }
+    }
+
+    &_seller {
+        width: 290px;
+        flex-shrink: 0;
+        p {
+            position: relative;
+            width: 180px;
+            height: 14px;
+        }
+
+        span {
+            display: flex;
+            position: relative;
+            width: 120px;
+            height: 14px;
+            margin-top: 8px;
+        }
+    }
+
+    &_status {
+        width: 173px;
+        display: flex;
+        gap: 4px;
+    }
+}
+
+.status {
+    height: 7px;
+    border-radius: 100px;
+    width: 36px;
+     position: relative;
+}
+
+.pos {
+    display: flex;
+
+    p {
+        max-width: 380px;
+        position: relative;
+        height: 14px;
+        width: 280px;
+    }
+
+    svg {
+        margin: 0 0 0 2px;
+    }
+
+    span {
+        margin-left: auto;
+        text-wrap: nowrap;
+        position: relative;
+        height: 14px;
+        width: 110px;
+    }
+}

@@ -30,10 +30,12 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     const [openPatternList, setOpenPatternList] = useState(false);
     const [openList, setOpenList] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [perUnit, setPerUnit] = useState(1)
     const items = useSelector(purchaseSelector).items;
     const modalRef = useRef();
     const listRef = useRef();
     const listPatternRef = useRef();
+    const inputRefFocus = useRef();
     console.log(patterList)
 
     useEffect(() => {
@@ -42,13 +44,9 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-        windowRef.current.style.left = "-4px";
-        /* windowRef.current.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        }); */
+
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflowY = "scroll";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -81,7 +79,12 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         if (patterList.length == 0) {
             setPatternId('')
         }
-    }, [patterList])
+    }, [patterList]);
+
+    useEffect(() => {
+        inputRefFocus.current && inputRefFocus.current.focus();
+        setOpenPatternList(false)
+    }, [inputRefFocus]);
 
     function closeModal(e) {
         e.stopPropagation()
@@ -102,7 +105,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     }
 
     function handleAddGood() {
-        setGoods([...goods, { item_id: itemId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: 1, type: type, sum: num * price, id: uuid(), maxPrice }]);
+        setGoods([...goods, { item_id: itemId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: uuid(), maxPrice }]);
         handleClose()
     }
 
@@ -120,7 +123,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     }
 
     function handleChangePrice(e) {
-        setPrice(e.target.value)
+        setPrice(Number(e.target.value))
     }
 
     function handleOpenList() {
@@ -147,6 +150,18 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         setOpenPatternList(false);
     }
 
+    const handleOpenPatternList = () => {
+        setOpenPatternList(true);
+    }
+
+    const handlePriceOne = () => {
+        setPerUnit(1)
+    }
+
+    const handlePrice = () => {
+        setPerUnit(0)
+    }
+
     useEffect(() => {
         document.addEventListener('mousedown', closeModal);
 
@@ -166,7 +181,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
                 <div className={`${s.good} ${openList && s.good_list}`}>
                     <div style={{ width: '100%' }} ref={listPatternRef}>
-                        <input onFocus={() => setOpenPatternList(true)} onChange={handleChangeName} className={s.input} value={name || ''} placeholder='Не указано' type='text'></input>
+                        <input onClick={handleOpenPatternList} ref={inputRefFocus} onFocus={() => setOpenPatternList(true)} onChange={handleChangeName} className={s.input} value={name || ''} placeholder='Не указано' type='text'></input>
                         <ul className={`${s.pattern_list} ${openPatternList && s.pattern_list_open}`}>
                             {patterList.map((el) => {
                                 return el.active && <li onClick={handleChosePattern} key={el.id} id={el.id}><p>{el.name}</p></li>
@@ -198,7 +213,10 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
                             </div>
 
                             <div className={`${s.block}`}>
-                                <p className={s.sub}>Цена за единицу</p>
+                                <div className={s.container_sub}>
+                                    <p onClick={handlePriceOne} className={`${s.sub} ${s.sub_price} ${perUnit == 1 && s.sub_price_active}`}>Цена за единицу</p>
+                                    <p onClick={handlePrice} className={`${s.sub} ${s.sub_price} ${perUnit == 0 && s.sub_price_active}`}>Цена за все</p>
+                                </div>
                                 <div className={s.good}>
                                     <input className={s.input} onChange={handleChangePrice} value={price || ''} placeholder='Не указано' type='number'></input>
                                     <span className={s.sub}>руб</span>

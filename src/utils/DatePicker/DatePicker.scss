@@ -1,0 +1,203 @@
+.pick {
+  background-color: var(--color-bg-card);
+  font-family: Inter;
+  border: 1px solid #eaf0fa00 !important;
+
+
+  &_stop {
+    pointer-events: none;
+    background: none;
+    border: 1px solid #EAF0FA !important;
+  }
+}
+
+.ant-picker {
+  width: 100%;
+  height: 46px;
+  padding: 12 16px;
+  border: 1px solid #1b1b1b00 !important;
+  box-sizing: border-box;
+  border-radius: 4px;
+  outline: none !important;
+  cursor: pointer;
+}
+
+.ant-picker {
+  width: 100%;
+  border: 1px solid #1b1b1b00;
+  box-sizing: border-box;
+}
+
+.ant-picker-cell-selected {
+  .ant-picker-cell-inner {
+    background: #002efb40 !important;
+  }
+}
+
+.ant-picker-focused.ant-picker {
+  border: none;
+  box-shadow: none;
+}
+
+.ant-picker .ant-picker-input>input {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--color-text-primary) !important;
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+}
+
+.ant-picker:hover {
+  border: none;
+  box-shadow: none;
+}
+
+.ant-picker-focused {
+  box-shadow: none;
+}
+
+.ant-space {
+  width: 100%;
+  height: 46px;
+}
+
+.ant-picker-disabled {
+  transition: all 0.2s ease-in-out;
+  cursor: default !important;
+  pointer-events: none;
+  background-color: #eaf0fa00 !important;
+  border: 1px solid var(--color-border-input-dis) !important;
+
+
+  input {
+    &:disabled {
+      color: var(--color-text-primary) !important;
+      background: none;
+    }
+  }
+}
+
+
+.anticon-calendar {
+  display: none;
+}
+
+.ant-picker-suffix {
+  width: 20px;
+  height: 20px;
+  background-image: url(../../image/icon/purchase/iconCalendarSmall.svg);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.ant-picker-suffix:active {
+  opacity: 0.8;
+}
+
+
+
+.ant-picker-date-panel {
+  width: fit-content !important;
+}
+
+
+
+.ant-picker-now-btn {
+  color: var(--color-button-accent);
+}
+
+.ant-picker-dropdown {
+  margin-left: -22px !important;
+  width: 226px;
+}
+
+.ant-picker-body {
+  width: 236px;
+  height: 230px;
+  padding: 0 8px 12px !important;
+}
+
+.ant-picker-cell {
+  padding: 4px 0 !important;
+}
+
+.ant-picker-header {
+  width: 226px;
+}
+
+.ant-picker-footer {
+  display: flex;
+  justify-content: center;
+  height: 34px;
+  a {
+    color: var(--color-text-primary) !important;
+    margin-bottom: 4px;
+  }
+  
+}
+
+.ant-picker-now {
+  line-height: 32px;
+}
+
+
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: #aba395;
+}
+
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  border: 1px solid #002efb40 !important;
+}
+
+.ant-picker-dropdown .ant-picker-today-btn {
+  color: #424242;
+}
+
+.ant-picker-dropdown .ant-picker-today-btn:hover {
+  color: #7b7b7b;
+}
+
+.ant-picker-dropdown .ant-picker-today-btn:active {
+  color: #1b1b1b;
+  ;
+}
+
+.ant-picker-panel-container {
+  background-color: var(--color-bg-card-inner) !important;
+  box-shadow: var(--box-shadow) !important;
+}
+
+.ant-picker-cell-inner {
+  color: var(--color-text-primary) !important;
+}
+
+.ant-picker-content {
+  th {
+    color: var(--color-text-primary) !important;
+  }
+}
+
+.ant-picker-header-view {
+  color: var(--color-text-primary) !important;
+
+  button {
+    color: var(--color-text-primary) !important;
+    &:hover {
+      color: var(--color-button-accent) !important;
+    }
+  }
+}
+
+.ant-picker-header {
+  button {
+    color: var(--color-text-primary) !important;
+    &:hover {
+      color: var(--color-button-accent) !important;
+    }
+  }
+}

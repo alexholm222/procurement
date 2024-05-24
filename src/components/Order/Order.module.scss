@@ -1,0 +1,135 @@
+.purchase {
+    display: flex;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    border-top: 1px solid #EAF0FA;
+    cursor: pointer;
+    transition: all 0.1s;
+
+
+    &:hover {
+        background-color: #F8FAFD;
+    }
+
+    &_hiden {
+        display: none;
+    }
+}
+
+.item {
+    padding: 16px 12px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    box-sizing: border-box;
+
+
+    &_date {
+        width: 118px;
+        text-wrap: nowrap;
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    &_pos {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 1;
+        gap: 4px;
+    }
+
+    &_create {
+        width: 368px;
+        display: flex;
+        padding-right: 32px;
+        flex-shrink: 0;
+    }
+
+    &_status {
+        width: 308px;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.attention {
+    position: absolute;
+    top: 18px;
+    left: -24px;
+    transition: all 0.15s;
+
+    &_hiden {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.status {
+    height: 6px;
+    border-radius: 100px;
+    background-color: #DFE5EF;
+    width: 36px;
+    transition: all 0.15s;
+
+    &_done {
+        background-color: #2EA96E;
+    }
+
+    &_red {
+        background-color: #E75A5A;
+    }
+
+    &_yellow {
+        background-color: #FFC227;
+    }
+}
+
+.pos {
+    display: flex;
+    text-wrap: nowrap;
+
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 380px;
+    }
+
+    svg {
+        margin: 0 0 0 2px;
+    }
+
+    span {
+        color: #71869D;
+        margin-left:
+            /* 12px */
+            auto;
+        text-wrap: nowrap;
+    }
+}
+
+.button {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 148%;
+    color: var(--color-button-accent);
+    transition: all 0.15s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 144px;
+    flex-shrink: 0;
+
+    &:hover {
+        color: var(--color-button-accent-hover);
+    }
+
+}

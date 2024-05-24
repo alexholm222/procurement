@@ -65,6 +65,20 @@
     line-height: 18px;
     color: #71869D;
     margin-bottom: 6px;
+
+    &_price {
+        position: absolute;
+        left: 130px;
+        transition: all 0.3s ease-in-out;
+        opacity: 0.4;
+        cursor: pointer;
+        user-select: none;
+
+        &_active {
+            left: 0;
+            opacity: 1;
+        }
+    }
 }
 
 .good {
@@ -87,6 +101,7 @@
         line-height: 26px;
         padding: 10px 16px;
         box-sizing: border-box;
+        
     }
 
     span {
@@ -177,6 +192,13 @@
     &_big {
         width: 100%;
         overflow: hidden;
+    }
+
+    &_sub {
+        display: flex;
+        gap: 20px;
+        height: 24px;
+        position: relative;
     }
 }
 

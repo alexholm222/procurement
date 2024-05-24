@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-	purchase: {},
-	payers: [],
-	vendors: [],
-	vendorsContracts: [],
-	categories: [],
-	items: [],
+	purchase: /* JSON.parse(localStorage.getItem('purchase')) ||  */{},
+	order: {},
+	payers: JSON.parse(localStorage.getItem('payers')) || [],
+	vendors: JSON.parse(localStorage.getItem('vendors')) || [],
+	vendorsContracts: JSON.parse(localStorage.getItem('vendorsContracts')) || [],
+	categories: JSON.parse(localStorage.getItem('categories')) || [],
+	items: JSON.parse(localStorage.getItem('items')) || [],
 };
 const purchaseSlice = createSlice({
 	name: 'purchase',
@@ -15,6 +16,10 @@ const purchaseSlice = createSlice({
 	reducers: {
 		setPurchase(state, action) {
 			state.purchase = action.payload;
+		},
+
+		setOrder(state, action) {
+			state.order = action.payload;
 		},
 
 		setPayers(state, action) {
@@ -41,11 +46,12 @@ const purchaseSlice = createSlice({
 
 export const {
 	setPurchase,
+	setOrder,
 	setPayers,
 	setVendors,
 	setVendorsContracts,
 	setCategories,
-	setItems
+	setItems,
 } = purchaseSlice.actions;
 
 export default purchaseSlice.reducer;

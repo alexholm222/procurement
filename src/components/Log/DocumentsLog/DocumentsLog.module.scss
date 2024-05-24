@@ -1,0 +1,147 @@
+.window {
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+    transition: all 0.3s;
+
+    &_disabled {
+        height: 0;
+        padding: 0 28px;
+        overflow: hidden;
+        opacity: 0;
+    }
+}
+
+.title {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+
+    margin: 0 0 4px;
+}
+
+.files {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    height: fit-content;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+
+}
+
+.file {
+    box-sizing: border-box;
+    display: flex;
+   /*  align-items: center; */
+    justify-content: center;
+    overflow: hidden;
+  /*   height: 75px; */
+    width: 75px;
+
+}
+
+.block_text {
+
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 14px;
+        margin-top: 4px;
+        padding-bottom: 2px;
+        text-align: center;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    span {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        color: #71869D;
+    }
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    transition: all 0.2s;
+
+    svg {
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+
+    &_disabled {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 75px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+
+    svg {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+    }
+
+}
+
+.fileLoader {
+    opacity: 1;
+    visibility: visible;
+    max-height: 68px;
+    height: fit-content;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &_disabled {
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        margin-top: -12px;
+    }
+}
+
+.picture {
+    height: 75px;
+    width: 75px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+        height: 76px;
+        width: 76px;
+    }
+}
