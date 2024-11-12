@@ -25,14 +25,14 @@
 
     &_blue {
         background-color: rgba(0, 36, 203, 0.08);
-        color: #0024CB;
+        color: var(--color-button-accent);
 
         svg {
             width: 16px;
             height: 16px;
 
             path {
-                fill: #0024CB;
+                fill: var(--color-button-accent);
             }
         }
 
@@ -77,7 +77,7 @@
                 height: 14px;
 
                 path {
-                    stroke: #0024CB;
+                    stroke: var(--color-button-accent);
                 }
 
             }

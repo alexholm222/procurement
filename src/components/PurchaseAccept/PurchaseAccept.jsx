@@ -76,7 +76,7 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
     const modalRef = useRef();
     const dispatch = useDispatch();
     const role = document.getElementById('root_purchases').getAttribute('role');
-  console.log(documents)
+    console.log(documents)
     useEffect(() => {
         setAnim(true)
     }, []);
@@ -90,24 +90,24 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
 
     useEffect(() => {
-        if(!check && documents.length > 0) {
+        if (!check && documents.length > 0) {
             setDisabled(false);
             return
         }
 
-        if(!check && documents.length == 0) {
+        if (!check && documents.length == 0) {
             setDisabled(true);
             return
         }
 
-        
-        if(check) {
+
+        if (check) {
             setDisabled(false);
             return
         }
@@ -144,6 +144,7 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
             .then(res => {
                 console.log(res);
                 const purchase = res.data.purchase;
+                const order = res.data.purchase.order;
                 const orderLog = {
                     comment: 'Создана заявка на закупку',
                     date: purchase.order?.date_create,
@@ -155,7 +156,7 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                     files: handleExistingFiles(purchase.order),
                 }
 
-                purchase.order ? setLogs([orderLog, ...purchase.logs]) : setLogs(purchase.logs);
+                purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setPurchasesUpdate(purchase));
                 setStatus(purchase.status);
                 setLoadAccept(false)
@@ -215,7 +216,7 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                     {loadAccept && <p>Принимаем</p>}
                     {!loadAccept && <p>Принять</p>}
                     {loadAccept && <LoaderButton color={'#FFFFFF'} />}
-                    </button>
+                </button>
                 <span className={s.text_err}>{err ? 'Произошла ошибка при добавлении поставщика' : ''}</span>
             </div>
 

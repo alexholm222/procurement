@@ -19,7 +19,7 @@ import { ReactComponent as IconButtonClose } from '../../image/icon/purchase/ico
 import { ReactComponent as IconButtonCloseDoc } from '../../image/icon/purchase/iconButtonCloseDoc.svg';
 import { ReactComponent as IconCheck } from '../../image/icon/purchase/iconCheck.svg';
 //API
-import { createOrder, takeOrder } from '../../Api/Api';
+import { createOrder, takeOrder, getOrder, createPurchaseFromOrder } from '../../Api/Api';
 //components
 import Log from '../Log/Log';
 import Options from '../Options/Options';
@@ -35,7 +35,7 @@ import PurchaseReject from '../PurchaseAccept/PurchaseReject';
 import DeleteModal from '../DeleteModal/DeleteModal';
 //slice
 import { setOrder } from '../../store/reducer/purchase/slice';
-import { setOrderUpdate, setOrderNew, setUpdateAction } from '../../store/reducer/purchaseUpdate/slice';
+import { setOrderUpdate, setOrderNew, setUpdateOrder } from '../../store/reducer/purchaseUpdate/slice';
 import { setPurchase } from '../../store/reducer/purchase/slice';
 import { setPurchaseNew } from '../../store/reducer/purchaseUpdate/slice';
 //utils 
@@ -45,7 +45,6 @@ import { HandledatePurchase, dateNow2 } from '../../utils/date';
 
 function WindowOrder({ id, order, personIsView, loadParametrs }) {
     const role = document.getElementById('root_purchases').getAttribute('role');
-    console.log(order)
     const [anim, setAnim] = useState(false);
     const [paymentType, setPaymentType] = useState('');
     const [personId, setPersonId] = useState(order.personId || -1);
@@ -53,9 +52,8 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
     const [disabled, setDisabled] = useState(false);
     const [disabledButton, setDisabledButton] = useState(false);
     const [loadCreate, setLoadCreate] = useState(false);
-    const [loadAproval, setLoadAproval] = useState(false);
+    const [loadDelete, setLoadDelete] = useState(false);
     const [createSuccess, setCreateSuccess] = useState(false);
-    const [aprovalSuccess, setAprovalSuccess] = useState(false);
     const [scrollTopHeight, setScrollTopHeight] = useState(0);
     const [status, setStatus] = useState(order.status || -2);
     const [logs, setLogs] = useState(order.logs || []);
@@ -82,8 +80,7 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
     const [personView, setPersonView] = useState(personIsView.id || 0)
     const dispatch = useDispatch();
     const windowRef = useRef();
-
-    console.log(idCreate, status, personView, order)
+    console.log(owner, personView, order)
 
 
     useEffect(() => {
@@ -165,7 +162,39 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
             setLogs(prevState => [orderLog, ...prevState]);
             return
         }
-    }, [])
+    }, []);
+
+
+    //Загрузка заявки 
+    useEffect(() => {
+        if (idCreate) {
+            getOrder(idCreate)
+                .then(res => {
+                    console.log(res);
+                    const data = res.data;
+                    console.log(data.order.order_logs)
+                    const logs = data.order.order_logs.slice(1);
+                    setLogs(prevState => [...prevState, ...logs])
+                    /*  const orderLog = {
+                         comment: 'Создана заявка на закупку',
+                         date: data.order?.date_create,
+                         id: data.order?.id,
+                         person: data.order?.person,
+                         person_id: data.order?.person_id,
+                         sub_comment: data.order?.comment,
+                         type: 'add',
+                         files: handleExistingFiles(data.order),
+                     }
+                     data.order ? setLogs([orderLog, ...data.logs]) : setLogs(data.logs); */
+                    /*  dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] })) */
+
+                    dispatch(setOrderUpdate({ ...data.order, logs_view: [{ is_view: 1 }] }));
+                    dispatch(setUpdateOrder())
+                })
+                .catch(err => console.log(err))
+            return
+        }
+    }, [idCreate]);
 
     const handleCloseOrder = () => {
         setAnim(false)
@@ -207,6 +236,7 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                 idCreate == '' && setIdCreate(order.id)
                 setStatus(order.status);
                 setLoadCreate(false);
+                setOwner(order.person_id);
                 const orderLog = {
                     comment: 'Создана заявка на закупку',
                     date: order.date_create,
@@ -244,6 +274,57 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                     files: handleExistingFiles(order)
                 }
 
+                /*   const purchaseForOpen = {
+                      isOrder: true,
+                      id: purchase.id,
+                      open: true,
+                      payerId: purchase?.payer_id,
+                      categoryId: purchase?.cat_id,
+                      dateCreate: purchase?.date_create,
+                      isNal: purchase?.is_nal,
+                      logs: [orderLog, ...purchase?.logs],
+                      status: purchase?.status,
+                      position: purchase?.person?.position,
+                      personId: purchase?.person_id,
+                      dateCreate: dateNow2(),
+                  }
+                  console.log(purchase)
+                  dispatch(setPurchaseNew(purchase))
+                  dispatch(setPurchase(purchaseForOpen)); */
+                dispatch(setUpdateOrder())
+                /*  setTimeout(() => {
+                     handleCloseOrder();
+                 }, 200) */
+
+                /* const documents = handleExistingFiles(purchase);
+                setDocuments(documents); */
+                /*    setTimeout(() => {handleClosePurchase()}, 600); */
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleCreatePurchaseFromOrder = () => {
+        setLoadCreate(true);
+        createPurchaseFromOrder({ id: idCreate })
+            .then(res => {
+                const order = res.data.order;
+                const purchase = res.data.purchase;
+                dispatch(setOrderUpdate(order));
+                console.log(res)
+                setStatus(2);
+                setLoadCreate(false);
+
+                const orderLog = {
+                    comment: 'Создана заявка на закупку',
+                    date: order.date_create,
+                    id: order.id,
+                    person: order.person,
+                    person_id: order.person_id,
+                    sub_comment: order.comment,
+                    type: 'add',
+                    files: handleExistingFiles(order)
+                }
+
                 const purchaseForOpen = {
                     isOrder: true,
                     id: purchase.id,
@@ -261,6 +342,7 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                 console.log(purchase)
                 dispatch(setPurchaseNew(purchase))
                 dispatch(setPurchase(purchaseForOpen));
+                dispatch(setUpdateOrder())
                 setTimeout(() => {
                     handleCloseOrder();
                 }, 200)
@@ -270,7 +352,11 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                 /*    setTimeout(() => {handleClosePurchase()}, 600); */
             })
             .catch(err => console.log(err))
+    }
 
+    const handleDelete = () => {
+        setDeleteType('order')
+        setDeleteModal(true)
     }
 
 
@@ -282,6 +368,14 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                 <div className={s.header}>
                     <h2><IconArrowBack onClick={handleCloseOrder} />{id ? `Заявка от ${HandledatePurchase(dateCreate)}` : `Создание заявки`} <StatusBage status={status} role={role} /></h2>
                     <div className={s.buttons}>
+
+                        {(role == 'administrator' || personView == owner) && status !== -2 && <button onClick={handleDelete} disabled={disabledButton} className={`${s.button} ${s.button_cancle}`}>
+                            <p>Удалить</p>
+                            {loadDelete && <LoaderButton color={'#E75A5A'} />}
+                            {!loadDelete && <IconButtonDelete />}
+                        </button>}
+
+
                         {status == -2 && <button disabled={disabledButton} onClick={handleCreateOrder} className={`${s.button} ${s.button_main}`}>
                             {loadCreate && <p>Создаем заявку</p>}
                             {!loadCreate && <p>Создать заявку</p>}
@@ -296,7 +390,19 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                             {!loadCreate && <IconTakeWork />}
                         </button>}
 
+                        {status == 1 && role == 'hr-assist' && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
+                            {loadCreate && <p>Создаем закупку</p>}
+                            {!loadCreate && <p>Создать закупку</p>}
+                            {loadCreate && <LoaderButton color={'#FFFFFF'} />}
+                            {!loadCreate && <IconTakeWork />}
+                        </button>}
 
+                        {status !== 2 && owner == personView && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
+                            {loadCreate && <p>Создаем закупку</p>}
+                            {!loadCreate && <p>Создать закупку</p>}
+                            {loadCreate && <LoaderButton color={'#FFFFFF'} />}
+                            {!loadCreate && <IconTakeWork />}
+                        </button>}
 
                     </div>
                 </div>
@@ -309,11 +415,11 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                     </div>
                     <div className={s.comment}>
                         <h3 className={s.title}>Позиции к закупке</h3>
-                        <textarea onChange={handleComment} value={comment || ''} placeholder='Напиши здесь позиции и описание к ним'></textarea>
+                        <textarea disabled={disabled} onChange={handleComment} value={comment || ''} placeholder='Напиши здесь позиции и описание к ним'></textarea>
                     </div>
                     <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setCreateSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
-                    <Log logs={logs} personView={personView} role={order.position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} />
-
+                    <Log logs={logs} setLogs={setLogs} personView={personView} role={order.position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} send={status !== -2} id={idCreate} type={'order'} />
+                    {deleteModal ? <DeleteModal setModal={setDeleteModal} id={idCreate} type={deleteType} setLoadDelete={setLoadDelete} loadDelete={loadDelete} setLogs={setLogs} handleClosePurchase={handleCloseOrder} /> : ''}
                 </div>
             </div>
         </div>

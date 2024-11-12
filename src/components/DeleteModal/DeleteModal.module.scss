@@ -11,13 +11,13 @@
     z-index: 30;
 
     &_anim {
-        background-color: var(--color-overlay);
+        background-color: rgba(0, 0, 0, 0.2);
     }
 }
 
 .modal {
     background-color: var(--color-bg-full);
-    box-shadow: 0px 0px 50px 0px rgba(129, 135, 163, 0.20);
+    box-shadow: var(--box-shadow);
     border-radius: 8px;
     padding: 32px;
     width: 440px;

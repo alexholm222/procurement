@@ -4,9 +4,9 @@ import { ReactComponent as IconClose } from '../../image/iconClose.svg';
 import { useDispatch } from 'react-redux';
 import { ReactComponent as IconButtonDelete } from '../../image/icon/purchase/iconButtonDelete.svg';
 //API
-import { deletePurchase, deleteRejectPurchase, deletePurchaseAdmin } from '../../Api/Api';
+import { deletePurchase, deleteRejectPurchase, deletePurchaseAdmin, deleteOrder } from '../../Api/Api';
 //slice
-import { setPurchasesDelete } from '../../store/reducer/purchaseUpdate/slice';
+import { setPurchasesDelete, setOrderDelete } from '../../store/reducer/purchaseUpdate/slice';
 import { setUpdateAction } from '../../store/reducer/purchaseUpdate/slice';
 //component
 import LoaderButton from '../LoaderButton/LoaderButton';
@@ -16,6 +16,7 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch();
+    console.log(type)
     //Фиксация окна при открытии модалки
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -47,7 +48,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
                 setLoadDelete(false);
-                setLogs([]);
                 dispatch(setUpdateAction());
                 setAnim(false);
                 setTimeout(() => {
@@ -66,7 +66,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
                 console.log(res);
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
-                setLogs([]);
                 dispatch(setUpdateAction());
                 setAnim(false);
                 setTimeout(() => {
@@ -86,7 +85,25 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
                 console.log(res);
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
-                setLogs([]);
+                dispatch(setUpdateAction());
+                setAnim(false);
+                setTimeout(() => {
+                    setModal(false);
+                    setLoadDelete(false);
+                }, 300)
+            })
+            .catch(err => {
+                setAnim(false);
+            })
+    }
+
+    const handleDeleteOrder = () => {
+        setLoadDelete(true)
+        deleteOrder({ id: id })
+            .then(res => {
+                console.log(res);
+                dispatch(setOrderDelete(id));
+                handleClosePurchase();
                 dispatch(setUpdateAction());
                 setAnim(false);
                 setTimeout(() => {
@@ -121,6 +138,12 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
 
         if (type == 'admin') {
             handleDeletePurchaseAdmin()
+            return
+        }
+
+        
+        if (type == 'order') {
+            handleDeleteOrder()
             return
         }
     }

@@ -6,7 +6,9 @@ const initialState = {
 	purchasesDelete: [],
 	orderUpdate: [],
 	orderNew: {},
+	orderDelete: [],
     updateAction: 0,
+	updateOrder: 0,
 };
 const purchaseUpdateSlice = createSlice({
 	name: 'purchaseUpdate',
@@ -36,6 +38,14 @@ const purchaseUpdateSlice = createSlice({
 		setOrderUpdate(state, action) {
 			state.orderUpdate =  [...state.orderUpdate, action.payload];
 		},
+
+		setOrderDelete(state, action) {
+			state.orderDelete =  [...state.orderDelete, action.payload];
+		},
+
+		setUpdateOrder(state) {
+			state.updateOrder =  state.updateOrder + 1;
+		},
 	},
 });
 
@@ -45,7 +55,9 @@ export const {
 	setPurchasesDelete,
 	setOrderUpdate,
 	setOrderNew,
-	setUpdateAction
+	setOrderDelete,
+	setUpdateAction,
+	setUpdateOrder
 } = purchaseUpdateSlice.actions;
 
 export default purchaseUpdateSlice.reducer;

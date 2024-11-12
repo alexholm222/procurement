@@ -51,7 +51,7 @@
 .purchase {
     display: flex;
     line-height: 22px;
-    border-top: 1px solid #EAF0FA;
+    border-top: 1px solid var(--color-line-border);
     transition: all 0.1s;
 }
 

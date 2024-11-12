@@ -53,26 +53,33 @@ function FileLoader({ files, setFiles, setSaveSuccess }) {
     }
 
     const handleFile = async (e) => {
-        const file = e.currentTarget.files[0];
-        if (file.size > 15 * 1048576) {
-            console.log("большой файл");
-            setError(true)
-        }
-        else {
-            setError(false);
-            handleWriteFile(file)
-            fileInputRef.current && (fileInputRef.current.value = '');
-        }
+        const files = Object.values(e.currentTarget.files);
+        console.log(files)
+        files.forEach((file) => {
+            if (file.size > 15 * 1048576) {
+                console.log("большой файл");
+                setError(true)
+            }
+            else {
+                setError(false);
+                handleWriteFile(file)
+                fileInputRef.current && (fileInputRef.current.value = '');
+            }
+        })
     }
 
     const handleDrop = (event) => {
         event.preventDefault();
         event.stopPropagation();
         console.log("File(s) dropped");
-        const file = event.dataTransfer.files[0]
-        if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
-            handleWriteFile(file)
-        };
+        const files = Object.values(event.dataTransfer.files);
+        console.log(files)
+        files.forEach((file) => {
+            if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
+                handleWriteFile(file)
+                return
+            };
+        })
     }
 
     function fonDragOver(e) {

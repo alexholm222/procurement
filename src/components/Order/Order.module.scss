@@ -3,13 +3,14 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 22px;
-    border-top: 1px solid #EAF0FA;
+    border-top: 1px solid var(--color-line-border);
     cursor: pointer;
     transition: all 0.1s;
+   
 
 
     &:hover {
-        background-color: #F8FAFD;
+        background-color: var(--color-bg-full);
     }
 
     &_hiden {
@@ -23,7 +24,6 @@
     font-weight: 400;
     line-height: 22px;
     box-sizing: border-box;
-
 
     &_date {
         width: 118px;
@@ -63,6 +63,8 @@
     top: 18px;
     left: -24px;
     transition: all 0.15s;
+    opacity: 1;
+    visibility: visible;
 
     &_hiden {
         opacity: 0;
@@ -73,7 +75,7 @@
 .status {
     height: 6px;
     border-radius: 100px;
-    background-color: #DFE5EF;
+    background-color: var(--color-bg-card-new);
     width: 36px;
     transition: all 0.15s;
 
@@ -105,7 +107,7 @@
     }
 
     span {
-        color: #71869D;
+        color: var(--color-text-secondary);
         margin-left:
             /* 12px */
             auto;

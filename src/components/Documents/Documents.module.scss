@@ -4,7 +4,7 @@
     flex-direction: column;
     padding: 28px;
     box-sizing: border-box;
-    background-color: #FFF;
+    background-color: var(--color-bg-card);
     border-radius: 8px;
     transition: all 0.3s;
 
@@ -42,8 +42,8 @@
     width: 0;
     box-sizing: border-box;
     border-radius: 8px;
-    border: 0px solid #ECF2FC;
-    background: #F8FAFD;
+    border: 0px solid var(--color-file-border);
+    background: var(--color-bg-card-inner);
     display: flex;
     align-items: center;
     opacity: 0;
@@ -51,7 +51,7 @@
     overflow: hidden;
 
     &_anim {
-        border: 1px solid #ECF2FC;
+        border: 1px solid var(--color-file-border);
         height: 74px;
         padding: 12px;
         opacity: 1;
@@ -67,6 +67,10 @@
     align-items: center;
 
     p {
+        max-width: 380px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-wrap: nowrap;
         font-size: 16px;
         font-weight: 400;
         line-height: 18px;
@@ -77,7 +81,7 @@
         font-size: 12px;
         font-weight: 400;
         line-height: 14px;
-        color: #71869D;
+        color: var(--color-text-secondary);
     }
 }
 

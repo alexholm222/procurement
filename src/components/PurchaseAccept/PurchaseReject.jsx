@@ -42,7 +42,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -79,6 +79,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                 .then(res => {
                     console.log(res);
                     const purchase = res.data.purchase;
+                    const order = res.data.purchase.order;
                     setLoadAccept(false);
                     setStatus(purchase.status);
                     setReject(true);
@@ -94,8 +95,8 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                         type: 'add',
                         files: handleExistingFiles(purchase.order),
                     }
-    
-                    purchase.order ? setLogs([orderLog, ...purchase.logs]) : setLogs(purchase.logs);
+
+                    purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                     dispatch(setUpdateAction());
                 })
                 .catch(err => console.log(err))
@@ -104,6 +105,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                 .then(res => {
                     console.log(res);
                     const purchase = res.data.purchase;
+                    const order = res.data.purchase.order;
                     setLoadAccept(false);
                     setStatus(purchase.status);
                     setReject(true);
@@ -120,7 +122,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                         files: handleExistingFiles(purchase.order),
                     }
 
-                    setLogs([orderLog, ...purchase.logs]);
+                    purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                     dispatch(setUpdateAction());
                 })
                 .catch(err => console.log(err))
@@ -174,7 +176,6 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                     {type == 'rejectPay' && 'Оплата отклонена'}
                 </h2>
                 <p className={s.text}></p>
-
             </div>
         </div>
     )

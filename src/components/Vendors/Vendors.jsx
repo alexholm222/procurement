@@ -13,7 +13,7 @@ import ModalSuplier from '../ModalSupliers/ModalSuplier';
 import ModalСontracts from '../ModalСontracts/ModalСontracts';
 import VendorSceleton from './VendorSceleton/VendorSceleton';
 
-const Vendors = ({ hiden, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef }) => {
+const Vendors = ({ hiden, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef, scrollTopHeight }) => {
     const vendors = useSelector(purchaseSelector).vendors;
     const contracts = useSelector(purchaseSelector).vendorsContracts;
     const payers = useSelector(purchaseSelector).payers;
@@ -203,13 +203,13 @@ const Vendors = ({ hiden, vendorId, contractVendorId, setVendorId, setContractVe
                     <p>Добавить продавца</p>
                 </button>
 
-              {/*   <button disabled={disabled} onClick={handleOpenModalContract} className={`${s.button} ${disabled && s.button_disabled}`}>
+               {/*  <button disabled={disabled} onClick={handleOpenModalContract} className={`${s.button} ${disabled && s.button_disabled}`}>
                     <IconPlus />
                     <p>Добавить договор</p>
                 </button> */}
             </div>
-            {modalVendor ? <ModalSuplier setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef}/> : ''}
-            {modalContracts ? <ModalСontracts setModal={setModalContracts} vendors={vendors} setContractVendorId={setContractVendorId} setVendorId={setVendorId} payers={payers} setAddType={setAddType} windowRef={windowRef}/> : ''}
+            {modalVendor ? <ModalSuplier setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
+            {modalContracts ? <ModalСontracts setModal={setModalContracts} vendors={vendors} setContractVendorId={setContractVendorId} setVendorId={setVendorId} payers={payers} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
         </div>
     )
 };

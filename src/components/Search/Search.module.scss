@@ -7,7 +7,7 @@
     max-width: 280px;
     width: 100%;
     box-sizing: border-box;
-    background-color: #FFF;
+    background-color: var(--color-bg-card);
     border-radius: 4px;
     
     input {
@@ -16,9 +16,11 @@
         font-size: 16px;
         font-weight: 400;
         line-height: 22px;
+        background: none;
+        color: var(--color-text-primary);
 
         &::placeholder {
-            color: #71869D;
+            color: var(--color-text-secondary);
         }
     }
 }

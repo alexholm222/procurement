@@ -75,7 +75,7 @@ const File = ({ file, files, setFiles, setOldFiles, id, type, disabled }) => {
 }
 
 
-const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVendorId, setAddType, windowRef }) => {
+const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVendorId, setAddType, windowRef, scrollTopHeight }) => {
     const [anim, setAnim] = useState(false);
     const [success, setSuccess] = useState(false);
     const [buyer, setBuyer] = useState(payers[0]);
@@ -106,7 +106,7 @@ const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVe
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -222,7 +222,7 @@ const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVe
     }, [bayerListOpen, providerListOpen]);
 
     return (
-        <div className={`${s.overlay} ${anim && s.overlay_anim}`}>
+        <div style={{ top: `${scrollTopHeight}px` }}  className={`${s.overlay} ${anim && s.overlay_anim}`}>
 
             <div ref={modalRef} className={`${s.modal} ${anim && !success && s.modal_anim}`}>
                 <div className={s.header}>

@@ -13,8 +13,8 @@ export function dateNow() {
     case 2: fMonth2 = "марта"; break;
     case 3: fMonth2 = "апреля"; break;
     case 4: fMonth2 = "мая"; break;
-    case 5: fMonth2 = "июнья"; break;
-    case 6: fMonth2 = "июлья"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
     case 7: fMonth2 = "августа"; break;
     case 8: fMonth2 = "сентября"; break;
     case 9: fMonth2 = "октября"; break;
@@ -56,8 +56,8 @@ export function HandledatePurchaseList(n) {
     case 2: fMonth2 = "марта"; break;
     case 3: fMonth2 = "апреля"; break;
     case 4: fMonth2 = "мая"; break;
-    case 5: fMonth2 = "июнья"; break;
-    case 6: fMonth2 = "июлья"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
     case 7: fMonth2 = "августа"; break;
     case 8: fMonth2 = "сентября"; break;
     case 9: fMonth2 = "октября"; break;
@@ -84,8 +84,8 @@ export function HandledatePurchase(n) {
     case 2: fMonth2 = "марта"; break;
     case 3: fMonth2 = "апреля"; break;
     case 4: fMonth2 = "мая"; break;
-    case 5: fMonth2 = "июнья"; break;
-    case 6: fMonth2 = "июлья"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
     case 7: fMonth2 = "августа"; break;
     case 8: fMonth2 = "сентября"; break;
     case 9: fMonth2 = "октября"; break;
@@ -106,7 +106,53 @@ export function HandledateContract(n) {
   return `${day}.${month < 10 ? `0${month}` : month}.${year}`
 }
 
+
+
 export function dateForLog(n) {
+  const date = new Date(n);
+  const dateNow = new Date();
+  const year = date.getFullYear();
+  const yearNow = dateNow.getFullYear();
+  const month = date.getMonth();
+  const monthNow = dateNow.getMonth();
+  const day = date.getDate();
+  const dayNow = dateNow.getDate();
+
+
+  let fMonth2;
+  switch (month) {
+    case 0: fMonth2 = "января"; break;
+    case 1: fMonth2 = "февраля"; break;
+    case 2: fMonth2 = "марта"; break;
+    case 3: fMonth2 = "апреля"; break;
+    case 4: fMonth2 = "мая"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
+    case 7: fMonth2 = "августа"; break;
+    case 8: fMonth2 = "сентября"; break;
+    case 9: fMonth2 = "октября"; break;
+    case 10: fMonth2 = "ноября"; break;
+    case 11: fMonth2 = "декабря"; break;
+    default:
+  }
+  if (year == yearNow && month == monthNow && dayNow - day > 1) {
+    return `${day < 10 ? `0${day}` : day} ${fMonth2}`
+  }
+
+  if (year == yearNow && dayNow - day == 1) {
+    return `Вчера`
+  }
+
+  if (year == yearNow && dayNow - day == 0) {
+    return `Сегодня`
+  }
+
+  if (year !== yearNow || month !== monthNow) {
+    return `${day < 10 ? `0${day}` : day} ${fMonth2} ${year}`
+  }
+}
+
+export function timeForLog(n) {
   const date = new Date(n);
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -121,8 +167,8 @@ export function dateForLog(n) {
     case 2: fMonth2 = "марта"; break;
     case 3: fMonth2 = "апреля"; break;
     case 4: fMonth2 = "мая"; break;
-    case 5: fMonth2 = "июнья"; break;
-    case 6: fMonth2 = "июлья"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
     case 7: fMonth2 = "августа"; break;
     case 8: fMonth2 = "сентября"; break;
     case 9: fMonth2 = "октября"; break;
@@ -130,7 +176,40 @@ export function dateForLog(n) {
     case 11: fMonth2 = "декабря"; break;
     default:
   }
-
-  return `${day < 10 ? `0${day}` : day} ${fMonth2} ${year} в ${hourses < 10 ? `0${hourses}` : hourses}:${minutes < 10 ? `0${minutes}` : minutes}`
+  return `${hourses < 10 ? `0${hourses}` : hourses}:${minutes < 10 ? `0${minutes}` : minutes}`
 }
 
+
+export const handleComparisonDate = (f, s) => {
+  const date = new Date(f);
+  const dateSecond = new Date(s);
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const day = date.getDate();
+  const monthSecond = dateSecond.getMonth();
+  const yearSecond = dateSecond.getFullYear();
+  const daySecond = dateSecond.getDate();
+
+  if (year == yearSecond && day == daySecond && month == monthSecond) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const handleCompareDateOrder = (f) => {
+  const date = new Date(f);
+  const dateSecond = new Date('2024-05-26');
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const day = date.getDate();
+  const monthSecond = dateSecond.getMonth();
+  const yearSecond = dateSecond.getFullYear();
+  const daySecond = dateSecond.getDate();
+
+  if (date > dateSecond) {
+    return true
+  } else {
+    return false
+  }
+}

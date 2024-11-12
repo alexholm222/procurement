@@ -3,13 +3,13 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 22px;
-    border-top: 1px solid #EAF0FA;
+    border-top: 1px solid var(--color-line-border);
     cursor: pointer;
     transition: all 0.1s;
 
 
     &:hover {
-        background-color: #F8FAFD;
+        background-color: var(--color-bg-full);
     }
 
     &_hiden {
@@ -71,7 +71,7 @@
             font-size: 14px;
             font-weight: 400;
             line-height: 18px;
-            color: #8E9AA8;
+            color: var(--color-text-secondary);
             margin-top: 4px;
         }
     }
@@ -98,7 +98,7 @@
 .status {
     height: 6px;
     border-radius: 100px;
-    background-color: #DFE5EF;
+    background-color: var(--color-bg-card-new);
     width: 36px;
     transition: all 0.15s;
 
@@ -135,7 +135,7 @@
     }
 
     span {
-        color: #71869D;
+        color: var(--color-text-secondary);
         margin-left:
             /* 12px */
             auto;

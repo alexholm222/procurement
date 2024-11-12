@@ -10,7 +10,7 @@ function ModalImage({ img, setOpenImage, windowRef, scrollTopHeight }) {
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflowY = "scroll";
+            windowRef.current.style.overflowY = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef])

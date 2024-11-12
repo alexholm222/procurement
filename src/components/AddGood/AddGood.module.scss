@@ -15,6 +15,15 @@
     &_anim {
         background-color: rgba(0, 0, 0, 0.2);
     }
+
+    input {
+        background: none;
+        color: var(--color-text-primary);
+
+        &::placeholder {
+            color: var(--color-text-secondary);
+        }
+    }
 }
 
 .add {
@@ -26,8 +35,8 @@
     box-sizing: border-box;
     flex-direction: column;
     border-radius: 8px;
-    background: #F8FAFD;
-    box-shadow: 0px 0px 50px 0px rgba(129, 135, 163, 0.20);
+    background: var(--color-bg-full);
+    box-shadow: var(--box-shadow);
     transition: all 0.2s ease-in-out;
     transform: scale(0.8);
 
@@ -63,7 +72,7 @@
     font-size: 14px;
     font-weight: 400;
     line-height: 18px;
-    color: #71869D;
+    color: var(--color-text-secondary);
     margin-bottom: 6px;
 
     &_price {
@@ -112,7 +121,7 @@
 }
 
 .line {
-    border-left: 1px solid #BFCBE0;
+    border-left: 1px solid var(--color-line-border);
     padding: 10px 0;
 }
 

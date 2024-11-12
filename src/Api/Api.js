@@ -148,6 +148,19 @@ export const createPurchaseAdmin = (data) => {
     })
 }
 
+export const createPurchaseLeader = (data) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "multipart/form-data",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/for_payment`,
+        data: data,
+    })
+}
+
 export const recalPurchase = (id) => {
     return instanceWithToken({
         method: 'post',
@@ -188,6 +201,19 @@ export const approveAdmin = (data) => {
     })
 }
 
+
+export const approveLeader = (data) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "multipart/form-data",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/for_payment_approval`,
+        data: data,
+    })
+}
 
 export const rejectPurchase = (data) => {
     return instanceWithToken({
@@ -299,7 +325,7 @@ export const sendLog = (data) => {
         method: 'post',
         mode: "cors",
         headers: {
-            "Content-type": "application/json",
+            "Content-type": "multipart/form-data",
             "Accept": "application/json"
         },
         url: `${baseUrl}api/purchases/send_comment`,
@@ -308,6 +334,10 @@ export const sendLog = (data) => {
 }
 
 //Orders
+export const getOrder = (id) => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/orders/detail/${id}`);
+}
+
 export const getOrders = () => {
     return instanceWithToken.get(`${baseUrl}api/purchases/orders`);
 }
@@ -325,6 +355,7 @@ export const createOrder = (data) => {
     })
 }
 
+
 export const takeOrder = (data) => {
     return instanceWithToken({
         method: 'patch',
@@ -338,6 +369,71 @@ export const takeOrder = (data) => {
     })
 }
 
+export const createPurchaseFromOrder = (data) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/orders/create_purchase`,
+        data: data,
+    })
+}
 
 
+export const deleteOrder = (data) => {
+    return instanceWithToken({
+        method: 'delete',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/orders`,
+        data: data,
+    })
+}
 
+export const sendLogOrder = (data) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "multipart/form-data",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/orders/send_comment`,
+        data: data,
+    })
+}
+
+
+//возврат
+export const refund = (id, is_full, comment, purchase_items) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/return`,
+        data: {id, is_full, comment, purchase_items},
+    })
+}
+
+
+export const confirmRefund =  (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/confirm_refund_received`,
+        data: {id},
+    })
+}

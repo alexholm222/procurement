@@ -10,7 +10,7 @@ import { daData } from '../../Api/ApiDaData';
 //slice
 import { setParametrsUpdate } from '../../store/reducer/updateParametrs/slice';
 
-const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, windowRef }) => {
+const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, windowRef, scrollTopHeight }) => {
     const [anim, setAnim] = useState(false);
     const [success, setSuccess] = useState(false);
     const [check, setCheck] = useState(false)
@@ -40,7 +40,7 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -163,7 +163,7 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
     }, [prompOpen]);
 
     return (
-        <div className={`${s.overlay} ${anim && s.overlay_anim}`}>
+        <div  style={{ top: `${scrollTopHeight}px` }}  className={`${s.overlay} ${anim && s.overlay_anim}`}>
 
             <div ref={modalRef} className={`${s.modal} ${anim && !success && s.modal_anim}`}>
                 <div className={s.header}>

@@ -90,7 +90,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -129,6 +129,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
             .then(res => {
                 console.log(res);
                 const purchase = res.data.purchase;
+                const order = res.data.purchase.order;
                 const orderLog = {
                     comment: 'Создана заявка на закупку',
                     date: purchase.order?.date_create,
@@ -140,7 +141,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
                     files: handleExistingFiles(purchase.order),
                 }
 
-                purchase.order ? setLogs([orderLog, ...purchase.logs]) : setLogs(purchase.logs);
+                purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setPurchasesUpdate(purchase));
                 setStatus(purchase.status);
                 setLoadAccept(false)

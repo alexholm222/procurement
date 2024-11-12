@@ -13,30 +13,31 @@ import { purchaseSelector } from '../../store/reducer/purchase/selector';
 const typeList = ['товар', 'услуга'];
 const typeList2 = ['товар', 'услуга'];
 
-function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNal }) {
+function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNal, position }) {
     const [anim, setAnim] = useState(false);
-    const [itemId, setItemId] = useState(0);
-    const [name, setName] = useState('');
-    const [num, setNum] = useState('');
-    const [price, setPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(0);
-    const [rate, setRate] = useState(0);
-    const [maxRate, setMaxRate] = useState(0);
-    const [type, setType] = useState('товар');
-    const [unit, setUnit] = useState('шт');
-    const [patterList, setPatternList] = useState([]);
-    const [patternId, setPatternId] = useState('');
+    const [itemId, setItemId] = useState(position?.item_id || 0);
+    const [name, setName] = useState(position?.name || '');
+    const [num, setNum] = useState(position?.quantity || '');
+    const [price, setPrice] = useState(position?.price || 0);
+    const [maxPrice, setMaxPrice] = useState(position?.maxPrice || 0);
+    const [rate, setRate] = useState(position?.rate || 0);
+    const [maxRate, setMaxRate] = useState(position?.maxRate || 0);
+    const [type, setType] = useState(position?.type || 'товар');
+    const [unit, setUnit] = useState(position?.unit || 'шт');
+    const [patterList, setPatternList] = useState(position?.item_id !== 0 ? [{}] : []);
+    const [patternId, setPatternId] = useState(position?.item_id !== 0 && position?.item_id ? position?.item_id : 0);
     const [patternState, setPatternState] = useState(false);
     const [openPatternList, setOpenPatternList] = useState(false);
     const [openList, setOpenList] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [buttonSaveDis, setButtonDis] = useState(true);
     const [perUnit, setPerUnit] = useState(1)
     const items = useSelector(purchaseSelector).items;
     const modalRef = useRef();
     const listRef = useRef();
     const listPatternRef = useRef();
     const inputRefFocus = useRef();
-    console.log(patterList)
+    console.log(position, patternId, patterList, goods, buttonDisabled)
 
     useEffect(() => {
         setAnim(true);
@@ -46,7 +47,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflowY = "scroll";
+            windowRef.current.style.overflowY = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -63,9 +64,10 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         }
     }, [name, num, price]);
 
+
     useEffect(() => {
-        patternId !== '' ? setPatternState(true) : setPatternState(false);
-    }, [patternId]);
+        patternId !== 0 ? setPatternState(true) : setPatternState(false);
+    }, [patternId, position]);
 
     function handleClose() {
         setAnim(false);
@@ -77,7 +79,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
     useEffect(() => {
         if (patterList.length == 0) {
-            setPatternId('')
+            setPatternId(0)
         }
     }, [patterList]);
 
@@ -105,8 +107,17 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     }
 
     function handleAddGood() {
-        setGoods([...goods, { item_id: itemId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: uuid(), maxPrice }]);
+        setGoods([...goods, { item_id: itemId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: uuid(), maxPrice, maxRate, rate }]);
         handleClose()
+    }
+
+    function handleSaveGood() {
+        const index = goods.findIndex(el => el.id == position.id);
+        const array = [...goods];
+        const newValue = { item_id: patternId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: uuid(), maxPrice, maxRate, rate };
+        array.splice(index, 1, newValue);
+        setGoods(array);
+        handleClose();
     }
 
 
@@ -116,14 +127,17 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         const newList = handleFilter(e.target.value, items);
         console.log(newList)
         setPatternList(newList);
+        setButtonDis(false);
     }
 
     function handleChangeNum(e) {
-        setNum(e.target.value)
+        setNum(e.target.value);
+        setButtonDis(false);
     }
 
     function handleChangePrice(e) {
-        setPrice(Number(e.target.value))
+        setPrice(Number(e.target.value));
+        setButtonDis(false);
     }
 
     function handleOpenList() {
@@ -140,6 +154,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         const id = e.currentTarget.id;
         const pattern = items.find(el => el.id == id);
         const maxrate = pattern.rate * 2;
+        console.log(maxrate)
         setItemId(pattern.id)
         setName(pattern.name);
         setUnit(pattern.unit);
@@ -148,6 +163,9 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         setMaxRate(maxrate);
         setPatternId(id);
         setOpenPatternList(false);
+        setNum('');
+        setPrice(0);
+        setButtonDis(false);
     }
 
     const handleOpenPatternList = () => {
@@ -173,7 +191,8 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         <div style={{ top: `${scrollTopHeight}px` }} className={`${s.window} ${anim && s.window_anim}`}>
             <div ref={modalRef} className={`${s.add} ${anim && s.add_anim}`}>
                 <div className={s.header}>
-                    <p className={s.title}>Добавление позиции</p>
+                    {!position.name && <p className={s.title}>Добавление позиции</p>}
+                    {position.name && <p className={s.title}>Редактирование позиции</p>}
                     <IconClose onClick={handleClose} />
                 </div>
 
@@ -262,7 +281,8 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
                 </div>
 
-                <button disabled={buttonDisabled} onClick={handleAddGood} className={s.button}>Добавить в закупку</button>
+                {!position.name && <button disabled={buttonDisabled} onClick={handleAddGood} className={s.button}>Добавить в закупку</button>}
+                {position.name && <button onClick={handleSaveGood} disabled={buttonSaveDis || buttonDisabled} className={s.button}>Сохранить</button>}
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ body {
   font-family: 'Inter', 'sans-serif';
   font-style: normal;
   background-color: var(--color-bg);
+  color: var(--color-text-primary);
 }
 
 img {
@@ -60,13 +61,13 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background: #fff;
+  background: var(--color-bg-card);
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #BFCBE0;
+  background-color: var(--color-bg-disabled);
   border-radius: 20px;
-  border: 1px solid #F8FAFD;
+  border: 1px solid var(--color-bg-disabled);
 }
 
 div::-webkit-scrollbar {
@@ -74,13 +75,13 @@ div::-webkit-scrollbar {
 }
 
 div::-webkit-scrollbar-track {
-  background: #fff;
+  background: var(--color-bg-car);
 }
 
 div::-webkit-scrollbar-thumb {
-  background-color: #BFCBE0;
+  background-color: var(--color-bg-disabled);
   border-radius: 20px;
-  border: 1px solid #F8FAFD;
+  border: 1px solid var(--color-bg-disabled);
 }
 
 textarea::-webkit-scrollbar {
@@ -88,13 +89,13 @@ textarea::-webkit-scrollbar {
 }
 
 textarea::-webkit-scrollbar-track {
-  background: #F8FAFD;
+  background: var(--color-bg-car);
 }
 
 textarea::-webkit-scrollbar-thumb {
-  background-color: #BFCBE0;
+  background-color: var(--color-bg-disabled);
   border-radius: 20px;
-  border: 1px solid #F8FAFD;
+  border: 1px solid var(--color-bg-disabled);
 }
 
 ul::-webkit-scrollbar {
@@ -102,13 +103,13 @@ ul::-webkit-scrollbar {
 }
 
 ul::-webkit-scrollbar-track {
-  background: #fff;
+  background: var(--color-bg-card);
 }
 
 ul::-webkit-scrollbar-thumb {
-  background-color: #BFCBE0;
+  background-color: var(--color-bg-disabled);
   border-radius: 20px;
-  border: 1px solid #F8FAFD;
+  border: 1px solid var(--color-bg-disabled);
 }
 
 html {

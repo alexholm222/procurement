@@ -18,7 +18,9 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
     const [cursorNext, setCursorNext] = useState('');
     const purchase = useSelector(purchaseSelector).purchase;
     const throttleInProgress = useRef();
+    const timerDebounceRef = useRef();
     const listRef = useRef();
+    console.log(purchases)
 
     useEffect(() => {
         setAnim(true)
@@ -26,16 +28,17 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
 
     useEffect(() => {
         setCursorNext(firstCursor)
-    },[firstCursor])
+    }, [firstCursor])
 
     useEffect(() => {
-        window.addEventListener('scroll', handleThrottleScroll);
-        return () => window.removeEventListener('scroll', handleThrottleScroll)
-    }, [cursorNext]);
+        window.addEventListener('scroll', handleDebounceScroll);
+        return () => window.removeEventListener('scroll', handleDebounceScroll)
+    }, [cursorNext, load]);
 
     const handleLoadList = () => {
         getPurchasesCursor(cursorNext, activeTabs)
             .then(res => {
+                console.log(res)
                 const data = res.data.data;
                 const cursor = res.data.next_page_url;
                 setPurchases(prevState => [...prevState, ...data]);
@@ -47,7 +50,6 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
             .catch(err => console.log(err))
     }
 
-    console.log(purchases)
 
     const handlePurchasesList = () => {
 
@@ -66,19 +68,22 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
     }
 
     const scrollLoad = () => {
-        const load = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 2800;
-        load && handlePurchasesList(cursorNext);
+        const loadScroll = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 500;
+        loadScroll && !load && handlePurchasesList(cursorNext);
     }
 
-    function handleThrottleScroll() {
-        if (throttleInProgress.current) {
-            return
+    function handleDebounceScroll() {
+        // Если ID таймена установлено - сбрасываем таймер
+        if (timerDebounceRef.current) {
+            clearTimeout(timerDebounceRef.current);
         }
-        throttleInProgress.current = true;
-        setTimeout(() => {
+        // Запускаем таймер, возвращаемое ID таймера
+        // записываем в timerDebounceRef
+        timerDebounceRef.current = setTimeout(() => {
+            // Вызываем увеличение счётчика кол-ва
+            // выполнения бизнес логики приложения с Debounce
             scrollLoad()
-            throttleInProgress.current = false;
-        }, 1800);
+        }, 200);
     }
 
     return (

@@ -18,6 +18,8 @@ import { updateParametrsSelector } from '../../store/reducer/updateParametrs/sel
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 //API 
 import { getParameters, getItems, getPurchases, getPurchasesAction, getOrders, getSearchResult } from '../../Api/Api';
+//utils
+import { handleCompareDateOrder } from '../../utils/date';
 
 const rols = ['administrator', 'hr-assist', 'chief-accountant', 'leader', 'frmanager', 'moderator', 'event-manager']
 
@@ -50,12 +52,13 @@ function AppPurchase() {
   const purchaseNew = useSelector(purchaseUpdateSelector).purchaseNew;
   const orderNew = useSelector(purchaseUpdateSelector).orderNew;
   const updateAction = useSelector(purchaseUpdateSelector).updateAction;
+  const updateOrder = useSelector(purchaseUpdateSelector).updateOrder;
   const updateParametrs = useSelector(updateParametrsSelector).update;
   const purchase = useSelector(purchaseSelector).purchase;
   const order = useSelector(purchaseSelector).order;
-
   const role = document.getElementById('root_purchases').getAttribute('role');
-  console.log(orderNew, orders)
+
+ 
 
   useEffect(() => {
     if (query !== '') {
@@ -127,7 +130,6 @@ function AppPurchase() {
   useEffect(() => {
     getPurchasesAction()
       .then(res => {
-        console.log(res)
         const data = res.data;
         setPurchaseAction(data);
         setLoadAction(false);
@@ -174,7 +176,6 @@ function AppPurchase() {
   useEffect(() => {
     query !== '' && getSearchResult(query)
       .then(res => {
-        console.log(res);
         const data = res.data.data;
         setPurchasesSearch(data);
         setFirstCursorSearch(res.data.next_page_url)
@@ -210,13 +211,15 @@ function AppPurchase() {
   useEffect(() => {
     getOrders()
       .then(res => {
-        setOrders(res.data.order);
+        console.log(res)
+        const filterOrders = res.data.order.filter(el => el.status == 0 || (el.status == 1 && handleCompareDateOrder(el.date_create)))
+        setOrders(filterOrders);
         setPersonIsView(res.data.person_view);
-        console.log(res);
+        console.log('обновились заявки', res);
         setLoadOrders(false);
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [updateOrder])
 
   const handleOpenPurchase = (e) => {
     const id = e.currentTarget.id
@@ -234,26 +237,26 @@ function AppPurchase() {
       <div className={s.header}>
         <h2 className={s.title}>Закупки{/* <sup>278</sup> */}</h2>
         <div className={s.buttons}>
-          {role !== 'hr-assist' && <button disabled={loadParametrs} onClick={handleOpenOrder} className={`${s.button} ${s.button_add}`}>
+          <button disabled={loadParametrs} onClick={handleOpenOrder} className={`${s.button} ${s.button_add}`}>
             <p>Создать заявку на закупку</p>
             <IconCreate />
           </button>
-          }
+
           <button disabled={loadParametrs} onClick={handleOpenPurchase} className={`${s.button} ${s.button_main}`}>
             <p>Добавить закупку</p>
             <IconAdd />
           </button>
         </div>
       </div>
-      <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction} loadAction={loadAction} query={query} setQuery={setQuery} />
+      <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction} loadAction={loadAction} loadOrders={loadOrders} query={query} setQuery={setQuery} orders={orders}/>
       {activeTabs == '' && query == '' && <List purchases={purchases} setPurchases={setPurchases} firstCursor={firstCursor} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
       {activeTabs == 'action' && query == '' && <List purchases={purchaseAction} setPurchases={setPurchaseAction} firstCursor={firstCursorAction} load={loadAction} setLoad={setLoadAction} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
       {activeTabs == 'beznal' && query == '' && <List purchases={purchaseBeznal} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
       {activeTabs == 'nal' && query == '' && <List purchases={purchaseNal} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
       {activeTabs == 'del' && query == '' && <List purchases={purchaseDel} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
       {query !== '' && <ListSearch purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
-      {activeTabs == 'orders' && query == '' && <ListOrders orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView}/>}
-      {order.open && order.id == '' && <WindowOrder id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView}/>}
+      {activeTabs == 'orders' && query == '' && <ListOrders orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
+      {order.open && order.id == '' && <WindowOrder id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}
       {purchase.open && (purchase.id == '' || purchase.isOrder) && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
     </div>
   );

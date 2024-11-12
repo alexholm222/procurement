@@ -49,7 +49,7 @@
     gap: 16px;
     padding: 28px;
     box-sizing: border-box;
-    background-color: #FFF;
+    background-color: var(--color-bg-card);
     border-radius: 8px;
 }
 
@@ -60,13 +60,13 @@
     gap: 16px;
     padding: 28px;
     box-sizing: border-box;
-    background-color: #FFF;
+    background-color: var(--color-bg-card);
     border-radius: 8px;
 
     textarea {
         resize: vertical;
         box-sizing: border-box;
-        height: 130px;
+        height: 255px;
         width: 100%;
         padding: 12px;
         border-radius: 4px;
@@ -84,6 +84,10 @@
 
         &::placeholder {
             color: var(--color-text-secondary);
+        }
+
+        &:disabled {
+            opacity: 0.8;
         }
     }
 
@@ -161,14 +165,22 @@
     }
 
     &_add {
-        color: #002CFB;
-        border: 1px solid #002CFB;
+        color: var(--color-button-accent);
+        border: 1px solid var(--color-button-accent);
         box-sizing: border-box;
         width: 168px;
 
+        svg path {
+            fill: var(--color-button-accent);
+        }
+
         &:hover {
-            color: #0028E5;
-            border-color: #0028E5;
+            color: var(--color-button-accent-hover);
+            border-color: var(--color-button-accent-hover);
+
+            svg path {
+                fill: var(--color-button-accent-hover);
+            }
         }
     }
 

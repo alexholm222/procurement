@@ -23,11 +23,12 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
 
-const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs }) => {
+const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, type, handleConfirmAproval, handleAproval, setPayDate }) => {
     const [anim, setAnim] = useState(false);
     const [check, setCheck] = useState(false);
     const [date, setDate] = useState('');
     const [disabled, setDisabled] = useState(true);
+    console.log(type)
 
     const [err, setErr] = useState(false);
     const modalRef = useRef();
@@ -39,15 +40,19 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
     }, []);
 
     useEffect(() => {
-        setDate(dateNow2())
+        setDate(dateNow2());
     }, [])
+
+    useEffect(() => {
+        type !== 'beznal' && setPayDate(date);
+    }, [date])
 
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
 
         return () => {
-            windowRef.current.style.overflow = "scroll";
+            windowRef.current.style.overflow = "auto";
             windowRef.current.style.left = "0";
         };
     }, [windowRef]);
@@ -77,6 +82,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
             .then(res => {
                 console.log(res);
                 const purchase = res.data.purchase;
+                const order = res.data.purchase.order;
                 setStatus(purchase.status);
                 dispatch(setPurchasesUpdate(purchase))
                 setLoadAccept(false);
@@ -92,10 +98,29 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
                     files: handleExistingFiles(purchase.order),
                 }
 
-                purchase.order ? setLogs([orderLog, ...purchase.logs]) : setLogs(purchase.logs);
+                purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setUpdateAction());
             })
             .catch(err => console.log(err))
+    }
+
+    const handleConfirmAll = () => {
+        if (type == 'beznal') {
+            handleConfirm();
+            return
+        }
+
+        if (type == 'nal') {
+            handleConfirmAproval();
+            console.log('за нал дата 1')
+            return
+        }
+
+        if (type == 'nal2') {
+            handleAproval();
+            console.log('за нал дата 2')
+            return
+        }
     }
 
 
@@ -123,7 +148,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
 
 
 
-                <button onClick={handleConfirm} className={s.button}>
+                <button onClick={handleConfirmAll} className={s.button}>
                     {loadAccept && <p>Подтверждаем</p>}
                     {!loadAccept && <p>Подтвердить</p>}
                     {loadAccept && <LoaderButton color={'#FFFFFF'} />}

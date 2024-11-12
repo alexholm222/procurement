@@ -8,9 +8,11 @@ import { useSelector } from 'react-redux';
 //slice 
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
-function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, query, setQuery }) {
+function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery, orders }) {
     const [tabAttention, setTabAttention] = useState(false);
+    const [tabAttentionOrders, setTabAttentionOrders] = useState(false);
     const updateAction = useSelector(purchaseUpdateSelector).updateAction;
+    const updateOrder = useSelector(purchaseUpdateSelector).updateOrder;
     const handleChoseTab = (e) => {
         const id = e.currentTarget.id;
         setActiveTabs(id);
@@ -18,16 +20,29 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, query, se
 
     useEffect(() => {
         const attentionResult = purchaseAction.map((el) => {
-            const isView = el?.logs_view.find(item => item.is_view == 0)
+            const isView = el?.logs_view?.find(item => item.is_view == 0)
             return isView
         })
 
-        const isViewResult = attentionResult.find(el => el?.is_view == 0);
+        const isViewResult = attentionResult?.find(el => el?.is_view == 0);
         isViewResult?.is_view == 0 ? setTabAttention(true) : setTabAttention(false)
 
         console.log(attentionResult, isViewResult)
 
     }, [purchaseAction, updateAction])
+
+    useEffect(() => {
+        const attentionResult = orders.map((el) => {
+            const isView = el?.logs_view?.find(item => item.is_view == 0)
+            return isView
+        })
+
+        const isViewResult = attentionResult?.find(el => el?.is_view == 0);
+        isViewResult?.is_view == 0 ? setTabAttentionOrders(true) : setTabAttentionOrders(false)
+
+        console.log(attentionResult, isViewResult)
+
+    }, [orders, updateOrder])
     return (
         <div className={s.tabs}>
             <div className={s.block}>
@@ -46,11 +61,13 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, query, se
                         }
                     </button>
 
-                    <button onClick={handleChoseTab} id='orders' className={`${s.button} ${activeTabs == 'orders' && s.button_active}`}>
+                    <button disabled={orders?.length == 0} onClick={handleChoseTab} id='orders' className={`${s.button} ${activeTabs == 'orders' && s.button_active}`}>
                         <p>Заявки</p>
-                        {/*  <div className={s.counter}>
-                            <p>2</p>
-                        </div> */}
+                        {orders?.length !== 0 && <div className={`${s.counter} ${tabAttentionOrders && s.counter_active}`}>
+                            {loadOrders && <Loader />}
+                            <p>{orders.length}</p>
+                        </div>
+                        }
                     </button>
 
                     <button onClick={handleChoseTab} id='beznal' className={`${s.button} ${activeTabs == 'beznal' && s.button_active}`}>
