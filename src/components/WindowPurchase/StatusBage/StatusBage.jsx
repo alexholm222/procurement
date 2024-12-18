@@ -2,13 +2,14 @@ import s from './StatusBage.module.scss';
 import { ReactComponent as IconStatusCreate } from '../../../image/icon/purchase/iconStatusCreate.svg';
 import { ReactComponent as IconStatusLoader } from '../../../image/icon/purchase/IconStatusLoader.svg';
 import { ReactComponent as IconStatusDone } from '../../../image/icon/purchase/iconStatusDone.svg'; 
+import { ReactComponent as IconDone } from '../../../image/icon/purchase/iconDone.svg'; 
 import { ReactComponent as IconStatusReject } from '../../../image/icon/purchase/iconStatusReject.svg';
 import { ReactComponent as IconStatusForPayment } from '../../../image/icon/purchase/iconStatusForPayment.svg'; 
 import { ReactComponent as IconStatusPaid } from '../../../image/icon/purchase/iconStatusPaid.svg';
 import { ReactComponent as IconStatusReceived } from '../../../image/icon/purchase/iconStatusReceived.svg';
 
 
-const StatusBage = ({ status, reject, role }) => {
+const StatusBage = ({ status, reject, role, returnDone, positionReturn }) => {
     return (
         <>
          {status == 0 && !reject && <div className={`${s.bage} ${s.bage_create}`}>
@@ -48,6 +49,15 @@ const StatusBage = ({ status, reject, role }) => {
 
             {reject && <div className={`${s.bage} ${s.bage_reject}`}>
                 <IconStatusReject /><p>Отклонена</p>
+            </div>
+            }
+
+            {returnDone && <div className={`${s.bage} ${s.bage_yellow}`}>
+                <IconDone /><p>Возврат получен</p>
+            </div>}
+
+            {positionReturn.length > 0 && <div className={`${s.bage} ${s.bage_anim}`}>
+                <IconStatusLoader /><p>Подтверждение возврата</p>
             </div>
             }
         </>

@@ -35,6 +35,7 @@
     grid-template-areas: 'param log'
         'pos log'
         'doc log'
+        'docClose log'
         'f   log';
     grid-template-columns: 1fr 484px;
     grid-template-rows: repeat(3, min-content);

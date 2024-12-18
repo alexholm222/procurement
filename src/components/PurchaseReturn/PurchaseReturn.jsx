@@ -13,8 +13,9 @@ import { setPurchasesUpdate, setUpdateAction } from '../../store/reducer/purchas
 import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
-const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, role, positions }) => {
+const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, role, positions, setPositionReturn, setPositions }) => {
     const [anim, setAnim] = useState(false);
+    const [full, setFull] = useState(false);
     const [comment, setComment] = useState('');
     const [disabled, setDisabled] = useState(true);
     const [err, setErr] = useState(false);
@@ -40,11 +41,60 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     }, [windowRef]);
 
     useEffect(() => {
-        const result = positions.map(el => {
-            return { id: el.id, quantity: el.quantity }
-        })
-        setPositionForReturn(result)
-    }, [positions])
+        if (comment.length > 0 && positionForReturn.length > 0 && !full) {
+            setDisabled(false)
+            return
+        }
+
+        if ((comment.length == 0 || positionForReturn.length == 0) && !full) {
+            setDisabled(true)
+            return
+        }
+
+        if (comment.length > 0 && full) {
+            setDisabled(false)
+            return
+        }
+
+        if (comment.length == 0 && full) {
+            setDisabled(true)
+            return
+        }
+
+
+    }, [positionForReturn, comment, full])
+
+
+    const handleAddPosition = (e) => {
+        const id = Number(e.currentTarget.id);
+        const result = positionForReturn.filter(el => el.id == id)
+        const filter = positionForReturn.filter(el => el.id !== id)
+        const position = positions.find(el => el.id == id)
+        console.log(result, id)
+
+        if (result.length == 0) {
+            setPositionForReturn(prevState => [...prevState, { id: position?.id, quantity: position?.quantity }])
+            return
+        }
+
+        if (result.length !== 0) {
+            setPositionForReturn(filter)
+            return
+        }
+    }
+
+    const handleChangeQuantity = (e) => {
+        const id = Number(e.currentTarget.id);
+        const value = Number(e.currentTarget.value);
+        const index = positionForReturn.findIndex(el => el.id == id);
+        const maxQuantity = Number(positions.find(el => el.id == id).quantity);
+        console.log(value)
+        const copyArr = [...positionForReturn]
+        copyArr[index] = { id: id, quantity: value > maxQuantity ? maxQuantity : value <= 0 ? '' : value }
+        setPositionForReturn(copyArr)
+
+
+    }
 
     const handleCloseModal = () => {
         setAnim(false);
@@ -70,7 +120,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
 
     const handleComment = (e) => {
         const text = e.target.value;
-        text.length > 0 ? setDisabled(false) : setDisabled(true)
+
         setComment(text)
     }
 
@@ -81,71 +131,34 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
         }
     }
 
+    const handleActiveTab = (e) => {
+        const id = e.currentTarget.id;
+        id == 1 ? setFull(false) : setFull(true)
+    }
+
     const handleConfirm = () => {
         setLoadAccept(true)
-        role !== 'administrator' && refund(id, true, comment, positionForReturn)
+
+        refund(id, full, comment, full ? [] : positionForReturn)
             .then(res => {
                 console.log(res)
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
+                const returnPos = purchase.return_items.filter(el => el.status == 'requested')
                 setLoadAccept(false);
                 setStatus(purchase.status);
                 dispatch(setPurchasesUpdate(purchase));
                 setAcceptSuccess(true);
-                const orderLog = {
-                    comment: 'Создана заявка на закупку',
-                    date: purchase.order.date_create,
-                    id: purchase.order.id,
-                    person: purchase.order.person,
-                    person_id: purchase.order.person_id,
-                    sub_comment: purchase.order.comment,
-                    type: 'add',
-                    files: handleExistingFiles(purchase.order),
-                }
-
-                purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
+                setPositionReturn(returnPos);
+                setPositions(purchase.items)
+                setLogs(purchase.logs);
                 dispatch(setUpdateAction());
-                console.log(res);
+
             })
             .catch(err => setErr(false));
-
-        role == 'administrator' && handleConfirmAdmin();
     }
 
-    const handleConfirmAdmin = () => {
-        setLoadAccept(true)
-        refund(id, true, comment, positionForReturn)
-            .then(res => {
-                console.log(res);
-                confirmRefund(id)
-                    .then(res => {
-                        console.log(res);
-                        const purchase = res.data.purchase;
-                        const order = res.data.purchase.order;
-                        setLoadAccept(false);
-                        setStatus(purchase.status);
-                        dispatch(setPurchasesUpdate(purchase));
-                        setAcceptSuccess(true);
-                        const orderLog = {
-                            comment: 'Создана заявка на закупку',
-                            date: purchase.order.date_create,
-                            id: purchase.order.id,
-                            person: purchase.order.person,
-                            person_id: purchase.order.person_id,
-                            sub_comment: purchase.order.comment,
-                            type: 'add',
-                            files: handleExistingFiles(purchase.order),
-                        }
 
-                        purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
-                        dispatch(setUpdateAction());
-                        console.log(res);
-                    })
-                    .catch(err => setErr(false))
-            })
-            .catch(err => setErr(false))
-        console.log('возврат')
-    }
 
     return (
         <div className={`${s.overlay} ${anim && !acceptSuccess && s.overlay_anim}`}>
@@ -159,20 +172,46 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                 </div>
 
                 <div className={s.tabs}>
-                    <div className={`${s.tab} ${s.tab_active}`}><p>Частичный</p></div>
-                    <div className={`${s.tab} ${s.tab_disabled}`}><p>Полный</p></div>
+                    <div id='1' onClick={handleActiveTab} className={`${s.tab} ${!full && s.tab_active}`}><p>Частичный</p></div>
+                    <div id='2' onClick={handleActiveTab} className={`${s.tab} ${full && s.tab_active}`}><p>Полный</p></div>
                 </div>
 
-                <ul className={s.position}>
+                <ul className={`${s.position} ${full && s.position_hidden}`}>
                     {positions.map(el => {
                         return <li id={el.id}>
                             <div className={s.position__header}>
-                                <div className={`${s.checkbox} ${s.checkbox_check}`}>
+                                <div onClick={handleAddPosition} id={el.id} className={`${s.checkbox} ${positionForReturn.find(elem => elem.id == el.id) && s.checkbox_check}`}>
                                     <div>
                                         <IconCheck />
                                     </div>
                                 </div>
                                 <p>{el.name}</p>
+                            </div>
+
+                            <div className={`${s.container} ${positionForReturn.find(elem => elem.id == el.id) && s.container_vis}`}>
+                                <div className={s.block}>
+                                    <p className={s.sub}>Количество</p>
+                                    <div className={s.count}>
+                                        <input id={el.id} onChange={handleChangeQuantity} max={el.quantity} type='number' value={positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
+                                        <p className={`${s.sub} ${s.sub_count}`}>{el.unit}</p>
+                                    </div>
+                                </div>
+
+                                <div className={s.block}>
+                                    <p className={s.sub}>Цена</p>
+                                    <div className={s.count}>
+                                        <input disabled max={el.quantity} value={el.price} type='number' placeholder={`${el.price}`}></input>
+                                        <p className={`${s.sub} ${s.sub_count}`}>руб</p>
+                                    </div>
+                                </div>
+
+                                <div className={s.block}>
+                                    <p className={s.sub}>Итого</p>
+                                    <div className={s.count}>
+                                        <input disabled max={el.quantity} type='number' placeholder={`${el.quantity}`} value={el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
+                                        <p className={`${s.sub} ${s.sub_count}`}>руб</p>
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     })}
@@ -202,8 +241,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                 <div className={s.close}><IconClose /></div>
                 <IconSuccess />
                 <h2 className={`${s.title} ${s.title_success}`}>
-                    {role == 'administrator' && 'Возврат оформлен'}
-                    {role !== 'administrator' && 'Запрос на возврат отправлен'}
+                    Запрос на возврат отправлен
                 </h2>
                 <p className={s.text}></p>
             </div>

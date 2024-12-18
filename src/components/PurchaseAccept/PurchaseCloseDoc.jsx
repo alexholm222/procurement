@@ -64,7 +64,7 @@ const Document = ({ i, file, files, setFiles, disabled }) => {
 }
 
 
-const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs }) => {
+const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, setCloseDocs }) => {
     const [anim, setAnim] = useState(false);
     const [check, setCheck] = useState(false);
     const [date, setDate] = useState('');
@@ -130,6 +130,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
                 console.log(res);
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
+                setCloseDocs(purchase.files)
                 const orderLog = {
                     comment: 'Создана заявка на закупку',
                     date: purchase.order?.date_create,

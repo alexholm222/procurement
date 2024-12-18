@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ReactComponent as IconFolder } from '../../image/iconFolder.svg';
 import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
-import iconPdf from '../../image/icon/order/iconPdf.png';
+import iconPdf from '../../image/icon/order/iconPdf.png'; 
 import iconWord from '../../image/icon/order/iconWord.png';
+import IconExcel from '../../image/icon/order/iconExcel.png';
 import FileLoader from '../FileLoader/FileLoader';
 import ModalImage from './ModalImage/ModalImage';
 import { baseUrl } from '../../Api/Api';
@@ -58,8 +59,9 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
     return (
         <div style={{ marginTop: i + 1 > 2 && animFile ? '12px' : '', marginLeft: (i + 1) % 2 == 0 && animFile ? '12px' : '' }} className={`${s.file} ${i > 2} ${animFile && s.file_anim}`}>
             {!isImage && <a className={s.link} target={conditionTarget} download={conditionDownload} href={urlFile}>
-                {file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'doc' && file.name.slice(-3) !== 'ocx' && <IconFolder />}
+                {file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'doc' && file.name.slice(-3) !== 'ocx' && file.name.slice(-3) !== 'lsx' && file.name.slice(-3) !== 'xls' && <IconFolder />}
                 {file.name.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
+                {(file.name.slice(-3) == 'xls' || file.name.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
                 {file.name.slice(-3) == 'doc' || file.name.slice(-3) == 'ocx' && <img src={iconWord}></img>}
                 <div className={s.block_text}>
                     <p>{file?.name}</p>
@@ -87,10 +89,11 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
 }
 
 
-const Documents = ({ documents, setDocuments, disabled, setDeleteFiles, setSaveSuccess, windowRef, scrollTopHeight }) => {
+const Documents = ({ documents, setDocuments, disabled, setDeleteFiles, setSaveSuccess, windowRef, scrollTopHeight, type }) => {
     return (
-        <div className={`${s.window} ${disabled && documents.length == 0 && s.window_disabled}`}>
-            <h3 className={s.title}>Документы</h3>
+        <div className={`${s.window} ${type == 'close' && s.window_close} ${disabled && documents.length == 0 && s.window_disabled}`}>
+             {type !== 'close' && <h3 className={s.title}>Документы</h3>}
+             {type == 'close' && <h3 className={s.title}>Закрывающие документы</h3>}
             <div style={{ height: `${Math.ceil(documents.length / 2) * 86}px` }} className={s.files}>
 
                 {documents.map((el, i) => {
@@ -98,9 +101,10 @@ const Documents = ({ documents, setDocuments, disabled, setDeleteFiles, setSaveS
                 })}
 
             </div>
-            <div className={`${s.fileLoader} ${disabled && documents.length > 0 && s.fileLoader_disabled}`}>
+            {type !== 'close' && <div className={`${s.fileLoader} ${disabled && documents.length > 0 && s.fileLoader_disabled}`}>
                 <FileLoader files={documents} setFiles={setDocuments} setSaveSuccess={setSaveSuccess} />
             </div>
+            }
 
         </div>
     )

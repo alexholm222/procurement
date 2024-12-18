@@ -75,7 +75,7 @@ function FileLoader({ files, setFiles, setSaveSuccess }) {
         const files = Object.values(event.dataTransfer.files);
         console.log(files)
         files.forEach((file) => {
-            if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
+            if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
                 handleWriteFile(file)
                 return
             };
@@ -103,7 +103,7 @@ function FileLoader({ files, setFiles, setSaveSuccess }) {
             <div onDrop={handleDrop} className={`${s.loader} ${anim == 'drag' && s.loader_drag} ${(anim == 'loader' || anim == 'drag') && s.loader_anim}`}>
 
                 <div className={`${s.container} ${anim == 'drag' && s.container_hiden}`}>
-                    <input ref={fileInputRef} multiple id="image-input" type='file' accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onInput={handleFile}></input>
+                    <input ref={fileInputRef} multiple id="image-input" type='file' accept=".png,.jpg,.jpeg,.pdf,.doc,.docx, .xls, .xlsx" onInput={handleFile}></input>
                     <p className={`${s.text}`}>Перетащите <label for="image-input">загрузите документ</label></p>
                     <p className={`${s.sub}`}>Файл обьемом до 20 Mбайт</p>
                 </div>

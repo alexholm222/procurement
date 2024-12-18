@@ -1,6 +1,8 @@
 import s from './Goods.module.scss';
 import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
 import { ReactComponent as IconPlus } from '../../image/iconPlus.svg';
+import { ReactComponent as IconWarning24 } from '../../image/icon/purchase/iconWarning24.svg';
+import { ReactComponent as IconDone } from '../../image/iconDone.svg';
 import { useEffect, useState } from 'react';
 import AddGood from '../AddGood/AddGood';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
@@ -46,9 +48,10 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition }) {
     )
 }
 
-function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice }) {
+function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice, status, positionReturn, positionReturnDone}) {
     const [openAdd, setOpenAdd] = useState(false);
     const [position, setPosition] = useState({});
+    const [isFull, setIsFull] = useState(false);
 
     useEffect(() => {
         const sum = positions.reduce((acc, el) => acc + el.sum, 0);
@@ -56,15 +59,21 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
         setSum(sum);
     }, [positions]);
 
+    useEffect(() => {
+        const result = positionReturn.filter(el => el.is_full == 1);
+        result.length > 0 ? setIsFull(true) : setIsFull(false)
+    }, [positionReturn])
+
 
     const handleOpenAdd = () => {
         setPosition({})
         setOpenAdd(true)
     }
 
+    console.log(positionReturn)
     return (
         <div className={s.goods}>
-            {openAdd && <AddGood scrollTopHeight={scrollTopHeight} setOpenAdd={setOpenAdd} setGoods={setPositions} goods={positions} windowRef={windowRef} isNal={isNal} position={position}/>}
+            {openAdd && <AddGood scrollTopHeight={scrollTopHeight} setOpenAdd={setOpenAdd} setGoods={setPositions} goods={positions} windowRef={windowRef} isNal={isNal} position={position} />}
             <h3 className={s.title}>Позиции</h3>
             <div className={s.table}>
                 <div className={s.header}>
@@ -95,16 +104,39 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                     {<li className={`${s.item} ${s.item_empty} ${positions.length === 0 && s.item_empty_anim}`}>Нет позиций</li>}
 
                     {positions.map((el, i) => {
-                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd}/>
+                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd} />
                     })}
-
                 </ul>
             </div>
+
+            {!isFull && <ul className={s.return}>
+                {positionReturn.map(el => {
+                    return el.status !== 'confirmed' && <li className={`${s.position} ${el.status == 'confirmed' && s.position_confirmed}`} key={el.id}><IconWarning24 />Запрошен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
+                })}
+            </ul>}
+            
+
+            {isFull && <ul className={s.return}>
+                <li className={`${s.position}`}><IconWarning24 />Запрошен полный возврат закупки</li>
+            </ul>}
+
+            {positionReturnDone?.[0]?.is_full !== 1 && <ul className={s.return}>
+                {positionReturnDone.map(el => {
+                    return  <li className={`${s.position}`} key={el.id}><IconDone />Получен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
+                })}
+            </ul>}
+            
+
+            {positionReturnDone?.[0]?.is_full == 1 && positionReturnDone.length > 0 && <ul className={s.return}>
+                <li className={`${s.position}`}><IconDone />Получен полный возврат закупки</li>
+            </ul>}
+
             <div className={s.footer}>
-                <button onClick={handleOpenAdd} className={`${s.button} ${disabled && s.button_disabled}`}>
+                {status < 4 && <button onClick={handleOpenAdd} className={`${s.button} ${disabled && s.button_disabled}`}>
                     <IconPlus />
                     <p>Добавить позицию</p>
                 </button>
+                }
                 <p className={s.text}>Итого {addSpaceNumber(sum)} ₽</p>
             </div>
 

@@ -157,7 +157,7 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
     }
 
 
-
+console.log(messages)
     return (
         <div className={s.log}>
             <div className={s.header}>

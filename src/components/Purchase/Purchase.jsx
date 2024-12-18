@@ -19,6 +19,7 @@ function Purchase({ el }) {
     const [purchase, setPurchaseUpdate] = useState(el);
     const [hidenPurchase, setHidenPurchase] = useState(false);
     const [isView, setIsView] = useState(true);
+    const [sumItems, setSumItems] = useState(purchase?.sum || 0)
     const dispatch = useDispatch();
     const existingFiles = [{ id: uuid(), file: purchase?.bill, name: purchase?.bill?.split('/').pop(), type: 'existing' },
     { id: uuid(), file: purchase?.bill2, name: purchase?.bill2?.split('/').pop(), type: 'existing' },
@@ -30,6 +31,15 @@ function Purchase({ el }) {
     ].filter(purchase => purchase.file && purchase.file !== null);
     const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
     const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
+
+    useEffect(() => {
+        let sum = 0
+        const items = purchase.items;
+        items.forEach(el => {
+           return sum += el.sum
+        })
+        setSumItems(sum)
+    }, [purchase])
 
     useEffect(() => {
         const purchaseNew = purchaseUpdate?.findLast(el => el.id == purchase?.id);
@@ -128,7 +138,7 @@ function Purchase({ el }) {
                 })}
             </div>
             <div className={`${s.item} ${s.item_sum}`}>
-                <p>{addSpaceNumber(purchase?.sum)}</p>
+                <p>{addSpaceNumber(sumItems)}</p>
             </div>
             <div className={`${s.item} ${s.item_buyer}`}>
                 {purchase?.is_nal && <p>Наличные</p>}

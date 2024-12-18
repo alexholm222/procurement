@@ -18,6 +18,7 @@
     }
 
     &_create {
+        pointer-events: none;
         border: 1.5px solid #BFCBE0;
         color: #BFCBE0;
         background: none;
@@ -26,6 +27,7 @@
     &_blue {
         background-color: rgba(0, 36, 203, 0.08);
         color: var(--color-button-accent);
+        pointer-events: none;
 
         svg {
             width: 16px;
@@ -41,6 +43,7 @@
     &_done {
         background-color: var(--color-bage-green);
         color: #28A879;
+        pointer-events: none;
 
         svg {
             height: 16px;
@@ -55,6 +58,7 @@
     &_reject {
         background-color: var(--color-bage-red);
         color: #E75A5A;
+        pointer-events: none;
 
         svg {
             margin-top: -1px;
@@ -63,7 +67,24 @@
         }
     }
 
+    &_yellow {
+        background-color: #FFF4E8;
+        color: #E78B00;
+        padding-left: 0;
+        pointer-events: none;
+
+        svg {
+            height: 16px;
+            width: 16px;
+
+            path {
+                fill: #E78B00;
+            }
+        }
+    }
+
     &_anim {
+        pointer-events: none;
         svg {
             animation: load 10s linear infinite;
             width: 14px;
@@ -71,6 +92,7 @@
         }
 
         &_blue {
+            pointer-events: none;
             svg {
                 animation: load 10s linear infinite;
                 width: 14px;
