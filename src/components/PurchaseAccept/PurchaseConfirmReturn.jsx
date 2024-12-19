@@ -7,7 +7,7 @@ import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 //Api
-import { confirmRefund } from '../../Api/Api';
+import { confirmRefund, rejectRefund } from '../../Api/Api';
 //utils
 import DataPicker from '../../utils/DatePicker/DatePicker';
 import { dateNow2 } from '../../utils/date';
@@ -23,12 +23,11 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
 
-const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, setPositionReturn, setPositions, setReturnDone, setPositionReturnDone}) => {
+const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, 
+    setPositionReturn, setPositions, setReturnDone, setPositionReturnDone }) => {
     const [anim, setAnim] = useState(false);
-
-    const [date, setDate] = useState('');
-
     const [err, setErr] = useState(false);
+    const [loadReject, setLoadReject] = useState(false)
     const modalRef = useRef();
     const dispatch = useDispatch();
 
@@ -101,6 +100,41 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
             .catch(err => console.log(err))
     }
 
+    const handleReject = () => {
+        setLoadReject(true);
+        rejectRefund(id)
+            .then(res => {
+                console.log(res);
+                const purchase = res.data.purchase;
+                const order = res.data.purchase.order;
+                /*  const returnPos = purchase.return_items.filter(el => el.status == 'requested')
+                 const returnPosDone = purchase.return_items.filter(el => el.status == 'confirmed');
+                 setPositionReturnDone(returnPosDone)
+                 returnPosDone.length > 0 ? setReturnDone(true) : setReturnDone(false) */
+                setStatus(purchase.status);
+                dispatch(setPurchasesUpdate(purchase))
+                setLoadReject(false);
+                setAcceptSuccess(true);
+                setPositionReturn([]);
+                setPositions(purchase.items)
+                const orderLog = {
+                    comment: 'Создана заявка на закупку',
+                    date: purchase.order?.date_create,
+                    id: purchase.order?.id,
+                    person: purchase.order?.person,
+                    person_id: purchase.order?.person_id,
+                    sub_comment: purchase.order?.comment,
+                    type: 'add',
+                    files: handleExistingFiles(purchase.order),
+                }
+
+                purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
+                dispatch(setUpdateAction());
+                handleCloseModal()
+            })
+            .catch(err => console.log(err))
+    }
+
 
     useEffect(() => {
         document.addEventListener('mousedown', closeModal);
@@ -121,12 +155,20 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
 
 
 
+                <div className={s.buttons}>
+                    <button onClick={handleConfirmAll} className={s.button}>
+                        {loadAccept && <p>Подтверждаем</p>}
+                        {!loadAccept && <p>Подтвердить</p>}
+                        {loadAccept && <LoaderButton color={'#FFFFFF'} />}
+                    </button>
 
-                <button onClick={handleConfirmAll} className={s.button}>
-                    {loadAccept && <p>Подтверждаем</p>}
-                    {!loadAccept && <p>Подтвердить</p>}
-                    {loadAccept && <LoaderButton color={'#FFFFFF'} />}
-                </button>
+                    <button onClick={handleReject} className={`${s.button} ${s.button_reject}`}>
+                        {loadReject && <p>Отклоняем</p>}
+                        {!loadReject && <p>Отклонить</p>}
+                        {loadReject && <LoaderButton color={'#E75A5A'} />}
+                    </button>
+                </div>
+
                 <span className={s.text_err}>{err ? 'Произошла ошибка' : ''}</span>
             </div>
 

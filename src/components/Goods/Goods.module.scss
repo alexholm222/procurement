@@ -173,6 +173,10 @@
         min-height: 54px;
         height: fit-content;
     }
+
+    &_disabled {
+        pointer-events: none;
+    }
 }
 
 .footer {

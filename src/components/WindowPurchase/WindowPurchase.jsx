@@ -108,7 +108,8 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     const [positionReturn, setPositionReturn] = useState([]);
     const [positionReturnDone, setPositionReturnDone] = useState([]);
     const [returnDone, setReturnDone] = useState(false);
-    const [closeDocs, setCloseDocs] = useState([])
+    const [closeDocs, setCloseDocs] = useState([]);
+    const [updatePurchase, setUpdatePurchase] = useState(0)
     console.log(status)
     const dispatch = useDispatch();
     const windowRef = useRef();
@@ -156,6 +157,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     console.log(data)
                     const docs = data.files
                     setCloseDocs(docs)
+                    setPositions(data.purchase_items)
                     const returnPos = data.purchase_return_items.filter(el => el.status == 'requested')
                     setPositionReturn(returnPos)
                     const returnPosDone = data.purchase_return_items.filter(el => el.status == 'confirmed');
@@ -177,14 +179,14 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
                     setPersonView(data.person_view.id);
                     setPersonId(data.purchase.person_id);
-                   
+
                     data.order && setOrder(data.order);
                     dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] }))
                 })
                 .catch(err => console.log(err))
             return
         }
-    }, [idCreate]);
+    }, [idCreate, updatePurchase]);
 
     useEffect(() => {
         const payment = paymentType == 'nal' ? true : false
@@ -712,10 +714,11 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
                         {(status == 9 || status == 5 || status == 7 || status == 4) && positionReturn.length > 0 && role == 'administrator' && <button onClick={handleReturnConfirmModal} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Подтвердить возврат</p>
-
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}
                             {!loadDelete && <IconButtonReturn />}
                         </button>}
+
+
 
 
 
@@ -975,13 +978,14 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         status={status}
                         positionReturn={positionReturn}
                         positionReturnDone={positionReturnDone}
+                        role={role}
                     />
                     <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setSaveSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
                     {(status == 5 || status == 9) && closeDocs.length > 0 && <DocumentsClose documents={closeDocs} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />}
                     <Log logs={logs} setLogs={setLogs} id={idCreate} personView={personView} role={purchase.position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} sendStatus={true} type={'purchase'} send={status !== -2 ? true : false} />
 
-                    {modalAccept ? <PurchaseAccept setModal={setModalAccept} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadAccept} setLoadAccept={setLoadAccept} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs}/> : ''}
-                    {modalDoc ? <PurchaseCloseDoc setModal={setModalDoc} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadCloseDoc} setLoadAccept={setLoadCloseDoc} acceptSuccess={closeDocSuccess} setAcceptSuccess={setCloseDocSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs}/> : ''}
+                    {modalAccept ? <PurchaseAccept setModal={setModalAccept} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadAccept} setLoadAccept={setLoadAccept} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs} /> : ''}
+                    {modalDoc ? <PurchaseCloseDoc setModal={setModalDoc} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadCloseDoc} setLoadAccept={setLoadCloseDoc} acceptSuccess={closeDocSuccess} setAcceptSuccess={setCloseDocSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs} /> : ''}
                     {modalPay ? <PurchaseConfirmPay setModal={setModalPay} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadPay} setLoadAccept={setLoadPay} acceptSuccess={paySuccess} setAcceptSuccess={setPaySuccess} setLogs={setLogs} type={'beznal'} /> : ''}
                     {modalPayNal ? <PurchaseConfirmPay setModal={setModalPayNal} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadAproval} /* setLoadAccept={setLoadAproval} */
                         acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} type={'nal'} handleConfirmAproval={handleConfirmAproval} handleAproval={handleAproval} setPayDate={setPayDate} /> : ''}
@@ -992,10 +996,13 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     {deleteModal ? <DeleteModal setModal={setDeleteModal} id={idCreate} type={deleteType} setLoadDelete={setLoadDelete} loadDelete={loadDelete} setLogs={setLogs} handleClosePurchase={handleClosePurchase} /> : ''}
                     {returnModal ? <PurchaseReturn windowRef={windowRef} setModal={setReturnModal} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} role={role} positions={positions} setPositionReturn={setPositionReturn} setPositions={setPositions} /> : ''}
                     {modalConfirmReturn ? <PurchaseConfirmReturn setModal={setModalConfirmReturn} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn}
-                        acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} setPositionReturn={setPositionReturn} setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone}/> : ''}
+                        acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} setPositionReturn={setPositionReturn}
+                        setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone} /> : ''}
+
                 </div>
             </div>
         </div>
+
 
     )
 };

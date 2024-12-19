@@ -67,6 +67,12 @@
     margin-bottom: 6px;
 }
 
+.buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 
 
 .button {
@@ -92,11 +98,25 @@
         background-color: #0028E5;
     }
 
+    &_reject {
+       background: none;
+       border: 1px solid #E75A5A;
+       color: #E75A5A;
+
+       &:hover {
+        background: none;
+        border: 1px solid #d13e3e;
+        color: #d13e3e;
+       }
+    }
+
     &:disabled {
         pointer-events: none;
         background-color: var(--color-bg-daily);
         color: #8E9AA8;
     }
+
+
 }
 
 .success {

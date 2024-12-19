@@ -125,7 +125,7 @@ function AppPurchase() {
         setLoad(false);
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [updateAction])
 
   useEffect(() => {
     getPurchasesAction()
@@ -147,7 +147,7 @@ function AppPurchase() {
         setLoadBeznal(false);
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [updateAction])
 
   useEffect(() => {
     getPurchases('nal')
@@ -159,7 +159,7 @@ function AppPurchase() {
         setLoadNal(false);
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [updateAction])
 
   useEffect(() => {
     getPurchases('del')

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import AddGood from '../AddGood/AddGood';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
-function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition }) {
+function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role, status }) {
     const [anim, setAnim] = useState(false);
     console.log(el)
 
@@ -33,14 +33,14 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition }) {
     }
 
     return (
-        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim}`}>
+        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim} ${((status > 2  && role == 'administrator') || (status > 0 && role == 'administrator') || status == -1) && s.item_disabled}`}>
             <div onClick={handleOpenPosition} className={`${s.pos} ${s.cell}`}>{i + 1}</div>
             <div onClick={handleOpenPosition} className={`${s.name} ${s.cell}`}>{el.name}</div>
             <div onClick={handleOpenPosition} className={`${s.type} ${s.cell}`}>{el.item_id !== 0 ? 'шаблон' : el.type}</div>
             <div onClick={handleOpenPosition} className={`${s.num} ${s.cell}`}>{el.quantity}</div>
             <div onClick={handleOpenPosition} className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
             <div onClick={handleOpenPosition} className={`${s.total} ${disabled && s.total_2} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
-            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled}`}>
+            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2  && role == 'administrator') || (status > 0 && role == 'administrator') || status == -1) && s.delete_disabled}`}>
                 <IconDelete id={el.id} onClick={handleDeleteGood} />
             </div>
 
@@ -48,7 +48,7 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition }) {
     )
 }
 
-function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice, status, positionReturn, positionReturnDone}) {
+function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice, status, role, positionReturn, positionReturnDone}) {
     const [openAdd, setOpenAdd] = useState(false);
     const [position, setPosition] = useState({});
     const [isFull, setIsFull] = useState(false);
@@ -69,6 +69,8 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
         setPosition({})
         setOpenAdd(true)
     }
+
+    console.log(positionReturnDone)
 
     console.log(positionReturn)
     return (
@@ -104,7 +106,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                     {<li className={`${s.item} ${s.item_empty} ${positions.length === 0 && s.item_empty_anim}`}>Нет позиций</li>}
 
                     {positions.map((el, i) => {
-                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd} />
+                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd} role={role} status={status}/>
                     })}
                 </ul>
             </div>

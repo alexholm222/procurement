@@ -437,3 +437,16 @@ export const confirmRefund =  (id) => {
         data: {id},
     })
 }
+
+export const rejectRefund =  (id) => {
+    return instanceWithToken({
+        method: 'post',
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json"
+        },
+        url: `${baseUrl}api/purchases/reject/refund`,
+        data: {id},
+    })
+}
