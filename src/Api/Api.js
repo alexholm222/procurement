@@ -16,7 +16,7 @@ instanceWithToken.interceptors.request.use(config => {
 });
 
 export const getPurchases = (type) => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${50}&type=${type}`);
+    return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${30}&type=${type}`);
 }
 
 export const getPurchasesCursor = (cursorNext, type) => {

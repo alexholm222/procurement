@@ -151,7 +151,7 @@ function Order({ el }) {
                 {order?.comment}
             </div>
             <div id={order?.id} onClick={handleOpenOrder} className={`${s.item} ${s.item_create}`}>
-                <p>{order?.person.name} {order?.person.surname}</p>
+                <p>{order?.person?.name} {order?.person?.surname}</p>
             </div>
             <div id={order?.id} onClick={handleOpenOrder} className={`${s.item} ${s.item_status}`}>
                 <StatusBage status={order?.status} />

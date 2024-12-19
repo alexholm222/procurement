@@ -308,6 +308,8 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
     }
 
+    console.log(role)
+
     const handleAproval = () => {
         setLoadAproval(true);
         const formData = new FormData();
@@ -701,14 +703,14 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
 
                         {/* кнопки возврата */}
-                        {(status == 9 || status == 5 || status == 7) && positionReturn.length == 0 && !returnDone && !isNal && <button onClick={handleReturnModal} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {(status == 9 || status == 5 || status == 7 || status == 4) && positionReturn.length == 0 && !returnDone && <button onClick={handleReturnModal} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             {role == 'administrator' && <p>Оформить возврат</p>}
                             {role !== 'administrator' && <p>Запросить возврат</p>}
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}
                             {!loadDelete && <IconButtonReturn />}
                         </button>}
 
-                        {(status == 9 || status == 5 || status == 7) && positionReturn.length > 0 && role == 'administrator' && <button onClick={handleReturnConfirmModal} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {(status == 9 || status == 5 || status == 7 || status == 4) && positionReturn.length > 0 && role == 'administrator' && <button onClick={handleReturnConfirmModal} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Подтвердить возврат</p>
 
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}

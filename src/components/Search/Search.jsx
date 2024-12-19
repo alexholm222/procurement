@@ -1,6 +1,5 @@
 import s from './Search.module.scss';
 import { ReactComponent as IconSearch } from '../../image/iconSearch.svg';
-import { getSearchResult } from '../../Api/Api';
 import { useState, useRef, useEffect } from 'react';
 
 function Search({ query, setQuery}) {

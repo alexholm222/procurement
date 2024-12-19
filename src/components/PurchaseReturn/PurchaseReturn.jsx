@@ -85,6 +85,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
 
     const handleChangeQuantity = (e) => {
         const id = Number(e.currentTarget.id);
+        console.log(id)
         const value = Number(e.currentTarget.value);
         const index = positionForReturn.findIndex(el => el.id == id);
         const maxQuantity = Number(positions.find(el => el.id == id).quantity);

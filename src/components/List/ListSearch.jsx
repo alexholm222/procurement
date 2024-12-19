@@ -1,6 +1,7 @@
 import s from './List.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import { ReactComponent as IconArrow } from '../../image/iconArrow.svg';
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //Api
@@ -17,7 +18,6 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
     const [anim, setAnim] = useState(false)
     const [cursorNext, setCursorNext] = useState('');
     const purchase = useSelector(purchaseSelector).purchase;
-    const throttleInProgress = useRef();
     const listRef = useRef();
 
     useEffect(() => {
@@ -26,12 +26,8 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
 
     useEffect(() => {
         setCursorNext(firstCursor)
-    },[firstCursor])
+    }, [firstCursor])
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleThrottleScroll);
-        return () => window.removeEventListener('scroll', handleThrottleScroll)
-    }, [cursorNext]);
 
     const handleLoadList = () => {
         getSearchCursor(cursorNext, query)
@@ -47,39 +43,9 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
             .catch(err => console.log(err))
     }
 
-    console.log(purchases)
 
-    const handlePurchasesList = () => {
-
-        if (cursorNext == '' || cursorNext == null) {
-            return
-        }
-
-        if (cursorNext !== '' && cursorNext !== null && activeTabs !== 'action') {
-            handleLoadList()
-            return
-        }
-
-        if (cursorNext == null) {
-            return
-        }
-    }
-
-    const scrollLoad = () => {
-        const load = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 2800;
-     /*    load && handlePurchasesList(cursorNext); */
-    }
-
-    function handleThrottleScroll() {
-        if (throttleInProgress.current) {
-            return
-        }
-        throttleInProgress.current = true;
-        setTimeout(() => {
-            scrollLoad()
-            throttleInProgress.current = false;
-        }, 1800);
-    }
+ 
+ 
 
     return (
         <div style={{ pointerEvents: loadParametrs ? 'none' : '' }} ref={listRef} className={`${s.list} ${anim && s.list_anim}`}>
@@ -113,11 +79,18 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
             </ul>
             }
 
-            {!load && <ul className={s.purchases}>
-                {purchases.map((el, i) => {
-                    return <Purchase key={el.id} el={el} />
-                })}
-            </ul>
+            {!load && <InfiniteScroll
+                dataLength={purchases.length}
+                next={handleLoadList}
+                hasMore={true}
+              /*   loader={<h4>Загрузка...</h4>} */
+            >
+                <ul className={s.purchases}>
+                    {purchases.map((el, i) => {
+                        return <Purchase key={el.id} el={el} />
+                    })}
+                </ul>
+            </InfiniteScroll>
             }
             {purchase.open && purchase.id !== '' && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>

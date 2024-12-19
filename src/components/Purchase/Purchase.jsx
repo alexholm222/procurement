@@ -3,7 +3,7 @@ import { ReactComponent as IconFav } from '../../image/iconFav.svg';
 import { ReactComponent as IconView } from '../../image/icon/purchase/iconView.svg';
 import { HandledatePurchaseList } from '../../utils/date';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import uuid from 'react-uuid';
 import { Link } from 'react-router-dom';
@@ -166,4 +166,4 @@ function Purchase({ el }) {
     )
 };
 
-export default Purchase;
+export default memo(Purchase);

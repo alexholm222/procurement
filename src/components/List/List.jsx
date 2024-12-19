@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ReactComponent as IconArrow } from '../../image/iconArrow.svg';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import InfiniteScroll from "react-infinite-scroll-component";
 //Api
 import { getPurchasesCursor } from '../../Api/Api'
 //component
@@ -16,11 +17,10 @@ import { purchaseSelector } from '../../store/reducer/purchase/selector';
 function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs }) {
     const [anim, setAnim] = useState(false)
     const [cursorNext, setCursorNext] = useState('');
+    const [endCursor, setEndCursor] = useState(30);
     const purchase = useSelector(purchaseSelector).purchase;
-    const throttleInProgress = useRef();
-    const timerDebounceRef = useRef();
     const listRef = useRef();
-    console.log(purchases)
+
 
     useEffect(() => {
         setAnim(true)
@@ -29,11 +29,6 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
     useEffect(() => {
         setCursorNext(firstCursor)
     }, [firstCursor])
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleDebounceScroll);
-        return () => window.removeEventListener('scroll', handleDebounceScroll)
-    }, [cursorNext, load]);
 
     const handleLoadList = () => {
         getPurchasesCursor(cursorNext, activeTabs)
@@ -50,41 +45,24 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
             .catch(err => console.log(err))
     }
 
+   
 
-    const handlePurchasesList = () => {
-
-        if (cursorNext == '' || cursorNext == null) {
-            return
-        }
-
-        if (cursorNext !== '' && cursorNext !== null && activeTabs !== 'action') {
-            handleLoadList()
-            return
-        }
-
-        if (cursorNext == null) {
-            return
-        }
+    const handleScrollTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     const scrollLoad = () => {
-        const loadScroll = listRef?.current?.getBoundingClientRect()?.bottom - window.innerHeight < 500;
-        loadScroll && !load && handlePurchasesList(cursorNext);
+        const loadBottom = listRef.current.getBoundingClientRect().bottom - window.innerHeight < 800;
+        const loadTop = window.innerHeight - listRef.current.getBoundingClientRect().top < 800;
+        loadBottom && setEndCursor(prevState => prevState + 30)
+        loadTop && setEndCursor(30);
+
     }
 
-    function handleDebounceScroll() {
-        // Если ID таймена установлено - сбрасываем таймер
-        if (timerDebounceRef.current) {
-            clearTimeout(timerDebounceRef.current);
-        }
-        // Запускаем таймер, возвращаемое ID таймера
-        // записываем в timerDebounceRef
-        timerDebounceRef.current = setTimeout(() => {
-            // Вызываем увеличение счётчика кол-ва
-            // выполнения бизнес логики приложения с Debounce
-            scrollLoad()
-        }, 200);
-    }
+    useEffect(() => {
+        window.addEventListener('scroll', scrollLoad);
+        return () => window.removeEventListener('scroll', scrollLoad)
+    }, [])
 
     return (
         <div style={{ pointerEvents: loadParametrs ? 'none' : '' }} ref={listRef} className={`${s.list} ${anim && s.list_anim}`}>
@@ -118,11 +96,18 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
             </ul>
             }
 
-            {!load && <ul className={s.purchases}>
-                {purchases.map((el, i) => {
-                    return <Purchase key={el.id} el={el} />
-                })}
-            </ul>
+            {!load && <InfiniteScroll
+                dataLength={purchases.length}
+                next={handleLoadList}
+                hasMore={true}
+            /*  loader={<h4>Loading...</h4>} */
+            >
+                <ul className={s.purchases}>
+                    {purchases.slice(0, endCursor).map((el, i) => {
+                        return <Purchase key={el.id} el={el} />
+                    })}
+                </ul>
+            </InfiniteScroll>
             }
             {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
