@@ -27,7 +27,6 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
         const isViewResult = attentionResult?.find(el => el?.is_view == 0);
         isViewResult?.is_view == 0 ? setTabAttention(true) : setTabAttention(false)
 
-        console.log(attentionResult, isViewResult)
 
     }, [purchaseAction, updateAction])
 
@@ -39,8 +38,6 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
 
         const isViewResult = attentionResult?.find(el => el?.is_view == 0);
         isViewResult?.is_view == 0 ? setTabAttentionOrders(true) : setTabAttentionOrders(false)
-
-        console.log(attentionResult, isViewResult)
 
     }, [orders, updateOrder])
     return (

@@ -50,7 +50,7 @@ const InputList = ({ open, setOpen, value, setValue, inputRef, list, err, setErr
         if (e.keyCode == 13 && filterList.length == 0) {
             setOpen(false);
             setErr(true);
-            console.log('ошибка');
+
             return
         }
         setTimeout(() => {
@@ -79,7 +79,6 @@ const InputList = ({ open, setOpen, value, setValue, inputRef, list, err, setErr
 
         if (e.keyCode === 38 && count == itemsLength) {
             e.preventDefault();
-            console.log('тут')
             items[itemsLength - 2].focus();
             setCount(itemsLength - 2)
             return

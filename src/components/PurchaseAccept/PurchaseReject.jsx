@@ -27,7 +27,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
     const textRef = useRef();
     const dispatch = useDispatch();
     const role = document.getElementById('root_purchases').getAttribute('role');
-    console.log(comment)
+
     useEffect(() => {
         textRef.current.focus();
     }, [textRef])
@@ -73,7 +73,6 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
 
     const handleConfirm = () => {
         setLoadAccept(true)
-        console.log(comment)
         if (type == 'reject') {
             rejectPurchase({ id, reject_comment: comment })
                 .then(res => {

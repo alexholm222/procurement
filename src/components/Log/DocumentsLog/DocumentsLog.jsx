@@ -35,7 +35,6 @@ const DocumentLog = ({ i, files, file, windowRef, scrollTopHeight, type, send, n
             setUrlFile(fileUrl)
         } else {
             const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : `${baseUrl}file/${file.file}`;
-            console.log(file.file.slice(0, 5), file)
             setUrlFile(link);
         }
     }, [file])

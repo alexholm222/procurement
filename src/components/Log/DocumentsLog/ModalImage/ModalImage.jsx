@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 function ModalImage({ img, setOpenImage, windowRef, scrollTopHeight }) {
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
-    console.log(windowRef)
 
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";

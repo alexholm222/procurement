@@ -16,7 +16,7 @@ import { purchaseSelector } from '../../store/reducer/purchase/selector';
 function ListOrders({ orders, load, loadParametrs, personIsView }) {
     const [anim, setAnim] = useState(false)
     const order = useSelector(purchaseSelector).order;
-   console.log(orders)
+  
     const listRef = useRef();
 
     useEffect(() => {

@@ -28,7 +28,6 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
     const [check, setCheck] = useState(false);
     const [date, setDate] = useState('');
     const [disabled, setDisabled] = useState(true);
-    console.log(type)
 
     const [err, setErr] = useState(false);
     const modalRef = useRef();
@@ -77,10 +76,8 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
 
     const handleConfirm = () => {
         setLoadAccept(true)
-        console.log(id, date)
         confirmPayment({ id: id, pay_date: date })
             .then(res => {
-                console.log(res);
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 setStatus(purchase.status);
@@ -112,13 +109,11 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
 
         if (type == 'nal') {
             handleConfirmAproval();
-            console.log('за нал дата 1')
             return
         }
 
         if (type == 'nal2') {
             handleAproval();
-            console.log('за нал дата 2')
             return
         }
     }

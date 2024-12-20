@@ -17,7 +17,6 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
     const [modalImage, setModalImage] = useState(false);
     const conditionDownload = file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'png' && file.name.slice(-3) !== 'jpg' ? file.name : false;
     const conditionTarget = file.type == 'existing' && file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'png' && file.name.slice(-3) !== 'jpg' ? '_self' : '_blank';
-    console.log(file)
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)
@@ -31,7 +30,6 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
     useEffect(() => {
         if (file.type == 'existing') {
             const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : `${baseUrl}file/${file.file}`;
-            console.log(file.file.slice(0, 5), file)
             setUrlFile(link);
         } else {
             const fileUrl = window.URL.createObjectURL(file.file);

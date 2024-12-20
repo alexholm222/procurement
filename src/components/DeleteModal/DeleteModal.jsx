@@ -16,7 +16,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch();
-    console.log(type)
     //Фиксация окна при открытии модалки
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -44,7 +43,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
         setLoadDelete(true)
         deletePurchase({ id: id })
             .then(res => {
-                console.log(res);
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
                 setLoadDelete(false);
@@ -63,7 +61,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
         setLoadDelete(true)
         deleteRejectPurchase(id)
             .then(res => {
-                console.log(res);
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
                 dispatch(setUpdateAction());
@@ -82,7 +79,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
         setLoadDelete(true)
         deletePurchaseAdmin({ id: id })
             .then(res => {
-                console.log(res);
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
                 dispatch(setUpdateAction());
@@ -101,7 +97,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
         setLoadDelete(true)
         deleteOrder({ id: id })
             .then(res => {
-                console.log(res);
                 dispatch(setOrderDelete(id));
                 handleClosePurchase();
                 dispatch(setUpdateAction());

@@ -9,7 +9,6 @@ import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
 function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role, status }) {
     const [anim, setAnim] = useState(false);
-    console.log(el)
 
     useEffect(() => {
         setTimeout(() => {
@@ -20,7 +19,6 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role,
     function handleDeleteGood(e) {
         const id = e.currentTarget.id;
         const arrFilter = goods.filter(el => String(el.id) !== id);
-        console.log(arrFilter)
         setAnim(false);
         setTimeout(() => {
             setGoods(arrFilter)
@@ -55,7 +53,6 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
 
     useEffect(() => {
         const sum = positions.reduce((acc, el) => acc + el.sum, 0);
-        console.log(sum)
         setSum(sum);
     }, [positions]);
 
@@ -70,9 +67,6 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
         setOpenAdd(true)
     }
 
-    console.log(positionReturnDone)
-
-    console.log(positionReturn)
     return (
         <div className={s.goods}>
             {openAdd && <AddGood scrollTopHeight={scrollTopHeight} setOpenAdd={setOpenAdd} setGoods={setPositions} goods={positions} windowRef={windowRef} isNal={isNal} position={position} />}

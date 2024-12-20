@@ -31,8 +31,6 @@ function Purchase({ el }) {
     const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
     const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
 
-   console.log(purchase)
-
     useEffect(() => {
         const purchaseNew = purchaseUpdate?.findLast(el => el.id == purchase?.id);
 

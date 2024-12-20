@@ -58,7 +58,6 @@ function Order({ el }) {
 
     useEffect(() => {
         const lastView = order?.logs_view?.find((item) => item.is_view == 0)
-        console.log(lastView)
         /* typeof  */!lastView /* == "undefined" */ ? setIsView(true) : setIsView(false);
     }, [order])
 
@@ -95,7 +94,7 @@ function Order({ el }) {
                 const order = res.data.order;
                 const purchase = res.data.purchase;
                 dispatch(setOrderUpdate(order));
-                console.log(res)
+
                 /*  setLoadCreate(false); */
 
                 const orderLog = {
@@ -123,7 +122,7 @@ function Order({ el }) {
                     personId: purchase?.person_id,
                     dateCreate: dateNow2(),
                 }
-                console.log(purchaseForOpen)
+    
                 dispatch(setPurchaseNew(purchase))
                 setTimeout(() => {
                     setIsView(true)

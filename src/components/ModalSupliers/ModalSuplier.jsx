@@ -87,7 +87,6 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
         setAddType('vendor')
         addVendor(name, inn, kpp)
             .then(res => {
-                console.log(res);
                 dispatch(setParametrsUpdate());
                 setVendorId(res.data.vendor.id);
                 setContractVendorId('');
@@ -149,7 +148,6 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
 
     const handleSelectCompany = (e) => {
         const target = e.currentTarget;
-        console.log(target)
         setPrompOpen(false);
         setName(target.querySelector('.company__name').textContent);
         !check && setInn(target.querySelector('.company__inn').textContent);

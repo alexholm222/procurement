@@ -22,8 +22,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
     const positionActive = activeRef?.current?.getBoundingClientRect().left;
 
-    /*  console.log(type == 'payers' && lastType)
-     console.log(type == 'payers' && activeId) */
+
 
     useEffect(() => {
         if (type == 'categories') {

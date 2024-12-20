@@ -28,9 +28,9 @@ function Message({ text, time, avatar, owner, name, surname, next, prev, index, 
                             {/*         <p>{text}</p> */}
                             <div className={s.status}>
                                 <p>{text}</p>
-                                {type !== "add" && type !== "receive" && type !== "reject" && type !== "comment" && type !== "comment&files" && <IconDone />}
+                                {type !== "add" && type !== "receive" && type !== "reject" && type !== "comment" && type !== "comment&files" && type !== "withdraw" && <IconDone />}
                                 {type == "receive" && <IconDone2 />}
-                                {type == 'reject' && <IconReject />}
+                                {(type == 'reject' || type == 'withdraw') && <IconReject />}
 
                             </div>
 
@@ -69,9 +69,9 @@ function Message({ text, time, avatar, owner, name, surname, next, prev, index, 
                         <div className={`${s.text} ${s.text_get}`}>
                             <div className={s.status}>
                                 <p>{text}</p>
-                                {type !== "add" && type !== "receive" && type !== "reject" && type !== "comment" && type !== "comment&files" && <IconDone />}
+                                {type !== "add" && type !== "receive" && type !== "reject" && type !== "comment" && type !== "comment&files" && type !== "withdraw" && <IconDone />}
                                 {type == "receive" && <IconDone2 />}
-                                {type == 'reject' && <IconReject />}
+                                {(type == 'reject' || type == 'withdraw') && <IconReject />}
                             </div>
 
                             {subcomment && <div className={s.comment}>

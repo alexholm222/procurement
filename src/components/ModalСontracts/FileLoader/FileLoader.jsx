@@ -51,7 +51,6 @@ function FileLoader({ files, setFiles }) {
     const handleFile = async (e) => {
         const file = e.currentTarget.files[0];
         if (file.size > 15 * 1048576) {
-            console.log("большой файл");
             setError(true)
         }
         else {

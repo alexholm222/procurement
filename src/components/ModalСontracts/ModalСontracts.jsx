@@ -173,12 +173,10 @@ const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVe
         !check && formData.append('end_date', endDate);
 
         fileForSend.forEach((el, i) => {
-            console.log(el);
             formData.append(`files[${i}]`, el, el.name)
         });
         addContract(formData)
             .then(res => {
-                console.log(res)
                 const id = res.data.contract.id;
                 const vendorId = res.data.contract.vendor_id;
                 setContractVendorId(id);

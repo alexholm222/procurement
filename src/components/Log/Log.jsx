@@ -34,8 +34,6 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
     const contentState = editorState.getCurrentContent();
     const fileInputRef = useRef();
 
-    console.log(messages)
-
     useEffect(() => {
         setMessages(logs)
         setTimeout(() => { chatRef.current?.scrollIntoView({ behavior: 'smooth', block: "end" }) }, 100)
@@ -81,7 +79,6 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
         type == 'purchase' && sendLog(formData)
             .then(res => {
                 const data = res.data;
-                console.log(res);
                 setLogs([...logs, data.purchase.logs.at(-1)]);
             })
             .catch(err => console.log(err))
@@ -89,7 +86,6 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
         type == 'order' && sendLogOrder(formData)
             .then(res => {
                 const data = res.data;
-                console.log(res);
                 setLogs([...logs, data.order.order_logs.at(-1)]);
 
             })
@@ -142,10 +138,8 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
 
     const handleFile = async (e) => {
         const files = Object.values(e.currentTarget.files);
-        console.log(files)
         files.forEach((file) => {
             if (file.size > 15 * 1048576) {
-                console.log("большой файл");
                 setError(true);
             }
             else {
@@ -156,8 +150,6 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
         })
     }
 
-
-console.log(messages)
     return (
         <div className={s.log}>
             <div className={s.header}>

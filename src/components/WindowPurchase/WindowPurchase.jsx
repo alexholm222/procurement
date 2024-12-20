@@ -110,10 +110,10 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     const [returnDone, setReturnDone] = useState(false);
     const [closeDocs, setCloseDocs] = useState([]);
     const [updatePurchase, setUpdatePurchase] = useState(0)
-    console.log(status)
+
     const dispatch = useDispatch();
     const windowRef = useRef();
-    console.log(status, purchase)
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -145,16 +145,13 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
             document.body.style.paddingRight = "0";
         };
     }, []);
-    console.log(positionReturn)
 
     //Загрузка закупки 
     useEffect(() => {
-        if (idCreate) {
-            getPurchase(idCreate)
+        if (id) {
+            getPurchase(id)
                 .then(res => {
-                    console.log(res);
                     const data = res.data;
-                    console.log(data)
                     const docs = data.files
                     setCloseDocs(docs)
                     setPositions(data.purchase_items)
@@ -173,7 +170,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         type: 'add',
                         files: handleExistingFiles(data.order),
                     }
-                    console.log(data.logs)
+             
 
                     data?.order_logs && data?.order_logs !== null ? setLogs([orderLog, ...data?.order_logs?.order_logs?.slice(1), ...data.logs]) : setLogs(data.logs);
 
@@ -181,19 +178,18 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     setPersonId(data.purchase.person_id);
 
                     data.order && setOrder(data.order);
-                    dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] }))
+                   /*  dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] })) */
                 })
                 .catch(err => console.log(err))
             return
         }
-    }, [idCreate, updatePurchase]);
+    }, [id]);
 
     useEffect(() => {
         const payment = paymentType == 'nal' ? true : false
         setIsNal(payment);
     }, [paymentType])
 
-    console.log(isPattern, isNormalPrice)
     //Определяем есть ли в закупке товары по шаблону и если ли среди них с превышенной максимальной ценой
     useEffect(() => {
         const el = positions.find(el => el.item_id == 0);
@@ -206,8 +202,6 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
             const el = positions.find(el => el.price > el.maxPrice);
             el ? setIsNormalPrice(false) : setIsNormalPrice(true)
         }
-        console.log(positions)
-
     }, [positions, isPattern])
 
     //Блокируем изменения
@@ -274,7 +268,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     const handleSave = () => {
         setLoadSave(true);
         const formData = new FormData();
-        formData.append('id', id);
+        formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
         formData.append('is_nal', isNal ? 1 : 0);
@@ -302,6 +296,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 setStatus(purchase.status);
                 setLoadSave(false);
                 setSaveSuccess(true);
+                dispatch(setUpdateAction());
                 /* const documents = handleExistingFiles(purchase);
                 setDocuments(documents); */
                 /*    setTimeout(() => {handleClosePurchase()}, 600); */
@@ -310,7 +305,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
     }
 
-    console.log(role)
+    console.log(idCreate)
 
     const handleAproval = () => {
         setLoadAproval(true);
@@ -343,13 +338,13 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     console.log('Созданная админом закупка', res.data)
                     const purchase = res.data.purchase;
                     setOwner(purchase.person_id)
-                    idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase));
+                   /*  idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase)); */
                     idCreate == '' && setIdCreate(purchase.id);
                     setStatus(purchase.status);
                     setLoadAproval(false);
                     setReject(purchase.is_reject);
                     setAprovalSuccess(true);
-                    setLogs(purchase.logs);
+                   /*  setLogs(purchase.logs); */
                     dispatch(setUpdateAction());
                     /* handleClosePurchase(); */
                 })
@@ -361,7 +356,6 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     const purchase = res.data.purchase;
                     const order = res.data.purchase.order;
                     setOwner(purchase.person_id)
-                    console.log('закупка создана админом', purchase)
                     idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase));
                     idCreate == '' && setIdCreate(purchase.id);
                     const orderLog = {
@@ -483,7 +477,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 dispatch(setUpdateAction());
                 /* handleClosePurchase(); */
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err.message))
     }
 
     const handleConfirmAprovalLeader = () => {
@@ -997,7 +991,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     {returnModal ? <PurchaseReturn windowRef={windowRef} setModal={setReturnModal} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} role={role} positions={positions} setPositionReturn={setPositionReturn} setPositions={setPositions} /> : ''}
                     {modalConfirmReturn ? <PurchaseConfirmReturn setModal={setModalConfirmReturn} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn}
                         acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} setPositionReturn={setPositionReturn}
-                        setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone} /> : ''}
+                        setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone}/> : ''}
 
                 </div>
             </div>

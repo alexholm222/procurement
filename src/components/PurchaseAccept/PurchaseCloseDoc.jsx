@@ -76,7 +76,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
     const modalRef = useRef();
     const dispatch = useDispatch();
     const role = document.getElementById('root_purchases').getAttribute('role');
-   console.log(documents)
+
     useEffect(() => {
         setAnim(true)
     }, []);
@@ -127,7 +127,6 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
 
         loadCloseDoc(formData)
             .then(res => {
-                console.log(res);
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 setCloseDocs(purchase.files)

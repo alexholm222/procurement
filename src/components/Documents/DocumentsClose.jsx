@@ -17,7 +17,7 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     const [modalImage, setModalImage] = useState(false);
     const conditionDownload = file.file.slice(-3) !== 'pdf' && file.file.slice(-3) !== 'png' && file.file.slice(-3) !== 'jpg' ? file.file : false;
     const conditionTarget = file.type == 'existing' && file.file.slice(-3) !== 'pdf' && file.file.slice(-3) !== 'png' && file.file.slice(-3) !== 'jpg' ? '_self' : '_blank';
-    console.log(file.file.slice(-3))
+
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)
@@ -30,7 +30,6 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
 
     useEffect(() => {
         const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : `${baseUrl}file/${file.file}`;
-        console.log(file.file.slice(0, 5), file)
         setUrlFile(link);
 
     }, [file])

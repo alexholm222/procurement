@@ -390,19 +390,19 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                             {!loadCreate && <IconTakeWork />}
                         </button>}
 
-                        {status == 1 && role == 'hr-assist' && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
+                        {status == 1 && (role == 'hr-assist' || owner == personView) && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
                             {loadCreate && <p>Создаем закупку</p>}
                             {!loadCreate && <p>Создать закупку</p>}
                             {loadCreate && <LoaderButton color={'#FFFFFF'} />}
                             {!loadCreate && <IconTakeWork />}
                         </button>}
 
-                        {status !== 2 && owner == personView && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
+                       {/*  {status == 1 && owner == personView && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
                             {loadCreate && <p>Создаем закупку</p>}
                             {!loadCreate && <p>Создать закупку</p>}
                             {loadCreate && <LoaderButton color={'#FFFFFF'} />}
                             {!loadCreate && <IconTakeWork />}
-                        </button>}
+                        </button>} */}
 
                     </div>
                 </div>

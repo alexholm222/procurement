@@ -78,12 +78,12 @@ function AppPurchase() {
     }
   }, [])
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (purchaseNew?.id) {
       setPurchases([purchaseNew, ...purchases]);
       return
     }
-  }, [purchaseNew])
+  }, [purchaseNew]) */
 
   useEffect(() => {
     if (orderNew?.id) {
@@ -117,7 +117,6 @@ function AppPurchase() {
   useEffect(() => {
     getPurchases('')
       .then(res => {
-        console.log(res)
         const data = res.data.data;
         const cursor = res.data.next_page_url;
         setPurchases(data);
@@ -211,11 +210,9 @@ function AppPurchase() {
   useEffect(() => {
     getOrders()
       .then(res => {
-        console.log(res)
         const filterOrders = res.data.order.filter(el => el.status == 0 || (el.status == 1 && handleCompareDateOrder(el.date_create)))
         setOrders(filterOrders);
         setPersonIsView(res.data.person_view);
-        console.log('обновились заявки', res);
         setLoadOrders(false);
       })
       .catch(err => console.log(err))

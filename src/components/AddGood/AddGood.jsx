@@ -37,7 +37,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     const listRef = useRef();
     const listPatternRef = useRef();
     const inputRefFocus = useRef();
-    console.log(position, patternId, patterList, goods, buttonDisabled)
+
 
     useEffect(() => {
         setAnim(true);
@@ -125,7 +125,6 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         setName(e.target.value);
         setOpenPatternList(true);
         const newList = handleFilter(e.target.value, items);
-        console.log(newList)
         setPatternList(newList);
         setButtonDis(false);
     }
@@ -146,7 +145,6 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
     function handleChoseType(e) {
         const value = e.currentTarget.textContent;
-        console.log(value)
         setType(value)
     }
 
@@ -154,7 +152,6 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
         const id = e.currentTarget.id;
         const pattern = items.find(el => el.id == id);
         const maxrate = pattern.rate * 2;
-        console.log(maxrate)
         setItemId(pattern.id)
         setName(pattern.name);
         setUnit(pattern.unit);

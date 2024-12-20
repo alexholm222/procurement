@@ -33,7 +33,6 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
     const handleLoadList = () => {
         getPurchasesCursor(cursorNext, activeTabs)
             .then(res => {
-                console.log(res)
                 const data = res.data.data;
                 const cursor = res.data.next_page_url;
                 setPurchases(prevState => [...prevState, ...data]);

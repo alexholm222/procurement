@@ -69,7 +69,7 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
         setLoadAccept(true);
         confirmRefund(id)
             .then(res => {
-                console.log(res);
+               
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 const returnPos = purchase.return_items.filter(el => el.status == 'requested')
@@ -94,7 +94,7 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
                 }
 
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
-                dispatch(setUpdateAction());
+                /* dispatch(setUpdateAction()); */
                 handleCloseModal()
             })
             .catch(err => console.log(err))
@@ -105,13 +105,15 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
         rejectRefund(id)
             .then(res => {
                 console.log(res);
+                /*    dispatch(setUpdateAction()); */
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
+                
                 /*  const returnPos = purchase.return_items.filter(el => el.status == 'requested')
                  const returnPosDone = purchase.return_items.filter(el => el.status == 'confirmed');
                  setPositionReturnDone(returnPosDone)
                  returnPosDone.length > 0 ? setReturnDone(true) : setReturnDone(false) */
-                setStatus(purchase.status);
+     /*            setStatus(purchase.status); */
                 dispatch(setPurchasesUpdate(purchase))
                 setLoadReject(false);
                 setAcceptSuccess(true);
@@ -129,7 +131,7 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
                 }
 
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
-                dispatch(setUpdateAction());
+             
                 handleCloseModal()
             })
             .catch(err => console.log(err))
