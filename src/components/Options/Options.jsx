@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 //selector
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
-function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCategoryId, setPaymentType, isNal, disabled }) {
+function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCategoryId, disabled }) {
     const [lastType, setLastType] = useState(0);
     const [transformType, setTransformType] = useState(0);
     const [disableRight, setDisabledRight] = useState(true);
@@ -22,29 +22,28 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
     const positionActive = activeRef?.current?.getBoundingClientRect().left;
 
+    console.log(payers)
 
 
     useEffect(() => {
         if (type == 'categories') {
             setList(categories);
-            /* setCategoryId(Number(activeId)); */
             purchaseId ? setActiveId(categoryId) : setActiveId(categories[0].id);
-            !purchaseId && setCategoryId(categories[0].id);
-            return
+            !purchaseId && setCategoryId(categories[0].id)
+            
         }
+    }, [categories]);
+
+    useEffect(() => {
 
         if (type == 'payers') {
             setList(payers);
-            /* setPayerId(Number(activeId)); */
-            const payerNal = payers.find(el => el.name.toLowerCase() == 'наличные')
-            /*  const activeId = purchaseId ? setActiveId(isNal && (!payerId || payerId == 0) ? payerNal.id : payerId) : setActiveId(payers[0].id);
-             console.log(payerNal) */
-            purchaseId ? setActiveId(isNal && (!payerId || payerId == 0) ? payerNal.id : payerId) : setActiveId(payers[0].id);
-            isNal && (!payerId || payerId == 0) && setPayerId(payerNal.id);
-            !purchaseId && setPayerId(payers[0].id);
-            return
+            purchaseId ? setActiveId(payerId) : setActiveId(payers[0].id);
+            !purchaseId && setPayerId(payers[0].id)
+            console.log('отработал')
+    
         }
-    }, []);
+    }, [payers]);
 
 
     useEffect(() => {
@@ -70,9 +69,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
 
     function handleSelectType(e) {
         const id = e.currentTarget.id;
-        const payment = payers.find(el => el.id == id);
         type == 'payers' && setPayerId(Number(id));
-        type == 'payers' && (payment?.name?.toLowerCase() == 'наличные' ? setPaymentType('nal') : setPaymentType('beznal'));
         type == 'categories' && setCategoryId(Number(id));
         setActiveId(Number(id))
         const position = e.currentTarget.getBoundingClientRect().right

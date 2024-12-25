@@ -46,10 +46,11 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
                 setLoadDelete(false);
-                dispatch(setUpdateAction());
+               
                 setAnim(false);
                 setTimeout(() => {
                     setModal(false);
+                    dispatch(setUpdateAction());
                 }, 300)
             })
             .catch(err => {
@@ -63,11 +64,11 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
             .then(res => {
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
-                dispatch(setUpdateAction());
                 setAnim(false);
                 setTimeout(() => {
                     setModal(false);
                     setLoadDelete(false);
+                    dispatch(setUpdateAction());
                 }, 300)
             })
             .catch(err => {
@@ -81,11 +82,12 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
             .then(res => {
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
-                dispatch(setUpdateAction());
+             
                 setAnim(false);
                 setTimeout(() => {
                     setModal(false);
                     setLoadDelete(false);
+                    dispatch(setUpdateAction());
                 }, 300)
             })
             .catch(err => {

@@ -114,7 +114,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     function handleSaveGood() {
         const index = goods.findIndex(el => el.id == position.id);
         const array = [...goods];
-        const newValue = { item_id: patternId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: uuid(), maxPrice, maxRate, rate };
+        const newValue = { item_id: patternId, name, quantity: Number(num), unit: unit, price: Number(price), per_unit: perUnit, type: type, sum: perUnit == 1 ? num * price : price, id: position.id, maxPrice, maxRate, rate };
         array.splice(index, 1, newValue);
         setGoods(array);
         handleClose();

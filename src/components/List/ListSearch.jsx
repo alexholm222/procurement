@@ -44,8 +44,8 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
     }
 
 
- 
- 
+
+
 
     return (
         <div style={{ pointerEvents: loadParametrs ? 'none' : '' }} ref={listRef} className={`${s.list} ${anim && s.list_anim}`}>
@@ -83,7 +83,7 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
                 dataLength={purchases.length}
                 next={handleLoadList}
                 hasMore={true}
-              /*   loader={<h4>Загрузка...</h4>} */
+            /*   loader={<h4>Загрузка...</h4>} */
             >
                 <ul className={s.purchases}>
                     {purchases.map((el, i) => {
@@ -92,6 +92,8 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
                 </ul>
             </InfiniteScroll>
             }
+
+            {!load && purchases == 0 && <div className={s.empty}><p>Ничего не найдено</p></div>}
             {purchase.open && purchase.id !== '' && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
     )

@@ -15,6 +15,10 @@ instanceWithToken.interceptors.request.use(config => {
     return config
 });
 
+export const getProfile = () => {
+    return instanceWithToken.get(`${baseUrl}api/profile`);
+}
+
 export const getPurchases = (type) => {
     return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${30}&type=${type}`);
 }

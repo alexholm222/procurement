@@ -94,15 +94,23 @@
     align-self: center;
     color: var(--color-text-secondary);
     cursor: pointer;
+    position: relative;
     transition: all 0.2s;
-    pointer-events: none;
-    opacity: 0.6;
+
 
     svg {
         margin-right: 6px;
+
+        path {
+            transition: all 0.2s;
+        }
     }
 
     &:hover {
-        background-color: var(--color-bg-daily);
+        background-color: var(--color-bg-full);
+    }
+
+    &_active {
+        background-color: var(--color-bg-full)
     }
 }

@@ -55,6 +55,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
         flex-shrink: 0;
+
+        span {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
     }
 
     &_seller {

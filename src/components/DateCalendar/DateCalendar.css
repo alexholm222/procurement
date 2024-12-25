@@ -1,0 +1,98 @@
+.calendar_dark {
+    background-color: #1A263B !important;
+
+    span {
+        color: #ECECEC;
+    }
+}
+
+.calendar_dark button {
+    color: #ECECEC !important;
+}
+
+.calendar_dark button {
+    color: #ECECEC !important;
+}
+
+.calendar_dark .Mui-disabled:not(.Mui-selected) {
+    color: #71869D !important;
+}
+
+.MuiDateCalendar-root {
+    height: min-content !important;
+    /*  margin-bottom: 6px !important; */
+}
+
+
+.Mui-selected {
+    background-color: #002CFB !important;
+}
+
+.calendar_dark .MuiPickersDay-today {
+    border: 1px solid #ececec2f !important;
+}
+
+.css-189ousr-MuiPopper-root-MuiPickersPopper-root {
+    z-index: 1200 !important;
+    margin-left: -32px !important;
+}
+
+.MuiDateRangeCalendar-root {
+    div:first-child {
+        color: rgba(255, 255, 255, 0) !important;
+
+        span {
+            color: black !important;
+        }
+    }
+}
+
+.MuiInputBase-input {
+    padding: 14px 12px !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    transition: all 0.15s !important;
+
+    fieldset {
+        border: 5px solid #1A263B !important;
+    }
+}
+
+.MuiFormLabel-root {
+    transition: all 0.15s !important;
+}
+
+.css-1hxjdpw-MuiInputBase-root-MuiOutlinedInput-root {
+    transition: all 0.15s !important;
+}
+
+.MuiFormControl-root {
+    label {
+        top: -3px;
+        color: var(--color-text-secondary) !important;
+    }
+}
+
+.css-1ko88h8-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+    color: #002CFB !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    transition: all 0.15s !important;
+}
+
+.css-1hxjdpw-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    transition: all 0.15s !important;
+}
+
+.css-1hxjdpw-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    transition: all 0.15s !important;
+    border-color: #002CFB !important;
+}
+
+.css-1hxjdpw-MuiInputBase-root-MuiOutlinedInput-root {
+    transition: all 0.15s !important;
+    border-color: var(--color-text-secondary) !important;
+}

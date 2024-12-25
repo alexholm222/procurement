@@ -18,7 +18,7 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
     const [text, setText] = useState('');
     const [error, setError] = useState(false);
     const [heightComment, setHeightComment] = useState(40);
-    const [messages, setMessages] = useState([{ text: 'Залупка одбренна', time: dateNow(), owner: 0, name: 'Админ' }, { text: 'Залупка одбренна', time: dateNow(), owner: 0, name: 'Админ' }]);
+    const [messages, setMessages] = useState([]);
     const [timeNow, setTimeNow] = useState('');
     const [scrollVis, setScrollVis] = useState(false);
     const [files, setFiles] = useState([]);

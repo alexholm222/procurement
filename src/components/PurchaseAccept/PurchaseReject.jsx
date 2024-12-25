@@ -18,7 +18,7 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
 
-const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, setReject, type }) => {
+const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setAprovalSuccess, setLogs, setReject, type }) => {
     const [anim, setAnim] = useState(false);
     const [comment, setComment] = useState('');
     const [disabled, setDisabled] = useState(true);
@@ -84,6 +84,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                     setReject(true);
                     dispatch(setPurchasesUpdate(purchase));
                     setAcceptSuccess(true);
+                    setAprovalSuccess(false)
                     const orderLog = {
                         comment: 'Создана заявка на закупку',
                         date: purchase.order?.date_create,
@@ -92,7 +93,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                         person_id: purchase.order?.person_id,
                         sub_comment: purchase.order?.comment,
                         type: 'add',
-                        files: handleExistingFiles(purchase.order),
+                        files: handleExistingFiles(purchase?.order),
                     }
 
                     purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
@@ -110,16 +111,18 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                     setReject(true);
                     dispatch(setPurchasesUpdate(purchase));
                     setAcceptSuccess(true);
+                    setAprovalSuccess(false)
                     const orderLog = {
                         comment: 'Создана заявка на закупку',
-                        date: purchase.order.date_create,
-                        id: purchase.order.id,
-                        person: purchase.order.person,
-                        person_id: purchase.order.person_id,
-                        sub_comment: purchase.order.comment,
+                        date: purchase.order?.date_create,
+                        id: purchase.order?.id,
+                        person: purchase.order?.person,
+                        person_id: purchase.order?.person_id,
+                        sub_comment: purchase.order?.comment,
                         type: 'add',
-                        files: handleExistingFiles(purchase.order),
+                        files: handleExistingFiles(purchase?.order),
                     }
+                    console.log(purchase.logs)
 
                     purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                     dispatch(setUpdateAction());

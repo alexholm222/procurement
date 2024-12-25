@@ -37,7 +37,7 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role,
             <div onClick={handleOpenPosition} className={`${s.type} ${s.cell}`}>{el.item_id !== 0 ? 'шаблон' : el.type}</div>
             <div onClick={handleOpenPosition} className={`${s.num} ${s.cell}`}>{el.quantity}</div>
             <div onClick={handleOpenPosition} className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
-            <div onClick={handleOpenPosition} className={`${s.total} ${disabled && s.total_2} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
+            <div onClick={handleOpenPosition} className={`${s.total} ${disabled && s.total_} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
             <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2  && role == 'administrator') || (status > 0 && role == 'administrator') || status == -1) && s.delete_disabled}`}>
                 <IconDelete id={el.id} onClick={handleDeleteGood} />
             </div>
@@ -92,7 +92,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                         <p>Цена</p>
                     </div>
 
-                    <div className={`${s.sub} ${s.total} ${disabled && s.total_2}`}>
+                    <div className={`${s.sub} ${s.total} ${disabled && s.total_}`}>
                         <p>Итого</p>
                     </div>
                 </div>

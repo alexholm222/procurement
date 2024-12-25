@@ -93,6 +93,7 @@ function Purchase({ el }) {
             positions: purchase?.items,
             isNal: purchase?.is_nal,
             inStock: role == 'administrator' ? purchase.in_stock : null,
+            takeAccount: role == 'administrator' ? purchase.take_account : null,
             sum: purchase?.sum,
             existingFiles,
             status: purchase?.status,
@@ -111,7 +112,7 @@ function Purchase({ el }) {
     //не показываем закупку черновик если роль не совпаадет с ролью в закупке и status == 0
     //не показываем кнопки в закупке leader если статус 1 person_id
     //не показываем кнопки в закупке administarator если статус 2
-
+   console.log(purchase)
     return (
         <div onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
             <div className={`${s.item} ${s.item_date}`}>
@@ -131,8 +132,9 @@ function Purchase({ el }) {
                 <p>{addSpaceNumber(purchase?.sum)}</p>
             </div>
             <div className={`${s.item} ${s.item_buyer}`}>
-                {purchase?.is_nal && <p>Наличные</p>}
-                <p>{purchase?.payer ? purchase?.payer.name : ''}</p>
+                <p>{purchase?.payer ? purchase?.payer?.name : ''}</p>
+                {role == 'administrator' && purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>наличные</span>}
+                {role == 'administrator' && !purchase?.is_nal && <span>безнал</span>}
             </div>
             <div className={`${s.item} ${s.item_seller}`}>
                 <p>{purchase?.counterparty_name}</p>

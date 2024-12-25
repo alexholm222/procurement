@@ -181,6 +181,7 @@
     &_disabled {
         pointer-events: none;
         cursor: default;
+        color: var(--color-text-secondary);
     }
 }
 

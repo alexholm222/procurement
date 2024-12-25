@@ -1,16 +1,20 @@
 import s from './Tabs.module.scss';
 import Search from '../Search/Search';
 import { ReactComponent as IconFilter } from '../../image/iconFilter.svg';
-//components 
-import Loader from '../Loader/Loader';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+//components 
+import Loader from '../Loader/Loader';
+import Filters from '../Filters/Filters';
+
 //slice 
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
-function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery, orders }) {
+function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery,
+    orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount }) {
     const [tabAttention, setTabAttention] = useState(false);
     const [tabAttentionOrders, setTabAttentionOrders] = useState(false);
+    const [filtersModal, setFiltersModal] = useState(false);
     const updateAction = useSelector(purchaseUpdateSelector).updateAction;
     const updateOrder = useSelector(purchaseUpdateSelector).updateOrder;
     const handleChoseTab = (e) => {
@@ -40,6 +44,10 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
         isViewResult?.is_view == 0 ? setTabAttentionOrders(true) : setTabAttentionOrders(false)
 
     }, [orders, updateOrder])
+
+    const handleActiveFilter = () => {
+        setFiltersModal(true)
+    }
     return (
         <div className={s.tabs}>
             <div className={s.block}>
@@ -67,24 +75,26 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                         }
                     </button>
 
-                    <button onClick={handleChoseTab} id='beznal' className={`${s.button} ${activeTabs == 'beznal' && s.button_active}`}>
+                    <button disabled={purchaseBeznalCount == 0} onClick={handleChoseTab} id='beznal' className={`${s.button} ${activeTabs == 'beznal' && s.button_active}`}>
                         <p>Безналичная оплата</p>
                     </button>
 
-                    <button onClick={handleChoseTab} id='nal' className={`${s.button} ${activeTabs == 'nal' && s.button_active}`}>
+                    <button disabled={purchaseNalCount == 0} onClick={handleChoseTab} id='nal' className={`${s.button} ${activeTabs == 'nal' && s.button_active}`}>
                         <p>Наличные</p>
                     </button>
 
-                    <button onClick={handleChoseTab} id='del' className={`${s.button} ${activeTabs == 'del' && s.button_active}`}>
+                    <button disabled={purchaseDelCount == 0} onClick={handleChoseTab} id='del' className={`${s.button} ${activeTabs == 'del' && s.button_active}`}>
                         <p>Удаленные</p>
                     </button>
                 </div>
             </div>
 
-            <div className={s.filter}>
+            <div onClick={handleActiveFilter} className={`${s.filter} ${filtersModal && s.filter_active}`}>
                 <IconFilter />
                 <p>Фильтры</p>
+                {filtersModal && <Filters />}
             </div>
+
         </div>
     )
 };

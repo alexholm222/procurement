@@ -14,12 +14,13 @@ import PurchaseSceleton from '../Purchase/PurchaseSceleton/PurchaseSceleton';
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
 
-function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs }) {
+function List({ purchases, purchaseCount, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs }) {
     const [anim, setAnim] = useState(false)
-    const [cursorNext, setCursorNext] = useState('');
+    const [cursorNext, setCursorNext] = useState(null);
     const [endCursor, setEndCursor] = useState(30);
     const purchase = useSelector(purchaseSelector).purchase;
     const listRef = useRef();
+    console.log(purchases.length, endCursor)
 
 
     useEffect(() => {
@@ -31,7 +32,7 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
     }, [firstCursor])
 
     const handleLoadList = () => {
-        getPurchasesCursor(cursorNext, activeTabs)
+        cursorNext !== null && getPurchasesCursor(cursorNext, activeTabs)
             .then(res => {
                 const data = res.data.data;
                 const cursor = res.data.next_page_url;
@@ -44,7 +45,7 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
             .catch(err => console.log(err))
     }
 
-   
+
 
     const handleScrollTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -108,6 +109,7 @@ function List({ purchases, setPurchases, firstCursor, loadParametrs, load, setLo
                 </ul>
             </InfiniteScroll>
             }
+              {!load && purchaseCount == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
             {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
     )

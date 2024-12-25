@@ -33,6 +33,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
     const modalRef = useRef();
     const dispatch = useDispatch();
     const role = document.getElementById('root_purchases').getAttribute('role');
+    console.log(type)
 
     useEffect(() => {
         setAnim(true)

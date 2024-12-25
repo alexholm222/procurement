@@ -1,0 +1,58 @@
+.checkbox {
+    border-radius: 5.5px;
+    border: 2px solid var(--OutlineDark, rgba(173, 191, 223, 0.40));
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+
+    &_disabled {
+        opacity: 0.4;
+    }
+
+    &:hover {
+        border-color: var(--color-button-accent);
+        opacity: 0.8;
+    }
+
+    div {
+        margin-top: 1px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            margin: 0;
+            width: 86%;
+            height: 86%;
+            transform: scale(0);
+            transition-delay: 0.15s;
+            transition: all 0.15s ease-in-out;
+        }
+    }
+
+    p {
+        user-select: none;
+        font-size: 16px
+    }
+
+    &_active {
+        background-color: var(--color-button-accent);
+        border-color: var(--color-button-accent);
+
+        div {
+            svg {
+                transform: scale(1);
+            }
+        }
+
+    }
+
+    &_dis {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+}

@@ -1,6 +1,6 @@
 import s from './WindowPurchase.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //icon 
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
@@ -41,15 +41,20 @@ import PurchaseReject from '../PurchaseAccept/PurchaseReject';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import PurchaseReturn from '../PurchaseReturn/PurchaseReturn';
 import PurchaseConfirmReturn from '../PurchaseAccept/PurchaseConfirmReturn';
+import ErrorModal from '../ErrorModal/ErrorModal';
 //slice
 import { setPurchase } from '../../store/reducer/purchase/slice';
 import { setPurchasesUpdate, setPurchaseNew, setPurchasesDelete, setUpdateAction } from '../../store/reducer/purchaseUpdate/slice';
+//selector
+import { purchaseSelector } from '../../store/reducer/purchase/selector';
 //utils 
 import { handleExistingFiles } from '../../utils/handleExistingFiles';
 import { HandledatePurchase } from '../../utils/date';
 
 function WindowPurchase({ id, purchase, loadParametrs }) {
     const role = document.getElementById('root_purchases').getAttribute('role');
+    const categories = useSelector(purchaseSelector).categories;
+    const payers = useSelector(purchaseSelector).payers;
     const [anim, setAnim] = useState(false);
     const [personId, setPersonId] = useState(purchase.personId || -1);
     const [idCreate, setIdCreate] = useState(id || '');
@@ -73,17 +78,16 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     const [status, setStatus] = useState(-2);
     const [reject, setReject] = useState(purchase.reject || false)
     const [logs, setLogs] = useState(purchase.logs || []);
-    const [updateLogs, setUpdateLogs] = useState(0)
     const [dateCreate, setDateCreate] = useState(purchase.dateCreate || '');
     const [positions, setPositions] = useState(purchase.positions || []);
     const [sum, setSum] = useState(purchase.sum || 0);
     const [vendorId, setVendorId] = useState(purchase?.vendorId || '');
     const [contractVendorId, setContractVendorId] = useState(/* purchase?.contractVendorId || */ '');
     const [payerId, setPayerId] = useState(purchase?.payerId || '');
-    const [paymentType, setPaymentType] = useState(purchase.isNal ? 'nal' : 'beznal')
+    const [paymentType, setPaymentType] = useState(false)
     const [categoryId, setCategoryId] = useState(purchase?.categoryId || '');
-    const [isNal, setIsNal] = useState(purchase.isNal || false);
-    const [inStock, setInStock] = useState(false);
+    const [inStock, setInStock] = useState(purchase?.inStock || false);
+    const [takeAccount, setTakeAccount] = useState(purchase?.takeAccount || false)
     const [documents, setDocuments] = useState(purchase.existingFiles || []);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
@@ -109,8 +113,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     const [positionReturnDone, setPositionReturnDone] = useState([]);
     const [returnDone, setReturnDone] = useState(false);
     const [closeDocs, setCloseDocs] = useState([]);
-    const [updatePurchase, setUpdatePurchase] = useState(0)
-
+    const [error, setError] = useState('')
     const dispatch = useDispatch();
     const windowRef = useRef();
 
@@ -120,6 +123,39 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
             setAnim(true)
         })
     }, []);
+
+    console.log(vendorId)
+
+    //устанавливаем значения чекбоксов
+    useEffect(() => {
+        setTakeAccount(purchase?.takeAccount)
+        setInStock(purchase?.inStock)
+    }, [purchase])
+
+    //определяем настройки категории
+    useEffect(() => {
+        if (categoryId !== purchase?.categoryId) {
+            const result = categories.find(el => el.id == categoryId);
+            console.log(result, categoryId)
+            result?.in_stock == 1 ? setInStock(true) : setInStock(false)
+            result?.take_account_cat == 1 ? setTakeAccount(true) : setTakeAccount(false)
+            return
+        }
+    }, [categoryId])
+
+
+    //определяем настрйоки покупателя
+    useEffect(() => {
+        const result = payers.find(el => el.id == payerId);
+        console.log(result)
+        result?.payment_type == 'nal' ? setPaymentType(true) : setPaymentType(false)
+    }, [payerId])
+
+    useEffect(() => {
+        paymentType && setVendorId('')
+    }, [paymentType])
+
+    console.log('id при создании', idCreate)
 
 
     //запиываем статус закпки
@@ -170,7 +206,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         type: 'add',
                         files: handleExistingFiles(data.order),
                     }
-             
+
 
                     data?.order_logs && data?.order_logs !== null ? setLogs([orderLog, ...data?.order_logs?.order_logs?.slice(1), ...data.logs]) : setLogs(data.logs);
 
@@ -178,17 +214,12 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     setPersonId(data.purchase.person_id);
 
                     data.order && setOrder(data.order);
-                   /*  dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] })) */
+                    /*  dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] })) */
                 })
                 .catch(err => console.log(err))
             return
         }
     }, [id]);
-
-    useEffect(() => {
-        const payment = paymentType == 'nal' ? true : false
-        setIsNal(payment);
-    }, [paymentType])
 
     //Определяем есть ли в закупке товары по шаблону и если ли среди них с превышенной максимальной ценой
     useEffect(() => {
@@ -206,7 +237,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
     //Блокируем изменения
     useEffect(() => {
-        if (role !== 'administrator' && status > 0) {
+        if ((role !== 'administrator' && status > 0) || (role == 'administrator' && status > 2)) {
             setDisabled(true)
         } else {
             setDisabled(false)
@@ -216,29 +247,14 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
     //disabled кнопок
     useEffect(() => {
         setSaveSuccess(false)
-        if (payerId == '' || categoryId == '' || positions.length == 0 || (vendorId == '' && !isNal)) {
+        if (payerId == '' || categoryId == '' || positions.length == 0 || (vendorId == '' && !paymentType)) {
             setDisabledButton(true)
         } else {
             setDisabledButton(false)
         }
 
-    }, [payerId, categoryId, positions, vendorId, contractVendorId, isNal]);
+    }, [payerId, categoryId, positions, vendorId, contractVendorId, paymentType]);
 
-    useEffect(() => {
-
-        if ((status == 0 || status == 1 || status == 2 || status == -2) && role == 'administrator') {
-            setInStock(true);
-        } else {
-            setInStock(purchase.inStock)
-        }
-    }, [purchase, role]);
-
-    useEffect(() => {
-        if (categoryId == 12) {
-            setInStock(false);
-            return
-        }
-    }, [categoryId])
 
     const handleClosePurchase = () => {
         setAnim(false)
@@ -265,14 +281,20 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
         inStock ? setInStock(false) : setInStock(true);
     }
 
+    const handleTakeAccount = () => {
+        takeAccount ? setTakeAccount(false) : setTakeAccount(true);
+    }
+
     const handleSave = () => {
         setLoadSave(true);
         const formData = new FormData();
         formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
-        formData.append('is_nal', isNal ? 1 : 0);
-        formData.append('person_id', role == 'administrator' ? '43' : '3651')
+        formData.append('is_nal', paymentType ? 1 : 0);
+        /*  formData.append('person_id', role == 'administrator' ? '43' : '3651') */
+        formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('take_account', takeAccount ? 1 : 0);
         /* vendorId !== null && vendorId && */ formData.append('stock_vendor_id', vendorId);
         /* contractVendorId !== null && contractVendorId && */ formData.append('stock_vendor_contracts_id', contractVendorId);
         positions.forEach((item, index) => {
@@ -293,6 +315,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 console.log(purchase)
                 idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase));
                 idCreate == '' && setIdCreate(purchase.id);
+                setPositions(purchase.items)
                 setStatus(purchase.status);
                 setLoadSave(false);
                 setSaveSuccess(true);
@@ -305,21 +328,20 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
     }
 
-    console.log(idCreate)
-
     const handleAproval = () => {
         setLoadAproval(true);
         const formData = new FormData();
         formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
-        formData.append('is_nal', isNal ? 1 : 0);
-        isNal == 1 && formData.append('pay_date', payDate);
+        formData.append('is_nal', paymentType ? 1 : 0);
+        paymentType && formData.append('pay_date', payDate);
         vendorId !== null && vendorId && formData.append('stock_vendor_id', vendorId);
         contractVendorId !== null && contractVendorId && formData.append('stock_vendor_contracts_id', contractVendorId);
         formData.append('is_pattern', isPattern ? 1 : 0);
         formData.append('is_price_normal', isNormalPrice ? 1 : 0);
-        role == 'administrator' && formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('take_account', takeAccount ? 1 : 0);
         positions.forEach((item, index) => {
             Object.keys(item).forEach((key) => {
                 formData.append(`items[${index}][${key}]`, item[key]);
@@ -333,22 +355,24 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
         deleteFiles.forEach((item) => formData.append("old_files[]", item.file));
 
         if (role == 'administrator') {
-            createPurchaseAdmin(formData)
+            idCreate == '' && createPurchaseAdmin(formData)
                 .then(res => {
                     console.log('Созданная админом закупка', res.data)
                     const purchase = res.data.purchase;
                     setOwner(purchase.person_id)
-                   /*  idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase)); */
+                    idCreate == '' ? dispatch(setPurchaseNew(purchase)) : dispatch(setPurchasesUpdate(purchase));
                     idCreate == '' && setIdCreate(purchase.id);
                     setStatus(purchase.status);
                     setLoadAproval(false);
                     setReject(purchase.is_reject);
+                    setPositions(purchase.items);
+                    setLogs(purchase.logs);
                     setAprovalSuccess(true);
-                   /*  setLogs(purchase.logs); */
                     dispatch(setUpdateAction());
-                    /* handleClosePurchase(); */
                 })
                 .catch(err => console.log(err))
+
+            idCreate !== '' && handleConfirmAproval()
             return
         } else {
             createPurchase(formData)
@@ -373,9 +397,9 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     setLoadAproval(false);
                     setStatus(purchase.status);
                     setReject(purchase.is_reject);
+                    setPositions(purchase.items)
                     setAprovalSuccess(true);
                     dispatch(setUpdateAction());
-                    /* handleClosePurchase(); */
                 })
                 .catch(err => console.log(err))
             return
@@ -388,12 +412,13 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
         formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
-        formData.append('is_nal', isNal ? 1 : 0);
+        formData.append('is_nal', paymentType ? 1 : 0);
         vendorId !== null && vendorId && formData.append('stock_vendor_id', vendorId);
         contractVendorId !== null && contractVendorId && formData.append('stock_vendor_contracts_id', contractVendorId);
         formData.append('is_pattern', isPattern ? 1 : 0);
         formData.append('is_price_normal', isNormalPrice ? 1 : 0);
-        role == 'administrator' && formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('take_account', takeAccount ? 1 : 0);
         positions.forEach((item, index) => {
             Object.keys(item).forEach((key) => {
                 formData.append(`items[${index}][${key}]`, item[key]);
@@ -417,8 +442,8 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 setReject(purchase.is_reject);
                 setAprovalSuccess(true);
                 setLogs(purchase.logs);
+                setPositions(purchase.items)
                 dispatch(setUpdateAction());
-                /* handleClosePurchase(); */
             })
             .catch(err => console.log(err))
         return
@@ -432,11 +457,12 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
         formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
-        formData.append('is_nal', isNal ? 1 : 0);
-        isNal == 1 && formData.append('pay_date', payDate);
+        formData.append('is_nal', paymentType ? 1 : 0);
+        paymentType == 1 && formData.append('pay_date', payDate);
         vendorId !== null && formData.append('stock_vendor_id', vendorId);
         contractVendorId !== null && formData.append('stock_vendor_contracts_id', contractVendorId);
-        role == 'administrator' && formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('take_account', takeAccount ? 1 : 0);
         formData.append('is_pattern', isPattern ? 1 : 0);
         formData.append('is_price_normal', isNormalPrice ? 1 : 0);
         positions.forEach((item, index) => {
@@ -463,6 +489,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 setLoadAproval(false);
                 setReject(purchase.is_reject);
                 setAprovalSuccess(true);
+                dispatch(setUpdateAction());
                 const orderLog = {
                     comment: 'Создана заявка на закупку',
                     date: purchase.order?.date_create,
@@ -474,10 +501,15 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                     files: handleExistingFiles(purchase.order),
                 }
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
-                dispatch(setUpdateAction());
-                /* handleClosePurchase(); */
+
+
             })
-            .catch(err => console.log(err.message))
+            .catch(err => {
+                const data = err.response.data;
+                const message = data.message;
+                setError(message)
+                dispatch(setUpdateAction());
+            })
     }
 
     const handleConfirmAprovalLeader = () => {
@@ -487,10 +519,11 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
         formData.append('id', idCreate);
         formData.append('cat_id', categoryId);
         formData.append('payer_id', payerId);
-        formData.append('is_nal', isNal ? 1 : 0);
+        formData.append('is_nal', paymentType ? 1 : 0);
         vendorId !== null && formData.append('stock_vendor_id', vendorId);
         contractVendorId !== null && formData.append('stock_vendor_contracts_id', contractVendorId);
-        role == 'administrator' && formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('in_stock', inStock ? 1 : 0);
+        formData.append('take_account', takeAccount ? 1 : 0);
         formData.append('is_pattern', isPattern ? 1 : 0);
         formData.append('is_price_normal', isNormalPrice ? 1 : 0);
         positions.forEach((item, index) => {
@@ -529,7 +562,6 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 }
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setUpdateAction());
-                /* handleClosePurchase(); */
             })
             .catch(err => console.log(err))
     }
@@ -567,7 +599,6 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setUpdateAction());
-                /* handleClosePurchase(); */
 
             })
             .catch(err => console.log(err))
@@ -623,7 +654,6 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                 }
                 purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                 dispatch(setUpdateAction());
-                /* handleClosePurchase(); */
             })
             .catch(err => console.log(err))
     }
@@ -684,7 +714,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                             {!loadDelete && <IconButtonDelete />}
                         </button>}
 
-                        {role !== 'administrator' && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleDelete} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {role !== 'administrator' && purchase.position !== 'administrator' && (status == 0 || status == -3) && !reject && <button onClick={handleDelete} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Удалить</p>
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}
                             {!loadDelete && <IconButtonDelete />}
@@ -726,7 +756,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                             {!loadSave && saveSuccess && <IconDone />}
                         </button>}
 
-                        {role !== 'administrator' && purchase.position !== 'administrator' && status == 0 && !reject && <button disabled={(loadSave || loadAproval || disabledButton) ? true : false} onClick={handleSave} className={`${s.button} ${s.button_add} ${saveSuccess && s.button_success}`}>
+                        {role !== 'administrator' && purchase.position !== 'administrator' && (status == 0 || status == -3) && !reject && <button disabled={(loadSave || loadAproval || disabledButton) ? true : false} onClick={handleSave} className={`${s.button} ${s.button_add} ${saveSuccess && s.button_success}`}>
                             {loadSave && <p>Сохраняем</p>}
                             {!loadSave && !saveSuccess && <p>Сохранить</p>}
                             {!loadSave && saveSuccess && <p>Сохранено</p>}
@@ -766,10 +796,10 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                             {!loadAproval && aprovalSuccess && <IconDone />}
                         </button>}
 
-                        {role == 'leader' && isPattern && isNormalPrice && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleAprovalLeader} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                        {role == 'leader' && isPattern && isNormalPrice && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleAprovalLeader} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main}`}>
                             {loadAproval && <p>Отправляем на оплату</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на оплату</p>}
-                            {!loadAproval && aprovalSuccess && <p>Отправлено на оплату</p>}
+
                             {loadAproval && <LoaderButton color={'#FFFFFF'} />}
                             {!loadAproval && !aprovalSuccess && <IconButtonAgreement />}
                             {!loadAproval && aprovalSuccess && <IconDone />}
@@ -811,7 +841,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         }
 
 
-                        {role !== 'administrator' && role !== 'leader' && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                        {role !== 'administrator' && role !== 'leader' && purchase.position !== 'administrator' && (status == 0 || status == -3) && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
                             {loadAproval && <p>Отправляем на согласование</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на согласование</p>}
                             {!loadAproval && aprovalSuccess && <p>Отправлено на согласование</p>}
@@ -880,10 +910,10 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         }
 
                         {role == 'administrator' && (status == 1 || status == 2)/*  && !reject  */ &&
-                            <button onClick={() => isNal ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
-                                {loadAproval && <p>{isNal ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
-                                {!loadAproval && !aprovalSuccess && <p>{isNal ? 'Провести закупку' : 'Согласовать и отправить на оплату'}</p>}
-                                {!loadAproval && aprovalSuccess && <p>{isNal ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
+                            <button onClick={() => paymentType ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                                {loadAproval && <p>{paymentType ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
+                                {!loadAproval && !aprovalSuccess && <p>{paymentType ? 'Провести закупку' : 'Согласовать и отправить на оплату'}</p>}
+                                {!loadAproval && aprovalSuccess && <p>{paymentType ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
                                 {loadAproval && <LoaderButton color={'#FFFFFF'} />}
                                 {!loadAproval && !aprovalSuccess && <IconButtonAgreementAdmin />}
                                 {!loadAproval && aprovalSuccess && <IconDone />}
@@ -891,10 +921,10 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         }
 
                         {role == 'administrator' && status == 0 && reject &&
-                            <button onClick={() => isNal ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
-                                {loadAproval && <p>{isNal ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
-                                {!loadAproval && !aprovalSuccess && <p>{isNal ? 'Провести закупку' : 'Согласовать и отправить на оплату'}</p>}
-                                {!loadAproval && aprovalSuccess && <p>{isNal ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
+                            <button onClick={() => paymentType ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                                {loadAproval && <p>{paymentType ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
+                                {!loadAproval && !aprovalSuccess && <p>{paymentType ? 'Провести закупку' : 'Согласовать и отправить на оплату'}</p>}
+                                {!loadAproval && aprovalSuccess && <p>{paymentType ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
                                 {loadAproval && <LoaderButton color={'#FFFFFF'} />}
                                 {!loadAproval && !aprovalSuccess && <IconButtonAgreementAdmin />}
                                 {!loadAproval && aprovalSuccess && <IconDone />}
@@ -902,10 +932,10 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         }
 
                         {role == 'administrator' && (status == 0 || status == -2) && !reject &&
-                            <button onClick={() => isNal ? setModalPayNal2(true) : handleAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} /* ${aprovalSuccess && s.button_success} */`}>
-                                {loadAproval && <p>{isNal ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
-                                {!loadAproval && !aprovalSuccess && <p>{isNal ? 'Провести закупку' : 'Отправить на оплату'}</p>}
-                                {!loadAproval && aprovalSuccess && <p>{isNal ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
+                            <button onClick={() => paymentType ? setModalPayNal2(true) : handleAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} /* ${aprovalSuccess && s.button_success} */`}>
+                                {loadAproval && <p>{paymentType ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
+                                {!loadAproval && !aprovalSuccess && <p>{paymentType ? 'Провести закупку' : 'Отправить на оплату'}</p>}
+                                {!loadAproval && aprovalSuccess && <p>{paymentType ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}
                                 {loadAproval && <LoaderButton color={'#FFFFFF'} />}
                                 {!loadAproval && !aprovalSuccess && <IconButtonAgreementAdmin />}
                                 {/* {!loadAproval && aprovalSuccess && <IconDone />} */}
@@ -948,17 +978,30 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
                         <h3 className={s.title}>Параметры</h3>
                         <Options type={'categories'} sub={'Тип закупки'} categoryId={Number(categoryId)} setCategoryId={setCategoryId} purchaseId={id} disabled={disabled /* || loadSave */} />
-                        <Options type={'payers'} sub={'Покупатель'} payerId={Number(payerId)} setPayerId={setPayerId} isNal={isNal} setPaymentType={setPaymentType} purchaseId={id} disabled={disabled /* || loadSave || loadAproval */} />
-                        <Vendors hiden={isNal} vendorId={vendorId} setVendorId={setVendorId} contractVendorId={contractVendorId} setContractVendorId={setContractVendorId} disabled={disabled/*  || loadSave || loadAproval */} loadParametrs={loadParametrs} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
-                        {role == 'administrator' && <div onClick={handleInStock} className={`${s.check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) || categoryId == 12 && s.check_disabled}`}>
-                            <div className={`${s.checkbox} ${inStock && s.checkbox_check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) || categoryId == 12 && s.checkbox_disabled}`}>
-                                <div>
-                                    <IconCheck />
+                        <Options type={'payers'} sub={'Покупатель'} payerId={Number(payerId)} setPayerId={setPayerId} purchaseId={id} disabled={disabled /* || loadSave || loadAproval */} />
+                        <Vendors hiden={paymentType} vendorId={vendorId} setVendorId={setVendorId} contractVendorId={contractVendorId} setContractVendorId={setContractVendorId} disabled={disabled/*  || loadSave || loadAproval */} loadParametrs={loadParametrs} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
+                        <div>
+                            {role == 'administrator' && <div onClick={handleInStock} className={`${s.check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.check_disabled}`}>
+                                <div className={`${s.checkbox} ${inStock && s.checkbox_check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.checkbox_disabled}`}>
+                                    <div>
+                                        <IconCheck />
+                                    </div>
                                 </div>
+                                <p>Учитывать закупку на остатках склада</p>
                             </div>
-                            <p>Учитывать закупку на остатках склада</p>
+                            }
+
+                            {role == 'administrator' && <div onClick={handleTakeAccount} className={`${s.check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.check_disabled}`}>
+                                <div className={`${s.checkbox} ${takeAccount && s.checkbox_check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.checkbox_disabled}`}>
+                                    <div>
+                                        <IconCheck />
+                                    </div>
+                                </div>
+                                <p>Учитывать закупку в финансовых итогах</p>
+                            </div>
+                            }
                         </div>
-                        }
+
                     </div>
                     <Goods
                         positions={positions}
@@ -967,7 +1010,7 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
                         sum={sum}
                         scrollTopHeight={scrollTopHeight}
                         setSum={setSum}
-                        isNal={isNal}
+                        isNal={paymentType}
                         disabled={disabled}
                         status={status}
                         positionReturn={positionReturn}
@@ -986,12 +1029,14 @@ function WindowPurchase({ id, purchase, loadParametrs }) {
 
                     {modalPayNal2 ? <PurchaseConfirmPay setModal={setModalPayNal2} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadAproval} /* setLoadAccept={setLoadAproval} */
                         acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} type={'nal2'} handleConfirmAproval={handleConfirmAproval} handleAproval={handleAproval} setPayDate={setPayDate} /> : ''}
-                    {modalReject ? <PurchaseReject setModal={setModalReject} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadRecall} setLoadAccept={setLoadRecall} acceptSuccess={recallSuccess} setAcceptSuccess={setRecallSuccess} setLogs={setLogs} setReject={setReject} type={typeReject} /> : ''}
+                    {modalReject ? <PurchaseReject setModal={setModalReject} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadRecall} setLoadAccept={setLoadRecall} acceptSuccess={recallSuccess} setAcceptSuccess={setRecallSuccess} setAprovalSuccess={setAprovalSuccess} setLogs={setLogs} setReject={setReject} type={typeReject} /> : ''}
                     {deleteModal ? <DeleteModal setModal={setDeleteModal} id={idCreate} type={deleteType} setLoadDelete={setLoadDelete} loadDelete={loadDelete} setLogs={setLogs} handleClosePurchase={handleClosePurchase} /> : ''}
                     {returnModal ? <PurchaseReturn windowRef={windowRef} setModal={setReturnModal} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} role={role} positions={positions} setPositionReturn={setPositionReturn} setPositions={setPositions} /> : ''}
                     {modalConfirmReturn ? <PurchaseConfirmReturn setModal={setModalConfirmReturn} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadReturn} setLoadAccept={setLoadReturn}
                         acceptSuccess={aprovalSuccess} setAcceptSuccess={setAprovalSuccess} setLogs={setLogs} setPositionReturn={setPositionReturn}
-                        setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone}/> : ''}
+                        setPositions={setPositions} setReturnDone={setReturnDone} setPositionReturnDone={setPositionReturnDone} /> : ''}
+
+                    {error !== '' && <ErrorModal setError={setError} windowRef={windowRef} error={error} handleClosePurchase={handleClosePurchase} />}
 
                 </div>
             </div>
