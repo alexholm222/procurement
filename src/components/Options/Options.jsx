@@ -38,7 +38,8 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
 
         if (type == 'payers') {
             setList(payers);
-            purchaseId ? setActiveId(payerId) : setActiveId(payers[0].id);
+            //payerId == 0 ? 21 : payerId это убрать как зальем обновление !!!!!!!!!!!!!
+            purchaseId ? setActiveId(payerId == 0 ? 21 : payerId) : setActiveId(payers[0].id);
             !purchaseId && setPayerId(payers[0].id)
             console.log('отработал')
     

@@ -9,7 +9,7 @@ import { createTheme } from '@mui/material/styles';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
 
-function DateCalendarRange({ value, setValue }) {
+function DateCalendarRange({ value, setValue, endDisabled}) {
 
 
 

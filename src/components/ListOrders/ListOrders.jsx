@@ -43,7 +43,7 @@ function ListOrders({ orders, load, loadParametrs, personIsView }) {
                 </div>
                 <div className={`${s.item} ${s.item_status}`}>
                     <p>Статус</p>
-                    <IconArrow />
+                 {/*    <IconArrow /> */}
                 </div>
             </div>
             {/*  {load && <ul className={s.purchases}>

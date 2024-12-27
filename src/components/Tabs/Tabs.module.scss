@@ -113,4 +113,17 @@
     &_active {
         background-color: var(--color-bg-full)
     }
+
+    &_disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    &_on {
+        color: var(--color-button-accent);
+        
+        svg path {
+            fill: var(--color-button-accent);
+        }
+    }
 }

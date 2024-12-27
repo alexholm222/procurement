@@ -11,7 +11,7 @@ import Filters from '../Filters/Filters';
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
 function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery,
-    orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount }) {
+    orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount, filterPayDate, setFilerPayDate, disabled }) {
     const [tabAttention, setTabAttention] = useState(false);
     const [tabAttentionOrders, setTabAttentionOrders] = useState(false);
     const [filtersModal, setFiltersModal] = useState(false);
@@ -89,11 +89,13 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                 </div>
             </div>
 
-            <div onClick={handleActiveFilter} className={`${s.filter} ${filtersModal && s.filter_active}`}>
+            {activeTabs !== 'orders' && <div onClick={handleActiveFilter} className={`${s.filter} ${filtersModal && s.filter_active} ${disabled && s.filter_disabled} ${filterPayDate[0] !== null && !filtersModal && s.filter_on}`}>
+                <div className={`${s.point}`}></div>
                 <IconFilter />
                 <p>Фильтры</p>
-                {filtersModal && <Filters />}
+                {filtersModal ? <Filters filterPayDate={filterPayDate} setFilterPayDate={setFilerPayDate} setFiltersModal={setFiltersModal} /> : ''}
             </div>
+            }
 
         </div>
     )

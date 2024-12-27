@@ -28,6 +28,7 @@ const rols = ['administrator', 'hr-assist', 'chief-accountant', 'leader', 'frman
 function AppPurchase() {
   const [theme, setTheme] = useState('light');
   const [purchases, setPurchases] = useState([]);
+  const [purchaseCountGeneral, setPurchaseCountGeneral] = useState('');
   const [purchaseCount, setPurchaseCount] = useState('');
   const [purchasesSearch, setPurchasesSearch] = useState([]);
   const [query, setQuery] = useState('');
@@ -54,6 +55,7 @@ function AppPurchase() {
   const [activeTabs, setActiveTabs] = useState('');
   const [orders, setOrders] = useState([]);
   const [personIsView, setPersonIsView] = useState({});
+  const [filterPayDate, setFilerPayDate] = useState([null, null]);
   const dispatch = useDispatch();
   const purchaseNew = useSelector(purchaseUpdateSelector).purchaseNew;
   const orderNew = useSelector(purchaseUpdateSelector).orderNew;
@@ -121,7 +123,7 @@ function AppPurchase() {
   }, []);
 
   useEffect(() => {
-    getPurchases('')
+    getPurchases('', filterPayDate)
       .then(res => {
         const data = res.data.data;
         const total = res.data.total;
@@ -129,23 +131,25 @@ function AppPurchase() {
         setPurchases(data);
         cursor !== null && setFirstCursor(cursor);
         setPurchaseCount(total == 0 ? '' : total);
+        load && setPurchaseCountGeneral(total);
+
         setLoad(false);
       })
       .catch(err => console.log(err))
-  }, [updateAction])
+  }, [updateAction, filterPayDate])
 
   useEffect(() => {
-    getPurchasesAction()
+    getPurchasesAction(filterPayDate)
       .then(res => {
         const data = res.data;
         setPurchaseAction(data);
         setLoadAction(false);
       })
       .catch(err => console.log(err))
-  }, [updateAction])
+  }, [updateAction, filterPayDate])
 
   useEffect(() => {
-    getPurchases('beznal')
+    getPurchases('beznal', filterPayDate)
       .then(res => {
         const data = res.data.data;
         const cursor = res.data.next_page_url;
@@ -156,10 +160,10 @@ function AppPurchase() {
         setPurchaseBeznalCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction])
+  }, [updateAction, filterPayDate])
 
   useEffect(() => {
-    getPurchases('nal')
+    getPurchases('nal', filterPayDate)
       .then(res => {
         const data = res.data.data;
         const cursor = res.data.next_page_url;
@@ -170,10 +174,10 @@ function AppPurchase() {
         setPurchaseNalCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction])
+  }, [updateAction, filterPayDate])
 
   useEffect(() => {
-    getPurchases('del')
+    getPurchases('del', filterPayDate)
       .then(res => {
         const data = res.data.data;
         const cursor = res.data.next_page_url;
@@ -184,7 +188,7 @@ function AppPurchase() {
         setPurchaseDelCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction])
+  }, [updateAction, filterPayDate])
 
   useEffect(() => {
     query !== '' && getSearchResult(query)
@@ -265,12 +269,13 @@ function AppPurchase() {
       <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction}
         purchaseBeznalCount={purchaseBeznalCount} purchaseNalCount={purchaseNalCount} purchaseDelCount={purchaseDelCount}
         loadAction={loadAction} loadOrders={loadOrders} query={query} setQuery={setQuery} orders={orders}
+        filterPayDate={filterPayDate} setFilerPayDate={setFilerPayDate} disabled={loadParametrs}
       />
-      {activeTabs == '' && query == '' && <List purchases={purchases} purchaseCount={purchaseCount} setPurchases={setPurchases} firstCursor={firstCursor} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
-      {activeTabs == 'action' && query == '' && <List purchases={purchaseAction} setPurchases={setPurchaseAction} firstCursor={firstCursorAction} load={loadAction} setLoad={setLoadAction} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
-      {activeTabs == 'beznal' && query == '' && <List purchases={purchaseBeznal} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
-      {activeTabs == 'nal' && query == '' && <List purchases={purchaseNal} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
-      {activeTabs == 'del' && query == '' && <List purchases={purchaseDel} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} />}
+      {activeTabs == '' && query == '' && <List purchases={purchases} purchaseCount={purchaseCount} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchases} firstCursor={firstCursor} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+      {activeTabs == 'action' && query == '' && <List purchases={purchaseAction} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseAction} firstCursor={firstCursorAction} load={loadAction} setLoad={setLoadAction} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+      {activeTabs == 'beznal' && query == '' && <List purchases={purchaseBeznal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+      {activeTabs == 'nal' && query == '' && <List purchases={purchaseNal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+      {activeTabs == 'del' && query == '' && <List purchases={purchaseDel} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
       {query !== '' && <ListSearch purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
       {activeTabs == 'orders' && query == '' && <ListOrders orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
       {order.open && order.id == '' && <WindowOrder id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}

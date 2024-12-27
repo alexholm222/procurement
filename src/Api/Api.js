@@ -15,20 +15,27 @@ instanceWithToken.interceptors.request.use(config => {
     return config
 });
 
+const filterPayDate = (payDate) => {
+    return `${payDate?.[0] !== null ? `&filters[pay_start]=${payDate?.[0]}` : ''}${payDate?.[1] !== null ? `&filters[pay_finish]=${payDate?.[1]}` : ''}`
+}
+
 export const getProfile = () => {
     return instanceWithToken.get(`${baseUrl}api/profile`);
 }
 
-export const getPurchases = (type) => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${30}&type=${type}`);
+export const getPurchases = (type, payDate) => {
+    const filterPayDateParam = filterPayDate(payDate)
+    return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${30}&type=${type}${filterPayDateParam}`);
 }
 
-export const getPurchasesCursor = (cursorNext, type) => {
-    return instanceWithToken.get(`${cursorNext}&perPage=${30}&type=${type}`);
+export const getPurchasesCursor = (cursorNext, type, payDate) => {
+    const filterPayDateParam = filterPayDate(payDate)
+    return instanceWithToken.get(`${cursorNext}&perPage=${30}&type=${type}${filterPayDateParam}`);
 }
 
-export const getPurchasesAction = () => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/list?type=action`);
+export const getPurchasesAction = (payDate) => {
+    const filterPayDateParam = filterPayDate(payDate)
+    return instanceWithToken.get(`${baseUrl}api/purchases/list?type=action${filterPayDateParam}`);
 }
 
 export const getPurchase = (id) => {
@@ -43,17 +50,7 @@ export const getSearchCursor = (cursorNext, query) => {
     return instanceWithToken.get(`${cursorNext}&perPage=${30}&search=${query}`);
 }
 
-/* export const getVendors = () => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/stock/vendors`);
-}
 
-export const getPayersList = () => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/stock/settings/payers`);
-}
-
-export const getCategories = () => {
-    return instanceWithToken.get(`${baseUrl}api/purchases/stock/settings/categories`);
-} */
 
 export const addVendor = (name, inn, kpp) => {
     return instanceWithToken({
@@ -424,12 +421,12 @@ export const refund = (id, is_full, comment, purchase_items) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/purchases/return`,
-        data: {id, is_full, comment, purchase_items},
+        data: { id, is_full, comment, purchase_items },
     })
 }
 
 
-export const confirmRefund =  (id) => {
+export const confirmRefund = (id) => {
     return instanceWithToken({
         method: 'post',
         mode: "cors",
@@ -438,11 +435,11 @@ export const confirmRefund =  (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/purchases/confirm_refund_received`,
-        data: {id},
+        data: { id },
     })
 }
 
-export const rejectRefund =  (id) => {
+export const rejectRefund = (id) => {
     return instanceWithToken({
         method: 'post',
         mode: "cors",
@@ -451,6 +448,6 @@ export const rejectRefund =  (id) => {
             "Accept": "application/json"
         },
         url: `${baseUrl}api/purchases/reject/refund`,
-        data: {id},
+        data: { id },
     })
 }

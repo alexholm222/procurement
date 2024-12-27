@@ -1,6 +1,7 @@
 import s from './Filters.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 //selector
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 //components
@@ -22,14 +23,22 @@ const FilterItem = ({ item }) => {
     )
 }
 
-export const Filters = () => {
+export const Filters = ({ filterPayDate, setFilterPayDate, setFiltersModal }) => {
     const payers = useSelector(purchaseSelector).payers;
     const categories = useSelector(purchaseSelector).categories;
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState([filterPayDate[0] == null ? null : dayjs(filterPayDate[0]), filterPayDate[1] == null ? null : dayjs(filterPayDate[1])]);
     const [dateRangeFormat, setDateRangeFormat] = useState([null, null]);
     const [disabled, setDisabled] = useState(false);
-    const [endDisabled, setEndDisabled] = useState(false)
-    console.log(dateRangeFormat, disabled)
+    const [endDisabled, setEndDisabled] = useState(false);
+    const [resetState, setResetState] = useState(false);
+    const [anim, setAnim] = useState(false);
+    const modalRef = useRef();
+
+    console.log(dateRange)
+
+    useEffect(() => {
+        setAnim(true)
+    }, []);
 
     useEffect(() => {
         const dateRangeFormat = dateRange.map(el => {
@@ -37,11 +46,65 @@ export const Filters = () => {
         })
         setDateRangeFormat(dateRangeFormat)
         setDisabled(dateRangeFormat.some(el => el == "Invalid Date") || (dateRangeFormat[0] == null && dateRangeFormat[1] !== null))
-    }, [dateRange])
+
+        dateRangeFormat[1] !== null && setEndDisabled(false)
+
+        if (dateRangeFormat[0] == null && dateRangeFormat[1] == null) {
+            setResetState(false)
+        } else {
+            setResetState(true)
+        }
+    }, [dateRange]);
+
+    const handleDisabledEnd = () => {
+        if (endDisabled) {
+            setEndDisabled(false)
+        } else {
+            setEndDisabled(true)
+            setDateRange(prevState => [prevState[0], null])
+        }
+    }
+
+    const handleReset = () => {
+        setDateRange([null, null]);
+        setFilterPayDate([null, null])
+        setEndDisabled(false)
+    }
+
+    const handleConfirm = () => {
+        setFilterPayDate(dateRangeFormat)
+
+        setTimeout(() => {
+            handleCloseModal();
+        }, 150)
+
+    }
+
+    const handleCloseModal = () => {
+        setAnim(false);
+        setTimeout(() => {
+            setFiltersModal(0);
+        }, 100)
+    }
+
+    const closeModal = (e) => {
+        e.stopPropagation()
+        if (modalRef.current && !modalRef.current.contains(e.target) && !e.target.closest('.MuiPopper-root')) {
+            handleCloseModal();
+            return
+        }
+    }
+
+
+    useEffect(() => {
+        document.addEventListener('mousedown', closeModal);
+
+        return () => document.removeEventListener('mousedown', closeModal);
+    }, []);
 
     return (
-        <div className={s.window}>
-            {/* <div className={s.container}>
+        <div ref={modalRef} className={`${s.window} ${anim && s.window_anim}`}>
+           {/*   <div className={s.container}>
                 <div className={s.block}>
                     <p className={s.sub}>Категории</p>
 
@@ -67,18 +130,20 @@ export const Filters = () => {
             <div className={s.block}>
                 <div className={s.subs}>
                     <p className={s.sub}>Дата оплаты</p>
-                    <p className={`${s.reset} ${s.reset_vis}`}>Сбросить</p>
+                    <p onClick={handleReset} className={`${s.reset} ${resetState && s.reset_vis}`}>Сбросить</p>
                 </div>
 
-                <DateCalendarRange value={dateRange} setValue={setDateRange} />
-                <div className={`${s.item} ${s.item_end}`}>
+                <DateCalendarRange value={dateRange} setValue={setDateRange} endDisabled={endDisabled} />
+               {/*  <div onClick={handleDisabledEnd} className={`${s.item} ${endDisabled && s.item_active} ${s.item_end}`}>
                     <CheckBox active={endDisabled} />
                     <p>без конечной даты</p>
-                </div>
+                </div> */}
 
             </div>
 
-            <button disabled={disabled} className={s.button}>Применить</button>
+            <button onClick={handleConfirm} disabled={disabled} className={s.button}>
+                Применить
+            </button>
         </div>
     )
 }

@@ -65,6 +65,7 @@
 .name {
     max-width: 440px;
     width: 100%;
+    overflow: auto;
 }
 
 .type {
@@ -123,7 +124,7 @@
     min-height: 54px;
 
     &_first {
-        max-height: 54px;
+       /*  max-height: 54px; */
     }
 
     &_disabled {
@@ -135,7 +136,7 @@
     border-top: 1px solid #eaf0fa00;
     box-sizing: border-box;
     overflow: hidden;
-    min-height: 0;
+    max-height: 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -162,7 +163,8 @@
 
         &_anim {
             opacity: 1;
-            min-height: 54px;
+            height: 54px;
+            max-height: 54px;
 
         }
     }
@@ -170,7 +172,7 @@
     &_anim {
         border-top: 1px solid var(--color-line-border);
         opacity: 1;
-        min-height: 54px;
+        max-height: 54px;
         height: fit-content;
     }
 
