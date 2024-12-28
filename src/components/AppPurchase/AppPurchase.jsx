@@ -271,7 +271,7 @@ function AppPurchase() {
   return (
     <div className={s.app}>
       <div className={s.header}>
-        <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup></h2>
+        <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup> {profile.name} {profile.position}</h2>
         <div className={s.buttons}>
           {isSkilla && <button disabled={loadParametrs} onClick={handleOpenOrder} className={`${s.button} ${s.button_add}`}>
             <p>Создать заявку на закупку</p>

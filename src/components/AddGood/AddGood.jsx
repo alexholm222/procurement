@@ -37,6 +37,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     const listRef = useRef();
     const listPatternRef = useRef();
     const inputRefFocus = useRef();
+    console.log(patternId)
 
 
     useEffect(() => {
