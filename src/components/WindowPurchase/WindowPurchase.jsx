@@ -24,7 +24,7 @@ import {
     getPurchase, savePurchase, createPurchase, createPurchaseAdmin,
     recalPurchase, deleteRejectPurchase, approveAdmin, rejectPurchase,
     createPayment, confirmPayment, rejectPayment, endPurchase,
-    deletePurchase, createPurchaseLeader, approveLeader
+    deletePurchase, createPurchaseLeader, approveLeader, changeTakeAccount
 } from '../../Api/Api'
 //components
 import Log from '../Log/Log';
@@ -299,7 +299,21 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     }
 
     const handleTakeAccount = () => {
-        takeAccount ? setTakeAccount(false) : setTakeAccount(true);
+        if ((status == 0 || status == 1 || status == 2 || status == -2)) {
+            takeAccount ? setTakeAccount(false) : setTakeAccount(true);
+            return
+        }
+
+        if ((status > 2)) {
+            changeTakeAccount(idCreate)
+                .then(res => {
+                    console.log(res)
+                    const data = res.data[0];
+                    takeAccount ? setTakeAccount(false) : setTakeAccount(true);
+                })
+
+        }
+
     }
 
     const handleSave = () => {
@@ -1019,8 +1033,8 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             </div>
                             }
 
-                            {(role == 'administrator' || role == 'director') && <div onClick={handleTakeAccount} className={`${s.check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.check_disabled}`}>
-                                <div className={`${s.checkbox} ${takeAccount && s.checkbox_check} ${(status !== 0 && status !== 1 && status !== 2 && status !== -2) && s.checkbox_disabled}`}>
+                            {(role == 'administrator' || role == 'director') && <div onClick={handleTakeAccount} className={`${s.check} ${status == -1 && s.check_disabled}`}>
+                                <div className={`${s.checkbox} ${takeAccount && s.checkbox_check} ${status == -1 && s.checkbox_disabled}`}>
                                     <div>
                                         <IconCheck />
                                     </div>

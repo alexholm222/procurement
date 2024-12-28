@@ -451,3 +451,8 @@ export const rejectRefund = (id) => {
         data: { id },
     })
 }
+
+//Редактировать учет в фин итогах внутри закупки
+export const changeTakeAccount = (id) => {
+    return instanceWithToken.post(`${baseUrl}api/purchases/change_take_account/${id}`);
+}
