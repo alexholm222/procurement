@@ -11,7 +11,8 @@ import Filters from '../Filters/Filters';
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
 function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery,
-    orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount, filterPayDate, setFilerPayDate, disabled }) {
+    orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount, filterPayDate, setFilerPayDate,
+    disabled, isSkilla }) {
     const [tabAttention, setTabAttention] = useState(false);
     const [tabAttentionOrders, setTabAttentionOrders] = useState(false);
     const [filtersModal, setFiltersModal] = useState(false);
@@ -66,7 +67,7 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                         }
                     </button>
 
-                    <button disabled={orders?.length == 0} onClick={handleChoseTab} id='orders' className={`${s.button} ${activeTabs == 'orders' && s.button_active}`}>
+                    {isSkilla && <button disabled={orders?.length == 0} onClick={handleChoseTab} id='orders' className={`${s.button} ${activeTabs == 'orders' && s.button_active}`}>
                         <p>Заявки</p>
                         {orders?.length !== 0 && <div className={`${s.counter} ${tabAttentionOrders && s.counter_active}`}>
                             {loadOrders && <Loader />}
@@ -74,6 +75,7 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                         </div>
                         }
                     </button>
+                    }
 
                     <button disabled={purchaseBeznalCount == 0} onClick={handleChoseTab} id='beznal' className={`${s.button} ${activeTabs == 'beznal' && s.button_active}`}>
                         <p>Безналичная оплата</p>

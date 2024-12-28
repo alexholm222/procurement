@@ -21,8 +21,7 @@ import { takeOrder } from '../../Api/Api';
 //utils
 import { dateNow2 } from '../../utils/date';
 
-function Order({ el }) {
-    const role = document.getElementById('root_purchases').getAttribute('role');
+function Order({ el, role }) {
     const [status, setStatus] = useState(0);
     const [order, setOrderUpdateEl] = useState(el);
     const [hidenOrder, setHidenOrder] = useState(false);

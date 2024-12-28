@@ -13,7 +13,7 @@ import PurchaseSceleton from '../Purchase/PurchaseSceleton/PurchaseSceleton';
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
 
-function ListOrders({ orders, load, loadParametrs, personIsView }) {
+function ListOrders({ role, orders, load, loadParametrs, personIsView }) {
     const [anim, setAnim] = useState(false)
     const order = useSelector(purchaseSelector).order;
   
@@ -22,11 +22,6 @@ function ListOrders({ orders, load, loadParametrs, personIsView }) {
     useEffect(() => {
         setAnim(true)
     }, [])
-
-
-
-
-
 
 
     return (
@@ -55,11 +50,11 @@ function ListOrders({ orders, load, loadParametrs, personIsView }) {
 
             {!load && <ul className={s.orders}>
                 {orders?.map((el, i) => {
-                    return <Order key={el.id} el={el} />
+                    return <Order role={role} key={el.id} el={el} />
                 })}
             </ul>
             }
-            {order.open && order.id !== '' && <WindowOrder id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView}/>}
+            {order.open && order.id !== '' && <WindowOrder role={role} id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView}/>}
         </div>
     )
 };

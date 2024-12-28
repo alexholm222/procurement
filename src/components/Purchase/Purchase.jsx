@@ -13,21 +13,13 @@ import { setUpdateAction } from '../../store/reducer/purchaseUpdate/slice';
 //selector
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
-function Purchase({ el }) {
-    const role = document.getElementById('root_purchases').getAttribute('role');
+function Purchase({ role, el }) {
     const [status, setStatus] = useState(0);
     const [purchase, setPurchaseUpdate] = useState(el);
     const [hidenPurchase, setHidenPurchase] = useState(false);
     const [isView, setIsView] = useState(true);
     const dispatch = useDispatch();
-    const existingFiles = [{ id: uuid(), file: purchase?.bill, name: purchase?.bill?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill2, name: purchase?.bill2?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill3, name: purchase?.bill3?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill4, name: purchase?.bill4?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill5, name: purchase?.bill5?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill6, name: purchase?.bill6?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: purchase?.bill7, name: purchase?.bill7?.split('/').pop(), type: 'existing' },
-    ].filter(purchase => purchase.file && purchase.file !== null);
+  
     const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
     const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
 
@@ -92,10 +84,10 @@ function Purchase({ el }) {
             categoryId: purchase?.cat_id,
             positions: purchase?.items,
             isNal: purchase?.is_nal,
-            inStock: role == 'administrator' ? purchase.in_stock : null,
-            takeAccount: role == 'administrator' ? purchase.take_account : null,
+            inStock: (role == 'administrator' || role == 'director') ? purchase.in_stock : null,
+            takeAccount: (role == 'administrator' || role == 'director') ? purchase.take_account : null,
             sum: purchase?.sum,
-            existingFiles,
+    /*         existingFiles, */
             status: purchase?.status,
             reject: purchase?.is_reject,
             vendorId: purchase?.stock_vendor_id,
@@ -133,8 +125,8 @@ function Purchase({ el }) {
             </div>
             <div className={`${s.item} ${s.item_buyer}`}>
                 <p>{purchase?.payer ? purchase?.payer?.name : ''}</p>
-                {role == 'administrator' && purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>наличные</span>}
-                {role == 'administrator' && !purchase?.is_nal && <span>безнал</span>}
+                {(role == 'administrator' || role == 'director') && purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>наличные</span>}
+                {(role == 'administrator' || role == 'director') && !purchase?.is_nal && <span>безнал</span>}
             </div>
             <div className={`${s.item} ${s.item_seller}`}>
                 <p>{purchase?.counterparty_name}</p>

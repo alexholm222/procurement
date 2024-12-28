@@ -31,14 +31,14 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role,
     }
 
     return (
-        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim} ${((status > 2  && role == 'administrator') || (status > 0 && role == 'administrator') || status == -1) && s.item_disabled}`}>
+        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim} ${((status > 2  && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.item_disabled}`}>
             <div onClick={handleOpenPosition} className={`${s.pos} ${s.cell}`}>{i + 1}</div>
             <div onClick={handleOpenPosition} className={`${s.name} ${s.cell}`}>{el.name}</div>
             <div onClick={handleOpenPosition} className={`${s.type} ${s.cell}`}>{el.item_id !== 0 ? 'шаблон' : el.type}</div>
             <div onClick={handleOpenPosition} className={`${s.num} ${s.cell}`}>{el.quantity}</div>
             <div onClick={handleOpenPosition} className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
             <div onClick={handleOpenPosition} className={`${s.total} ${disabled && s.total_} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
-            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2  && role == 'administrator') || (status > 0 && role == 'administrator') || status == -1) && s.delete_disabled}`}>
+            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2  && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.delete_disabled}`}>
                 <IconDelete id={el.id} onClick={handleDeleteGood} />
             </div>
 

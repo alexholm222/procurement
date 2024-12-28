@@ -32,7 +32,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
     const [err, setErr] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch();
-    const role = document.getElementById('root_purchases').getAttribute('role');
+
     console.log(type)
 
     useEffect(() => {

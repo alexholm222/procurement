@@ -43,8 +43,7 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 import { HandledatePurchase, dateNow2 } from '../../utils/date';
 
 
-function WindowOrder({ id, order, personIsView, loadParametrs }) {
-    const role = document.getElementById('root_purchases').getAttribute('role');
+function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     const [anim, setAnim] = useState(false);
     const [paymentType, setPaymentType] = useState('');
     const [personId, setPersonId] = useState(order.personId || -1);
@@ -397,7 +396,7 @@ function WindowOrder({ id, order, personIsView, loadParametrs }) {
                             {!loadCreate && <IconTakeWork />}
                         </button>}
 
-                       {/*  {status == 1 && owner == personView && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
+                        {/*  {status == 1 && owner == personView && <button disabled={false} onClick={handleCreatePurchaseFromOrder} className={`${s.button} ${s.button_main}`}>
                             {loadCreate && <p>Создаем закупку</p>}
                             {!loadCreate && <p>Создать закупку</p>}
                             {loadCreate && <LoaderButton color={'#FFFFFF'} />}

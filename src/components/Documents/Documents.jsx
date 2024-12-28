@@ -29,7 +29,8 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
 
     useEffect(() => {
         if (file.type == 'existing') {
-            const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : `${baseUrl}file/${file.file}`;
+            const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('uploads') ? `${baseUrl}file/${file.file}` : file.file;
+            console.log(file)
             setUrlFile(link);
         } else {
             const fileUrl = window.URL.createObjectURL(file.file);

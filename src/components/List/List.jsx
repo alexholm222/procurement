@@ -14,7 +14,7 @@ import PurchaseSceleton from '../Purchase/PurchaseSceleton/PurchaseSceleton';
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
 
-function List({ purchases, purchaseCount, purchaseCountGeneral, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs, filterPayDate }) {
+function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs, filterPayDate }) {
     const [anim, setAnim] = useState(false)
     const [cursorNext, setCursorNext] = useState(null);
     const [endCursor, setEndCursor] = useState(30);
@@ -104,14 +104,14 @@ function List({ purchases, purchaseCount, purchaseCountGeneral, setPurchases, fi
             >
                 <ul className={s.purchases}>
                     {purchases.slice(0, endCursor).map((el, i) => {
-                        return <Purchase key={el.id} el={el} />
+                        return <Purchase key={el.id} el={el} role={role} isSkilla={isSkilla}/>
                     })}
                 </ul>
             </InfiniteScroll>
             }
               {purchaseCountGeneral == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
-              {purchases.length == 0 && <div className={s.empty}><p>По выбранным фильтрам нет закупок</p></div>}
-            {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
+              {purchases.length == 0 && purchaseCountGeneral !== 0 && <div className={s.empty}><p>По выбранным фильтрам нет закупок</p></div>}
+            {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase role={role} isSkilla={isSkilla} id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
     )
 };

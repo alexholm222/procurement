@@ -226,12 +226,12 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                 <button disabled={disabled} onClick={handleConfirm} className={s.button}>
                     {loadAccept &&
                         <p>
-                            {role == 'administrator' && 'Оформляем возврат'}
-                            {role !== 'administrator' && 'Отправляем запрос на возврат'}
+                            {(role == 'administrator' || role == 'director') && 'Оформляем возврат'}
+                            {role !== 'administrator' && role !== 'director' && 'Отправляем запрос на возврат'}
                         </p>}
                     {!loadAccept && <p>
-                        {role == 'administrator' && 'Оформить возврат'}
-                        {role !== 'administrator' && 'Отправить запрос на возврат'}
+                        {(role == 'administrator' || role == 'director') && 'Оформить возврат'}
+                        {role !== 'administrator' && role !== 'director' && 'Отправить запрос на возврат'}
                     </p>}
                     {loadAccept && <LoaderButton color={'#FFFFFF'} />}
                 </button>

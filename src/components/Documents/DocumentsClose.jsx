@@ -12,11 +12,12 @@ import { baseUrl } from '../../Api/Api';
 
 const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     const [animFile, setAnimFile] = useState();
+    const [fileName, setFileName] = useState('');
     const [urlFile, setUrlFile] = useState('');
     const [isImage, setIsImage] = useState(false);
     const [modalImage, setModalImage] = useState(false);
-    const conditionDownload = file.file.slice(-3) !== 'pdf' && file.file.slice(-3) !== 'png' && file.file.slice(-3) !== 'jpg' ? file.file : false;
-    const conditionTarget = file.type == 'existing' && file.file.slice(-3) !== 'pdf' && file.file.slice(-3) !== 'png' && file.file.slice(-3) !== 'jpg' ? '_self' : '_blank';
+    const conditionDownload = file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? file?.file : false;
+    const conditionTarget = file?.type == 'existing' && file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? '_self' : '_blank';
 
     useEffect(() => {
         setTimeout(() => {
@@ -25,13 +26,13 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     }, []);
 
     useEffect(() => {
-        setIsImage(file.file.slice(-3) == 'png' || file.file.slice(-3) == 'jpg')
+        setIsImage(file?.file.slice(-3) == 'png' || file.file.slice(-3) == 'jpg')
     }, [file])
 
     useEffect(() => {
-        const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : `${baseUrl}file/${file.file}`;
+        const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('uploads') ? `${baseUrl}file/${file.file}` : file.file;
         setUrlFile(link);
-
+        setFileName(file.file?.includes('uploads') ? file.file?.split('/').pop() : file.file?.split('filename=').pop().split('&').shift())
     }, [file])
 
 
@@ -47,7 +48,7 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
                 {(file?.file?.slice(-3) == 'xls' || file?.file?.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
                 {file?.file?.slice(-3) == 'doc' || file?.file?.slice(-3) == 'ocx' && <img src={iconWord}></img>}
                 <div className={s.block_text}>
-                    <p>{file?.file}</p>
+                    <p>{fileName}</p>
                     {/*   <span>Размер {file.size.toFixed(2)}</span> */}
                 </div>
             </a>
@@ -58,7 +59,7 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
                     <img src={urlFile}></img>
                 </div>
                 <div className={s.block_text}>
-                    <p>{file?.file}</p>
+                    <p>{fileName}</p>
                     {/*   <span>Размер {file.size.toFixed(2)}</span> */}
                 </div>
             </div>
@@ -70,13 +71,14 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
 
 
 const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight }) => {
+    console.log(documents)
     return (
         <div className={`${s.window} ${s.window_close} ${disabled && documents.length == 0 && s.window_disabled}`}>
             <h3 className={s.title}>Закрывающие документы</h3>
             <div style={{ height: `${Math.ceil(documents.length / 2) * 86}px` }} className={s.files}>
 
                 {documents.map((el, i) => {
-                    return <DocumentClose key={el.id} i={i} file={el} files={documents} type={el.type ? el.type : ''} disabled={disabled} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
+                    return el.file && <DocumentClose key={el.id} i={i} file={el} files={documents} type={el.type ? el.type : ''} disabled={disabled} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
                 })}
 
             </div>

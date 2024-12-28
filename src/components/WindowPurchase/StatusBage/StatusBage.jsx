@@ -23,7 +23,7 @@ const StatusBage = ({ status, reject, role, returnDone, positionReturn }) => {
             }
 
             {(status == 1 || status == 2) && !reject && <div className={`${s.bage} ${s.bage_anim}`}>
-                <IconStatusLoader /><p>{role == 'administrator' ? 'Согласование' : 'Ожидает согласования'}</p>
+                <IconStatusLoader /><p>{(role == 'administrator' || role == 'director') ? 'Согласование' : 'Ожидает согласования'}</p>
             </div>
             }
 

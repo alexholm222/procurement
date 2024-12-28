@@ -10,7 +10,7 @@ import { daData } from '../../Api/ApiDaData';
 //slice
 import { setParametrsUpdate } from '../../store/reducer/updateParametrs/slice';
 
-const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, windowRef, scrollTopHeight }) => {
+const ModalSuplier = ({ role, setModal, setVendorId, setAddType, setContractVendorId, windowRef, scrollTopHeight }) => {
     const [anim, setAnim] = useState(false);
     const [success, setSuccess] = useState(false);
     const [check, setCheck] = useState(false)
@@ -29,7 +29,6 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
     const inputRef2 = useRef();
     const inputRef3 = useRef(); 
     const dispatch = useDispatch();
-    const role = document.getElementById('root_purchases').getAttribute('role');
 
     useEffect(() => {
         setAnim(true)
@@ -174,7 +173,7 @@ const ModalSuplier = ({ setModal, setVendorId, setAddType, setContractVendorId, 
                 <div ref={inputRef} className={s.input}>
                     <input ref={inputRefFocus} onFocus={handleFocusName} onChange={handleName} value={name || ''} type='text' className={s.input}></input>
                 </div>
-                {role == 'administrator' && <div className={`${s.check}`}>
+                {(role == 'administrator' || role == 'director') && <div className={`${s.check}`}>
                     <div onClick={handleCheck} className={`${s.checkbox} ${check && s.checkbox_check}`}>
                         <div>
                             <IconCheck />

@@ -26,7 +26,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
     const modalRef = useRef();
     const textRef = useRef();
     const dispatch = useDispatch();
-    const role = document.getElementById('root_purchases').getAttribute('role');
+  
 
     useEffect(() => {
         textRef.current.focus();

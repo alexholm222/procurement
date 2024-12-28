@@ -75,7 +75,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
     const [err, setErr] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch();
-    const role = document.getElementById('root_purchases').getAttribute('role');
+
 
     useEffect(() => {
         setAnim(true)

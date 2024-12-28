@@ -13,7 +13,7 @@ import ModalSuplier from '../ModalSupliers/ModalSuplier';
 import ModalСontracts from '../ModalСontracts/ModalСontracts';
 import VendorSceleton from './VendorSceleton/VendorSceleton';
 
-const Vendors = ({ hiden, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef, scrollTopHeight }) => {
+const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef, scrollTopHeight }) => {
     const vendors = useSelector(purchaseSelector).vendors;
     const contracts = useSelector(purchaseSelector).vendorsContracts;
     const payers = useSelector(purchaseSelector).payers;
@@ -208,7 +208,7 @@ const Vendors = ({ hiden, vendorId, contractVendorId, setVendorId, setContractVe
                     <p>Добавить договор</p>
                 </button> */}
             </div>
-            {modalVendor ? <ModalSuplier setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
+            {modalVendor ? <ModalSuplier role={role} setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
             {modalContracts ? <ModalСontracts setModal={setModalContracts} vendors={vendors} setContractVendorId={setContractVendorId} setVendorId={setVendorId} payers={payers} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
         </div>
     )
