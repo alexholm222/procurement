@@ -5,6 +5,7 @@
     line-height: 22px;
     border-top: 1px solid var(--color-line-border);
     cursor: pointer;
+    position: relative;
     transition: all 0.1s;
 
 
@@ -93,8 +94,11 @@
     top: 18px;
     left: -24px;
     transition: all 0.15s;
+    z-index: 2;
+    opacity: 1;
+    visibility: visible;
 
-    &_hiden {
+    &_hidden {
         opacity: 0;
         visibility: hidden;
     }

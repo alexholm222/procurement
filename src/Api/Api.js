@@ -42,6 +42,10 @@ export const getPurchase = (id) => {
     return instanceWithToken.get(`${baseUrl}api/purchases/detail/${id}`);
 }
 
+export const getPurchaseFiles = (id) => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/files/${id}`);
+}
+
 export const getSearchResult = (query) => {
     return instanceWithToken.get(`${baseUrl}api/purchases/list?perPage=${30}&search=${query}`);
 }

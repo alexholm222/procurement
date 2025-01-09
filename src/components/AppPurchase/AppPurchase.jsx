@@ -1,5 +1,6 @@
 import s from './AppPurchase.module.scss';
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
@@ -68,6 +69,9 @@ function AppPurchase() {
   const purchase = useSelector(purchaseSelector).purchase;
   const order = useSelector(purchaseSelector).order;
   /*   const role = document.getElementById('root_purchases').getAttribute('role'); */
+  const location = useLocation();
+  const navigate = useNavigate();
+  const path = location.pathname;
   console.log(role)
 
 
@@ -244,6 +248,38 @@ function AppPurchase() {
       })
       .catch(err => console.log(err))
   }, [updateParametrs])
+  console.log(purchase)
+
+  //загрузка закупки по ссылке
+  useEffect(() => {
+    if (path.includes('/purchase=') && !purchase.id) {
+      const idPurchase = Number(path.split('purchase=').pop());
+      const purchaseForOpen = {
+        isOrder: false,
+        id: idPurchase,
+        open: true,
+      }
+      dispatch(setPurchase(purchaseForOpen));
+      localStorage.setItem('purchase', JSON.stringify(purchaseForOpen))
+      document.title = `Закупка`;
+      return
+    }
+
+  }, [path, purchase])
+
+  useEffect(() => {
+    if (!path.includes('/purchase=') && !path.includes('/new')) {
+      handleClosePurchase()
+      document.title = `Закупки`;
+      return
+    }
+
+    if (path.includes('/new') && !purchase.id) {
+      dispatch(setPurchase({ id: '', open: true }))
+      document.title = `Закупка`;
+      return
+    }
+  }, [path])
 
   //orders
   useEffect(() => {
@@ -258,14 +294,22 @@ function AppPurchase() {
   }, [updateOrder])
 
   const handleOpenPurchase = (e) => {
-    const id = e.currentTarget.id
     dispatch(setPurchase({ id: '', open: true }))
+    navigate('/new')
+  }
+
+  const handleClosePurchase = () => {
+    setTimeout(() => {
+      dispatch(setPurchase({ id: '', open: false }))
+    }, 150);
   }
 
   const handleOpenOrder = (e) => {
     const id = e.currentTarget.id
     dispatch(setOrder({ id: '', open: true }))
   }
+
+  console.log(purchase)
 
 
   return (
@@ -298,7 +342,7 @@ function AppPurchase() {
       {query !== '' && <ListSearch role={role} purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
       {activeTabs == 'orders' && isSkilla && query == '' && <ListOrders role={role} orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
       {order.open && order.id == '' && <WindowOrder role={role} id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}
-      {purchase.open && (purchase.id == '' || purchase.isOrder) && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} role={role} isSkilla={isSkilla}/>}
+      {purchase.open && (purchase.id == '' || purchase.isOrder) && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} role={role} isSkilla={isSkilla} />}
 
     </div>
   );

@@ -1,6 +1,7 @@
 import s from './WindowPurchase.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import uuid from 'react-uuid';
 //icon 
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
@@ -24,7 +25,8 @@ import {
     getPurchase, savePurchase, createPurchase, createPurchaseAdmin,
     recalPurchase, deleteRejectPurchase, approveAdmin, rejectPurchase,
     createPayment, confirmPayment, rejectPayment, endPurchase,
-    deletePurchase, createPurchaseLeader, approveLeader, changeTakeAccount
+    deletePurchase, createPurchaseLeader, approveLeader, changeTakeAccount,
+    getPurchaseFiles
 } from '../../Api/Api'
 //components
 import Log from '../Log/Log';
@@ -115,11 +117,14 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     const [returnDone, setReturnDone] = useState(false);
     const [closeDocs, setCloseDocs] = useState([]);
     const [error, setError] = useState('');
-    const [loadPurchase, setLoadPurchase] = useState(false)
+    const [loadPurchase, setLoadPurchase] = useState(false);
+    const [loadDocuments, setLoadDocuments] = useState(false);
+    const [position, setPosition] = useState(purchase.position || '')
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const windowRef = useRef();
 
-    console.log(purchase)
+    console.log('id плательщика', payerId)
 
 
     useEffect(() => {
@@ -147,7 +152,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
         }
     }, [categoryId])
 
-
+    console.log('плательщики', payers, payerId)
     //определяем настрйоки покупателя
     useEffect(() => {
         const result = payers.find(el => el.id == payerId);
@@ -190,13 +195,27 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     useEffect(() => {
         if (id) {
             setLoadPurchase(true)
+            setLoadDocuments(true)
             getPurchase(id)
                 .then(res => {
+                    /* setTimeout(() => {
+                        dispatch(setUpdateAction());
+                    }, 200) */
                     const data = res.data;
-                    const docs = data.files;
                     const purchase = data.purchase;
-                    setCloseDocs(docs)
+                    setDateCreate(purchase.date_create)
+                    setPayerId(purchase.payer_id)
+                    setCategoryId(purchase.cat_id)
+                    setInStock((role == 'administrator' || role == 'director') ? purchase.in_stock : null)
+                    setTakeAccount((role == 'administrator' || role == 'director') ? purchase.take_account : null)
+                    setStatus(purchase?.status)
+                    setReject(purchase?.is_reject)
+                    setVendorId(purchase?.stock_vendor_id)
+                    setContractVendorId(purchase?.stock_vendor_contracts_id)
                     setPositions(data.purchase_items)
+                    setPersonView(data.person_view.id);
+                    setPersonId(purchase.person_id);
+                    setPosition(purchase.person?.position)
                     const returnPos = data.purchase_return_items.filter(el => el.status == 'requested')
                     setPositionReturn(returnPos)
                     const returnPosDone = data.purchase_return_items.filter(el => el.status == 'confirmed');
@@ -213,25 +232,40 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                         files: handleExistingFiles(data.order),
                     }
 
-                    const existingFiles = [{ id: uuid(), file: purchase?.bill, name: purchase?.bill?.includes('uploads') ? purchase?.bill?.split('/').pop() : purchase?.bill?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill2, name: purchase?.bill2?.includes('uploads') ? purchase?.bill2?.split('/').pop() : purchase?.bill2?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill3, name: purchase?.bill3?.includes('uploads') ? purchase?.bill3?.split('/').pop() : purchase?.bill3?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill4, name: purchase?.bill4?.includes('uploads') ? purchase?.bill4?.split('/').pop() : purchase?.bill4?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill5, name: purchase?.bill5?.includes('uploads') ? purchase?.bill5?.split('/').pop() : purchase?.bill5?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill6, name: purchase?.bill6?.includes('uploads') ? purchase?.bill6?.split('/').pop() : purchase?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    { id: uuid(), file: purchase?.bill7, name: purchase?.bill7?.includes('uploads') ? purchase?.bill7?.split('/').pop() : purchase?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                    ].filter(purchase => purchase.file && purchase.file !== null);
-                    console.log(existingFiles)
-                    setDocuments(existingFiles)
+
 
                     data?.order_logs && data?.order_logs !== null ? setLogs([orderLog, ...data?.order_logs?.order_logs?.slice(1), ...data.logs]) : setLogs(data.logs);
 
-                    setPersonView(data.person_view.id);
-                    setPersonId(data.purchase.person_id);
+
 
                     data.order && setOrder(data.order);
                     setLoadPurchase(false)
+                   
+                   
                     /*  dispatch(setPurchasesUpdate({ ...res.data.purchase, items: res.data.purchase_items, payer: res.data.payer, logs_view: [{ is_view: 1 }] })) */
+                    document.title = `Закупка от ${HandledatePurchase(purchase.date_create)}`;
+                })
+                .catch(err => console.log(err))
+
+            getPurchaseFiles(id)
+                .then(res => {
+                    console.log(res)
+                    const data = res.data;
+                    const purchase = data.purchase;
+                    const docs = data.files;
+                    console.log(docs)
+                    setCloseDocs(docs)
+                    const existingFiles = [
+                        { id: uuid(), file: purchase?.bill, name: purchase?.bill?.includes('uploads') ? purchase?.bill?.split('/').pop() : purchase?.bill?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill2, name: purchase?.bill2?.includes('uploads') ? purchase?.bill2?.split('/').pop() : purchase?.bill2?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill3, name: purchase?.bill3?.includes('uploads') ? purchase?.bill3?.split('/').pop() : purchase?.bill3?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill4, name: purchase?.bill4?.includes('uploads') ? purchase?.bill4?.split('/').pop() : purchase?.bill4?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill5, name: purchase?.bill5?.includes('uploads') ? purchase?.bill5?.split('/').pop() : purchase?.bill5?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill6, name: purchase?.bill6?.includes('uploads') ? purchase?.bill6?.split('/').pop() : purchase?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                        { id: uuid(), file: purchase?.bill7, name: purchase?.bill7?.includes('uploads') ? purchase?.bill7?.split('/').pop() : purchase?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    ].filter(purchase => purchase.file && purchase.file !== null);
+                    setDocuments(existingFiles)
+                    setLoadDocuments(false)
                 })
                 .catch(err => console.log(err))
             return
@@ -275,10 +309,11 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
 
     const handleClosePurchase = () => {
         setAnim(false)
+        navigate('/')
 
-        setTimeout(() => {
-            dispatch(setPurchase({ id: '', open: false }))
-        }, 150);
+        /*  setTimeout(() => {
+             dispatch(setPurchase({ id: '', open: false }))
+         }, 150); */
     }
 
     const handleScrollTop = (e) => {
@@ -728,14 +763,14 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     }
 
 
-    console.log(role)
+    console.log('продавец и тип оплаты', vendorId, paymentType, payerId)
 
     return (
         <div ref={windowRef} onScroll={handleScrollTop} className={`${s.window} ${anim && s.window_anim}`}>
             <div className={s.container}>
                 <div className={s.header}>
-                    <h2><IconArrowBack onClick={handleClosePurchase} />
-                        {id /* && !order.id */ && `Закупка от ${HandledatePurchase(dateCreate)}`}
+                    <h2 style={{ pointerEvents: 'auto' }}><Link onClick={handleClosePurchase} to={`/`}><IconArrowBack /></Link>
+                        {id /* && !order.id */ && `Закупка от  ${dateCreate !== '' ? HandledatePurchase(dateCreate) : ''}`}
                         {/*  {id && order.id && `Закупка по заявке (${order.person.name} ${order.person.surname}) от ${HandledatePurchase(dateCreate)}`} */}
                         {!id && `Создание закупки`}
                         <StatusBage status={status} returnDone={returnDone} positionReturn={positionReturn} reject={reject} role={role} /></h2>
@@ -747,14 +782,14 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             {!loadDelete && <IconButtonDelete />}
                         </button>}
 
-                        {role !== 'administrator' && role !== 'director' && purchase.position == role && (status == 0 || status == -3) && !reject && <button onClick={handleDelete} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {role !== 'administrator' && role !== 'director' && position == role && (status == 0 || status == -3) && !reject && <button onClick={handleDelete} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Удалит 1</p>
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}
                             {!loadDelete && <IconButtonDelete />}
                         </button>}
 
 
-                        {role !== 'administrator' && role !== 'director' && purchase.position == role && reject && <button onClick={handleDeletePurchase} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {role !== 'administrator' && role !== 'director' && position == role && reject && <button onClick={handleDeletePurchase} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Удалить</p>
                             {loadDelete && <LoaderButton color={'#E75A5A'} />}
                             {!loadDelete && <IconButtonDelete />}
@@ -789,7 +824,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             {!loadSave && saveSuccess && <IconDone />}
                         </button>}
 
-                        {role !== 'administrator' && purchase.position !== 'administrator' && role !== 'director' && purchase.position !== 'director' && (status == -3) && !reject && <button disabled={(loadSave || loadAproval || disabledButton) ? true : false} onClick={handleSave} className={`${s.button} ${s.button_add} ${saveSuccess && s.button_success}`}>
+                        {role !== 'administrator' && position !== 'administrator' && role !== 'director' && position !== 'director' && (status == -3) && !reject && <button disabled={(loadSave || loadAproval || disabledButton) ? true : false} onClick={handleSave} className={`${s.button} ${s.button_add} ${saveSuccess && s.button_success}`}>
                             {loadSave && <p>Сохраняем</p>}
                             {!loadSave && !saveSuccess && <p>Сохранить</p>}
                             {!loadSave && saveSuccess && <p>Сохранено</p>}
@@ -811,7 +846,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
 
 
 
-                        {role == 'leader' && (!isPattern || !isNormalPrice) && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                        {role == 'leader' && (!isPattern || !isNormalPrice) && position !== 'administrator' && status == 0 && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
                             {loadAproval && <p>Отправляем на согласование</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на согласование</p>}
                             {!loadAproval && aprovalSuccess && <p>Отправлено на согласование</p>}
@@ -829,7 +864,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             {!loadAproval && aprovalSuccess && <IconDone />}
                         </button>}
 
-                        {role == 'leader' && isPattern && isNormalPrice && purchase.position !== 'administrator' && status == 0 && !reject && <button onClick={handleAprovalLeader} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main}`}>
+                        {role == 'leader' && isPattern && isNormalPrice && position !== 'administrator' && status == 0 && !reject && <button onClick={handleAprovalLeader} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main}`}>
                             {loadAproval && <p>Отправляем на оплату</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на оплату</p>}
 
@@ -847,13 +882,13 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             {!loadAproval && aprovalSuccess && <IconDone />}
                         </button>}
 
-                        {role == 'leader' && purchase.position == 'leader' && (status == 1 || status == 2) && !reject && <button onClick={handleRecall} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
+                        {role == 'leader' && position == 'leader' && (status == 1 || status == 2) && !reject && <button onClick={handleRecall} disabled={loadSave} className={`${s.button} ${s.button_cancle}`}>
                             <p>Отозвать</p>
                             {loadRecall && <LoaderButton color={'#E75A5A'} />}
                             {!loadRecall && <IconButtonCancel />}
                         </button>}
 
-                        {role == 'leader' && purchase.position !== 'administrator' && reject && <button onClick={handleAproval} disabled={loadSave || disabledButton} className={`${s.button} ${s.button_main}`}>
+                        {role == 'leader' && position !== 'administrator' && reject && <button onClick={handleAproval} disabled={loadSave || disabledButton} className={`${s.button} ${s.button_main}`}>
                             {loadAproval && <p>Отправляем на согласование</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на повторное согласование</p>}
                             {!loadAproval && aprovalSuccess && <p>Отправлено на согласование</p>}
@@ -874,7 +909,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                         }
 
 
-                        {role !== 'administrator' && role !== 'director' && role !== 'leader' && purchase.position !== 'administrator' && purchase.position !== 'director' && (status == 0 || status == -3) && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                        {role !== 'administrator' && role !== 'director' && role !== 'leader' && position !== 'administrator' && position !== 'director' && (status == 0 || status == -3) && !reject && <button onClick={handleAproval} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
                             {loadAproval && <p>Отправляем на согласование</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на согласование</p>}
                             {!loadAproval && aprovalSuccess && <p>Отправлено на согласование</p>}
@@ -898,7 +933,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                             {!loadRecall && <IconButtonCancel />}
                         </button>}
 
-                        {role !== 'administrator' && role !== 'director' && role !== 'leader' && purchase.position !== 'administrator' && purchase.position !== 'director' && reject && <button onClick={handleAproval} disabled={loadSave || disabledButton} className={`${s.button} ${s.button_main}`}>
+                        {role !== 'administrator' && role !== 'director' && role !== 'leader' && position !== 'administrator' && position !== 'director' && reject && <button onClick={handleAproval} disabled={loadSave || disabledButton} className={`${s.button} ${s.button_main}`}>
                             {loadAproval && <p>Отправляем на согласование</p>}
                             {!loadAproval && !aprovalSuccess && <p>Отправить на повторное согласование</p>}
                             {!loadAproval && aprovalSuccess && <p>Отправлено на согласование</p>}
@@ -1059,9 +1094,9 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                         positionReturnDone={positionReturnDone}
                         role={role}
                     />
-                    <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setSaveSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
-                    {(status == 5 || status == 9) && closeDocs.length > 0 && <DocumentsClose documents={closeDocs} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />}
-                    <Log logs={logs} setLogs={setLogs} id={idCreate} personView={personView} role={purchase.position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} sendStatus={true} type={'purchase'} send={status !== -2 ? true : false} />
+                    <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setSaveSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} loadDocuments={loadDocuments} />
+                    {(status == 5 || status == 9) && <DocumentsClose documents={closeDocs} windowRef={windowRef} scrollTopHeight={scrollTopHeight}  loadDocuments={loadDocuments}/>}
+                    <Log logs={logs} setLogs={setLogs} id={idCreate} personView={personView} role={position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} sendStatus={true} type={'purchase'} send={status !== -2 ? true : false} />
 
                     {modalAccept ? <PurchaseAccept setModal={setModalAccept} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadAccept} setLoadAccept={setLoadAccept} acceptSuccess={acceptSuccess} setAcceptSuccess={setAcceptSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs} /> : ''}
                     {modalDoc ? <PurchaseCloseDoc role={role} setModal={setModalDoc} windowRef={windowRef} id={idCreate} setStatus={setStatus} loadAccept={loadCloseDoc} setLoadAccept={setLoadCloseDoc} acceptSuccess={closeDocSuccess} setAcceptSuccess={setCloseDocSuccess} setLogs={setLogs} setCloseDocs={setCloseDocs} /> : ''}

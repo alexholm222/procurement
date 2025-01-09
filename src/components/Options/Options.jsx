@@ -12,7 +12,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const [disabledEffect, setDisabledEffect] = useState(false);
     const [list, setList] = useState([]);
     const [firstLoad, setFirstLoad] = useState(true);
-    const [activeId, setActiveId] = useState(payerId || '');
+    const [activeId, setActiveId] = useState('');
     const buttonRef = useRef();
     const buttonLast = useRef();
     const activeRef = useRef();
@@ -22,29 +22,42 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
     const positionActive = activeRef?.current?.getBoundingClientRect().left;
 
-    console.log(payers)
+    console.log(categoryId, payerId, activeId, purchaseId, firstLoad)
 
 
     useEffect(() => {
         if (type == 'categories') {
             setList(categories);
-            purchaseId ? setActiveId(categoryId) : setActiveId(categories[0].id);
-            !purchaseId && setCategoryId(categories[0].id)
-            
+            console.log('id категории', categoryId)
+            setActiveId(categoryId);
+
         }
-    }, [categories]);
+    }, [type, categories, purchaseId, categoryId]);
 
     useEffect(() => {
+        if (type == 'categories' && firstLoad) {
+            !purchaseId && setCategoryId(categories[0].id)
+            setFirstLoad(false);
+        }
+    }, [categories, firstLoad]);
 
+    useEffect(() => {
         if (type == 'payers') {
             setList(payers);
             //payerId == 0 ? 21 : payerId это убрать как зальем обновление !!!!!!!!!!!!!
-            purchaseId ? setActiveId(payerId == 0 ? 21 : payerId) : setActiveId(payers[0].id);
-            !purchaseId && setPayerId(payers[0].id)
-            console.log('отработал')
-    
+            setActiveId(payerId);
+
+
         }
-    }, [payers]);
+    }, [type, payers, purchaseId, payerId, firstLoad]);
+
+    useEffect(() => {
+
+        if (type == 'payers' && firstLoad) {
+            !purchaseId && setPayerId(payers[0].id)
+            setFirstLoad(false);
+        }
+    }, [payers, firstLoad]);
 
 
     useEffect(() => {
@@ -60,7 +73,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
         const activebutton = list[list.length - 1]?.id == activeId ? position3 : positionActive;
         if (activebutton > 1050 && firstLoad) {
             handleTypeRight();
-            setFirstLoad(false);
+
             return
         }
 
@@ -72,7 +85,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
         const id = e.currentTarget.id;
         type == 'payers' && setPayerId(Number(id));
         type == 'categories' && setCategoryId(Number(id));
-        setActiveId(Number(id))
+        /*  setActiveId(Number(id)) */
         const position = e.currentTarget.getBoundingClientRect().right
 
         if (position - position1 > 912) {

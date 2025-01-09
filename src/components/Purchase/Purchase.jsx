@@ -19,7 +19,8 @@ function Purchase({ role, el }) {
     const [hidenPurchase, setHidenPurchase] = useState(false);
     const [isView, setIsView] = useState(true);
     const dispatch = useDispatch();
-  
+    console.log(isView, purchase?.logs_view)
+
     const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
     const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
 
@@ -69,8 +70,8 @@ function Purchase({ role, el }) {
 
     useEffect(() => {
         const lastView = purchase?.logs_view?.find((item) => item.is_view == 0)
-        typeof lastView === "undefined" ? setIsView(true) : setIsView(false);
-    }, [purchase])
+        lastView?.is_view == 0 ? setIsView(false) : setIsView(true)
+    }, [el])
 
 
     const handleOpenPurchase = (e) => {
@@ -83,11 +84,10 @@ function Purchase({ role, el }) {
             payerId: purchase?.payer_id,
             categoryId: purchase?.cat_id,
             positions: purchase?.items,
-            isNal: purchase?.is_nal,
+            sum: purchase?.sum,
             inStock: (role == 'administrator' || role == 'director') ? purchase.in_stock : null,
             takeAccount: (role == 'administrator' || role == 'director') ? purchase.take_account : null,
-            sum: purchase?.sum,
-    /*         existingFiles, */
+
             status: purchase?.status,
             reject: purchase?.is_reject,
             vendorId: purchase?.stock_vendor_id,
@@ -104,12 +104,12 @@ function Purchase({ role, el }) {
     //не показываем закупку черновик если роль не совпаадет с ролью в закупке и status == 0
     //не показываем кнопки в закупке leader если статус 1 person_id
     //не показываем кнопки в закупке administarator если статус 2
-   console.log(purchase)
+    console.log(purchase)
     return (
-        <div onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
+        <Link to={`/purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
+             <div className={`${s.attention} ${isView && s.attention_hidden}`}><IconView /></div>
             <div className={`${s.item} ${s.item_date}`}>
                 {purchase?.pay_date && <p>{HandledatePurchaseList(purchase?.pay_date)}</p>}
-                <div className={`${s.attention} ${isView && s.attention_hiden}`}><IconView /></div>
             </div>
             <div className={`${s.item} ${s.item_pos}`}>
                 {purchase?.items?.map((el) => {
@@ -146,7 +146,7 @@ function Purchase({ role, el }) {
                 <div className={`${s.status}`}></div>
                 <div className={`${s.status}`}></div>
             </div>}
-        </div>
+        </Link>
     )
 };
 

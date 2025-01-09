@@ -18,7 +18,7 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     const [modalImage, setModalImage] = useState(false);
     const conditionDownload = file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? file?.file : false;
     const conditionTarget = file?.type == 'existing' && file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? '_self' : '_blank';
-
+    console.log(file, isImage)
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)
@@ -26,7 +26,8 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     }, []);
 
     useEffect(() => {
-        setIsImage(file?.file.slice(-3) == 'png' || file.file.slice(-3) == 'jpg')
+        const fileName = file?.file?.includes('uploads') ? file?.file?.split('/').pop() : file?.file?.split('filename=').pop().split('&').shift()
+        setIsImage(fileName.slice(-3) == 'png' || fileName.slice(-3) == 'jpg')
     }, [file])
 
     useEffect(() => {
@@ -70,10 +71,10 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
 }
 
 
-const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight }) => {
-    console.log(documents)
+const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight,  loadDocuments }) => {
+    console.log('закрывающие документы', documents)
     return (
-        <div className={`${s.window} ${s.window_close} ${disabled && documents.length == 0 && s.window_disabled}`}>
+        <div className={`${s.window} ${s.window_close} ${(loadDocuments || documents.length == 0) && s.window_disabled}`}>
             <h3 className={s.title}>Закрывающие документы</h3>
             <div style={{ height: `${Math.ceil(documents.length / 2) * 86}px` }} className={s.files}>
 

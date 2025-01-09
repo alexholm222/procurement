@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ReactComponent as IconFolder } from '../../image/iconFolder.svg';
 import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
-import iconPdf from '../../image/icon/order/iconPdf.png'; 
+import iconPdf from '../../image/icon/order/iconPdf.png';
 import iconWord from '../../image/icon/order/iconWord.png';
 import IconExcel from '../../image/icon/order/iconExcel.png';
 import FileLoader from '../FileLoader/FileLoader';
 import ModalImage from './ModalImage/ModalImage';
+import LoaderButton from '../LoaderButton/LoaderButton';
 import { baseUrl } from '../../Api/Api';
 
 const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, setSaveSuccess, windowRef, scrollTopHeight }) => {
@@ -17,6 +18,7 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
     const [modalImage, setModalImage] = useState(false);
     const conditionDownload = file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'png' && file.name.slice(-3) !== 'jpg' ? file.name : false;
     const conditionTarget = file.type == 'existing' && file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'png' && file.name.slice(-3) !== 'jpg' ? '_self' : '_blank';
+
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)
@@ -29,7 +31,7 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
 
     useEffect(() => {
         if (file.type == 'existing') {
-            const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('uploads') ? `${baseUrl}file/${file.file}` : file.file;
+            const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('uploads') ? `${baseUrl}file/${file.file}` : `${file.file}`;
             console.log(file)
             setUrlFile(link);
         } else {
@@ -88,19 +90,21 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
 }
 
 
-const Documents = ({ documents, setDocuments, disabled, setDeleteFiles, setSaveSuccess, windowRef, scrollTopHeight, type }) => {
+const Documents = ({ documents, setDocuments, disabled, setDeleteFiles, setSaveSuccess, windowRef, scrollTopHeight, type, loadDocuments }) => {
+    console.log('дизаблед', disabled, documents.length)
     return (
-        <div className={`${s.window} ${type == 'close' && s.window_close} ${disabled && documents.length == 0 && s.window_disabled}`}>
-             {type !== 'close' && <h3 className={s.title}>Документы</h3>}
-             {type == 'close' && <h3 className={s.title}>Закрывающие документы</h3>}
+        <div className={`${s.window} ${type == 'close' && s.window_close} ${disabled && documents.length == 0 && !loadDocuments && s.window_disabled}`}>
+            {type !== 'close' && <h3 className={s.title}>Документы</h3>}
+            {type == 'close' && <h3 className={s.title}>Закрывающие документы</h3>}
             <div style={{ height: `${Math.ceil(documents.length / 2) * 86}px` }} className={s.files}>
 
+                <div className={`${s.loader} ${loadDocuments && s.loader_vis}`}><LoaderButton /></div>
                 {documents.map((el, i) => {
                     return <Document key={el.id} i={i} file={el} files={documents} setFiles={setDocuments} type={el.type ? el.type : ''} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setSaveSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
                 })}
 
             </div>
-            {type !== 'close' && <div className={`${s.fileLoader} ${disabled && documents.length > 0 && s.fileLoader_disabled}`}>
+            {type !== 'close' && <div className={`${s.fileLoader} ${(disabled && documents.length > 0) && s.fileLoader_disabled} ${loadDocuments && s.fileLoader_load}`}>
                 <FileLoader files={documents} setFiles={setDocuments} setSaveSuccess={setSaveSuccess} />
             </div>
             }

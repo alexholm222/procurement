@@ -36,6 +36,7 @@
     margin-bottom: 12px;
     height: 0;
     transition: all 0.3s;
+    position: relative;
 }
 
 .file {
@@ -144,6 +145,11 @@
         max-height: 0;
         margin-top: -12px;
     }
+
+    &_load {
+        pointer-events: none;
+        opacity: 0.4;
+    }
 }
 
 .picture {
@@ -159,5 +165,22 @@
     img {
         width: 56px;
         height: 56px;
+    }
+}
+
+.loader {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 74px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+
+    &_vis {
+        opacity: 1;
+        visibility: visible;
     }
 }
