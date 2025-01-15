@@ -11,10 +11,23 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 24px;
+    opacity: 1;
+    transition: all 0.2s;
 
     svg {
         width: 16px;
         height: 16px;
+    }
+
+
+
+
+    &_hidden {
+        width: 0;
+        padding: 0;
+        opacity: 0;
+        display: none;
+        visibility: hidden;
     }
 
     &_create {
@@ -85,6 +98,7 @@
 
     &_anim {
         pointer-events: none;
+
         svg {
             animation: load 10s linear infinite;
             width: 14px;
@@ -93,6 +107,7 @@
 
         &_blue {
             pointer-events: none;
+
             svg {
                 animation: load 10s linear infinite;
                 width: 14px;
@@ -105,6 +120,19 @@
             }
         }
     }
+
+    @media(max-width: 1860px) {
+        height: 24px;
+        font-size: 12px;
+        padding: 0 6px;
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+   
 
 }
 

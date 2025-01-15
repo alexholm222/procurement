@@ -88,10 +88,10 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
-            windowRef.current.style.overflow = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.overflowY = "auto";
+            windowRef.current.style.paddingRight = "0";
         };
     }, [windowRef]);
 
@@ -127,6 +127,7 @@ const PurchaseCloseDoc = ({ setModal, windowRef, id, setStatus, loadAccept, setL
 
         loadCloseDoc(formData)
             .then(res => {
+                console.log(res)
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 setCloseDocs(purchase.files)

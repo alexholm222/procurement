@@ -50,9 +50,10 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
     const [openAdd, setOpenAdd] = useState(false);
     const [position, setPosition] = useState({});
     const [isFull, setIsFull] = useState(false);
+    console.log(sum)
 
     useEffect(() => {
-        const sum = positions.reduce((acc, el) => acc + el.sum, 0);
+        const sum = positions.reduce((acc, el) => acc + Number(el.sum), 0);
         setSum(sum);
     }, [positions]);
 
@@ -92,8 +93,12 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                         <p>Цена</p>
                     </div>
 
-                    <div className={`${s.sub} ${s.total} ${disabled && s.total_}`}>
+                    <div className={`${s.sub} ${s.total} `}>
                         <p>Итого</p>
+                    </div>
+
+                    <div className={` ${s.empity} ${!disabled && s.empity_vis}`}>
+    
                     </div>
                 </div>
                 <ul className={`${s.list} ${disabled && s.list_disabled} ${positions.length <= 1 && s.list_first}`}>

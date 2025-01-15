@@ -34,8 +34,6 @@ export const Filters = ({ filterPayDate, setFilterPayDate, setFiltersModal }) =>
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
 
-    console.log(dateRange)
-
     useEffect(() => {
         setAnim(true)
     }, []);

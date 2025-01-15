@@ -8,12 +8,12 @@ function ModalImage({ img, setOpenImage, windowRef, scrollTopHeight }) {
 
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
             windowRef.current.style.overflowY = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.paddingRight = "0";
         };
-    }, [windowRef])
+    }, [windowRef]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -40,7 +40,7 @@ function ModalImage({ img, setOpenImage, windowRef, scrollTopHeight }) {
     }, []);
 
     return (
-        <div style={{ top: `${scrollTopHeight}px` }} className={`${s.modal_image} ${anim && s.modal_image_anim}`}>
+        <div /* style={{ top: `${scrollTopHeight}px` }} */ className={`${s.modal_image} ${anim && s.modal_image_anim}`}>
             <IconClose onClick={closeModal} />
             <img className={`${s.pic} ${anim && s.pic_anim}`} ref={modalRef} src={img}></img>
         </div>

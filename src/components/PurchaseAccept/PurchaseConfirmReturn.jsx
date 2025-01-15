@@ -24,7 +24,7 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
 const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, 
-    setPositionReturn, setPositions, setReturnDone, setPositionReturnDone }) => {
+    setPositionReturn, setPositions, setReturnDone, setPositionReturnDone, setError }) => {
     const [anim, setAnim] = useState(false);
     const [err, setErr] = useState(false);
     const [loadReject, setLoadReject] = useState(false)
@@ -40,10 +40,10 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
-            windowRef.current.style.overflow = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.overflowY = "auto";
+            windowRef.current.style.paddingRight = "0";
         };
     }, [windowRef]);
 
@@ -69,7 +69,6 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
         setLoadAccept(true);
         confirmRefund(id)
             .then(res => {
-               
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 const returnPos = purchase.return_items.filter(el => el.status == 'requested')
@@ -97,14 +96,24 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
                 /* dispatch(setUpdateAction()); */
                 handleCloseModal()
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                const data = err.response?.data?.message;
+                console.log(data)
+                if(data?.message.includes('Quantity')) {
+                    setError(`Невозможно провести возврат, проверьте остатки позиций на складе`)
+                } else {
+                    setError('Ошибка на сервере')
+                }
+                setLoadAccept(false);
+               
+                setModal(false)
+            } )
     }
 
     const handleReject = () => {
         setLoadReject(true);
         rejectRefund(id)
             .then(res => {
-                console.log(res);
                 /*    dispatch(setUpdateAction()); */
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;

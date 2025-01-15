@@ -1,7 +1,9 @@
 .pick {
   background-color: var(--color-bg-card);
   font-family: Inter;
+  font-size: 16px;
   border: 1px solid #eaf0fa00 !important;
+
 
 
   &_stop {
@@ -41,7 +43,7 @@
 
 .ant-picker .ant-picker-input>input {
   font-family: Inter;
-  font-size: 16px;
+  font-size: 16px !important;
   font-style: normal;
   font-weight: 400;
   line-height: 22px;

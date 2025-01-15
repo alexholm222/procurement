@@ -4,6 +4,7 @@
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 2;
     background-color: var(--color-bg);
     overflow-y: scroll;
     opacity: 0;
@@ -51,6 +52,7 @@
     box-sizing: border-box;
     background-color: var(--color-bg-card);
     border-radius: 8px;
+    overflow: hidden;
 }
 
 .comment {

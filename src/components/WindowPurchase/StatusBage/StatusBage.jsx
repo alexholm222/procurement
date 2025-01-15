@@ -9,7 +9,7 @@ import { ReactComponent as IconStatusPaid } from '../../../image/icon/purchase/i
 import { ReactComponent as IconStatusReceived } from '../../../image/icon/purchase/iconStatusReceived.svg';
 
 
-const StatusBage = ({ status, reject, role, returnDone, positionReturn }) => {
+const StatusBage = ({ status, reject, role, returnDone, positionReturn, loadPurchase }) => {
     return (
         <>
             {status == 0 && !reject && <div className={`${s.bage} ${s.bage_create}`}>
@@ -57,12 +57,12 @@ const StatusBage = ({ status, reject, role, returnDone, positionReturn }) => {
             </div>
             }
 
-            {returnDone && <div className={`${s.bage} ${s.bage_yellow}`}>
+            {<div className={`${s.bage} ${s.bage_yellow} ${!returnDone && s.bage_hidden}`}>
                 <IconDone /><p>Возврат получен</p>
             </div>}
 
-            {positionReturn.length > 0 && <div className={`${s.bage} ${s.bage_anim}`}>
-                <IconStatusLoader /><p>Подтверждение возврата</p>
+            {<div className={`${s.bage} ${s.bage_anim} ${positionReturn.length == 0 && s.bage_hidden}`}>
+                <IconStatusLoader /><p>Возврат</p>
             </div>
             }
         </>

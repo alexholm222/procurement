@@ -22,13 +22,9 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
     const positionActive = activeRef?.current?.getBoundingClientRect().left;
 
-    console.log(categoryId, payerId, activeId, purchaseId, firstLoad)
-
-
     useEffect(() => {
         if (type == 'categories') {
             setList(categories);
-            console.log('id категории', categoryId)
             setActiveId(categoryId);
 
         }

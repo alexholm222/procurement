@@ -5,7 +5,7 @@ import { HandledatePurchaseList } from '../../utils/date';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import uuid from 'react-uuid';
+
 import { Link } from 'react-router-dom';
 //slice 
 import { setOrder } from '../../store/reducer/purchase/slice';
@@ -27,14 +27,7 @@ function Order({ el, role }) {
     const [hidenOrder, setHidenOrder] = useState(false);
     const [isView, setIsView] = useState(true);
     const dispatch = useDispatch();
-    const existingFiles = [{ id: uuid(), file: order?.bill, name: order?.bill?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill2, name: order?.bill2?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill3, name: order?.bill3?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill4, name: order?.bill4?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill5, name: order?.bill5?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill6, name: order?.bill6?.split('/').pop(), type: 'existing' },
-    { id: uuid(), file: order?.bill7, name: order?.bill7?.split('/').pop(), type: 'existing' },
-    ].filter(order => order.file && order.file !== null);
+  
 
     const orderUpdate = useSelector(purchaseUpdateSelector).orderUpdate;
     const orderDelete = useSelector(purchaseUpdateSelector).orderDelete;
@@ -71,7 +64,7 @@ function Order({ el, role }) {
             categoryId: order?.cat_id,
             comment: order?.comment,
             isNal: order?.is_nal,
-            existingFiles,
+        /*     existingFiles, */
             status: order?.status,
             person: order?.person,
             personId: order?.person_id,
@@ -104,7 +97,7 @@ function Order({ el, role }) {
                     person_id: order.person_id,
                     sub_comment: order.comment,
                     type: 'add',
-                    files: existingFiles
+                    /* files: existingFiles */
                 }
 
                 const purchaseForOpen = {

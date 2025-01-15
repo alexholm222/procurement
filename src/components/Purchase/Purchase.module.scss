@@ -1,5 +1,7 @@
 .purchase {
     display: flex;
+    width: 100%;
+    box-sizing: border-box;
     font-size: 16px;
     font-weight: 400;
     line-height: 22px;
@@ -7,6 +9,10 @@
     cursor: pointer;
     position: relative;
     transition: all 0.1s;
+
+    @media(max-width: 1860px) {
+        font-size: 14px;
+    }
 
 
     &:hover {
@@ -25,21 +31,42 @@
     line-height: 22px;
     box-sizing: border-box;
 
+    @media(max-width: 1860px) {
+        font-size: 14px;
+        padding: 12px 8px;
+        line-height: 20px;
+    }
+
 
     &_date {
         width: 118px;
         text-wrap: nowrap;
         flex-shrink: 0;
         position: relative;
+
+        @media(max-width: 1860px) {
+            width: 100px;
+        }
+
     }
 
     &_pos {
         width: 100%;
-        max-width: 570px;
+        min-width: 570px;
         display: flex;
         flex-direction: column;
-        flex-shrink: 0;
+        flex-shrink: 20;
         gap: 4px;
+
+        @media(max-width: 1860px) {
+            min-width: 570px;
+            max-width: 570px;
+          
+        }
+        @media(max-width: 1620px) {
+            min-width: 470px;
+            max-width: 470px;
+        }
     }
 
     &_sum {
@@ -48,25 +75,50 @@
         justify-content: flex-end;
         padding-right: 32px;
         flex-shrink: 0;
+
+        @media(max-width: 1860px) {
+            padding-right: 20px;
+        }
     }
 
     &_buyer {
-        width: 240px;
+        min-width: 280px;
         text-wrap: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-shrink: 0;
+        width: 100%;
+        flex-shrink: 30;
+
+        p {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media(max-width: 1860px) {
+            min-width: 180px;
+            flex-shrink: 34;
+        }
+
 
         span {
             font-size: 14px;
             color: var(--color-text-secondary);
+
+            @media(max-width: 1860px) {
+                font-size: 12px;
+            }
         }
     }
 
     &_seller {
-        width: 290px;
+        min-width: 290px;
         text-wrap: nowrap;
-        flex-shrink: 0;
+        /*  flex-shrink: 0; */
+        width: 100%;
+        flex-shrink: 30;
+
+        @media(max-width: 1860px) {
+            min-width: 220px;
+        }
 
         p {
             overflow: hidden;
@@ -79,6 +131,10 @@
             line-height: 18px;
             color: var(--color-text-secondary);
             margin-top: 4px;
+
+            @media(max-width: 1860px) {
+                font-size: 12px;
+            }
         }
     }
 
@@ -86,6 +142,10 @@
         width: 173px;
         display: flex;
         gap: 4px;
+
+        @media(max-width: 1860px) {
+            width: 120px;
+        }
     }
 }
 
@@ -98,6 +158,10 @@
     opacity: 1;
     visibility: visible;
 
+    @media(max-width: 1860px) {
+        left: -20px;
+    }
+
     &_hidden {
         opacity: 0;
         visibility: hidden;
@@ -108,8 +172,12 @@
     height: 6px;
     border-radius: 100px;
     background-color: var(--color-bg-card-new);
-    width: 36px;
+    width: 100%;
     transition: all 0.15s;
+
+    @media(max-width: 1860px) {
+       /*  width: 20px; */
+    }
 
     &_done {
         background-color: #2EA96E;
@@ -120,7 +188,7 @@
     }
 
     &_yellow {
-       background-color: #FFC227; 
+        background-color: #FFC227;
     }
 
     &_blue {
@@ -136,11 +204,12 @@
     p {
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 380px;
+        max-width: 80%;
     }
 
     svg {
-        margin: 0 0 0 2px;
+        flex-shrink: 0;
+        margin: 0 8px 0 4px;
     }
 
     span {

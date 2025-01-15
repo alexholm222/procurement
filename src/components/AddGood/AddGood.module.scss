@@ -30,7 +30,6 @@
     display: flex;
     width: 735px;
     opacity: 0;
-
     padding: 32px;
     box-sizing: border-box;
     flex-direction: column;
@@ -39,6 +38,11 @@
     box-shadow: var(--box-shadow);
     transition: all 0.2s ease-in-out;
     transform: scale(0.8);
+
+    @media(max-width: 1860px) {
+        padding: 22px;
+        width: 675px;
+    }
 
     &_anim {
         transform: scale(1);
@@ -60,12 +64,27 @@
         }
     }
 
+    @media(max-width: 1860px) {
+        margin-bottom: 12px;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
 }
 
 .title {
     font-size: 24px;
     font-weight: 600;
     line-height: 28px;
+
+    @media(max-width: 1860px) {
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 500;
+    }
 }
 
 .sub {

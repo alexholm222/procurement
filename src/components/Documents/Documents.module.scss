@@ -6,7 +6,9 @@
     box-sizing: border-box;
     background-color: var(--color-bg-card);
     border-radius: 8px;
+    min-height: 176px;
     transition: all 0.3s;
+    position: relative;
 
     &_disabled {
         height: 0;
@@ -18,6 +20,11 @@
     &_close {
         grid-area: docClose;
     }
+
+    @media(max-width: 1860px) {
+        gap: 12px;
+        padding: 22px;
+    }
 }
 
 .title {
@@ -27,6 +34,13 @@
     letter-spacing: 0.15px;
     margin: 0;
     margin-bottom: 16px;
+
+    @media(max-width: 1860px) {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 20px;
+        margin-bottom: 12px;
+    }
 }
 
 .files {
@@ -37,6 +51,11 @@
     height: 0;
     transition: all 0.3s;
     position: relative;
+
+    @media(max-width: 1860px) {
+        margin-bottom: 0;
+    }
+
 }
 
 .file {
@@ -61,6 +80,11 @@
         padding: 12px;
         opacity: 1;
         width: calc(50% - 6px);
+
+        @media(max-width: 1860px) {
+            height: 68px;
+            padding: 8px;
+        }
     }
 }
 
@@ -80,6 +104,13 @@
         font-weight: 400;
         line-height: 18px;
         margin-bottom: 2px;
+    }
+
+    @media(max-width: 1860px) {
+        p {
+            max-width: 85%;
+            font-size: 14px;
+        }
     }
 
     span {
@@ -128,6 +159,10 @@
 
     img {
         height: 52px;
+
+        @media(max-width: 1860px) {
+            height: 46px;
+        }
     }
 }
 
@@ -166,6 +201,16 @@
         width: 56px;
         height: 56px;
     }
+
+    @media(max-width: 1860px) {
+        width: 46px;
+        height: 46px;
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
 }
 
 .loader {
@@ -182,5 +227,32 @@
     &_vis {
         opacity: 1;
         visibility: visible;
+    }
+}
+
+.empity {
+    position: absolute;
+    width: calc(100% - 56px);
+    box-sizing: border-box;
+    height: 68px;
+    bottom: 28px;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s;
+    color: var(--color-text-secondary);
+
+    &_vis {
+        opacity: 1;
+        visibility: visible;
+    }
+
+
+    p {
+        font-weight: 500;
     }
 }

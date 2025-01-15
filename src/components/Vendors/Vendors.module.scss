@@ -12,6 +12,10 @@
         overflow: hidden;
         max-height: 0;
     }
+
+    @media(max-width: 1860px) {
+        gap: 8px;
+    }
 }
 
 .container {
@@ -22,11 +26,16 @@
 
     &_vendor {
         width: 500px;
+
+        @media(max-width: 1860px) {
+            width: 380px;
+        }
     }
 
     &_contract {
         width: 260px;
     }
+
 }
 
 .sub {
@@ -44,7 +53,6 @@
     width: 100%;
     border-radius: 4px;
     background-color: var(--color-bg-card-inner);
-    
     padding: 12px 16px;
     box-sizing: border-box;
     display: flex;
@@ -53,6 +61,12 @@
     position: relative;
     transition: all 0.2s;
     border: 1px solid #eaf0fa00;
+
+    @media(max-width: 1860px) {
+        height: 54px;
+        padding: 8px 12px;
+        gap: 1px;
+    }
 
     &_disabled {
         background: none;
@@ -68,11 +82,16 @@
     }
 
     input {
-        background: none;
+        background: none !important;
         font-size: 16px;
         font-weight: 400;
         line-height: 22px;
         color: var(--color-text-primary);
+
+        @media(max-width: 1860px) {
+            font-size: 14px;
+            line-height: 18px;
+        }
     }
 
     &_dis {
@@ -172,6 +191,13 @@
     transition: all 0.2s;
     text-wrap: nowrap;
     max-width: 220px;
+
+    @media(max-width: 1860px) {
+        padding: 6px 16px 6px 8px;
+        height: 28px;
+        max-width: 190px;
+       
+    }
 
     svg {
         margin-right: 6px;

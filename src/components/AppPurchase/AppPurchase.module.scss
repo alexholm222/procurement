@@ -1,10 +1,38 @@
 .app {
-    width: 100%;
-    height: 100%;
-    max-width: 1558px;
-    min-width: 1558px;
-    margin: 40px auto 40px 300px;
-    padding-bottom: 1px;
+    /* height: 100%; */
+   /*    max-width: 1558px; */
+        min-width: 1260px;
+    /*   margin: 40px auto 40px 300px; */
+    padding: 30px 30px 0;
+    height: calc(100vh - 94px);
+    overflow: overlay;
+    overflow-y: auto;
+
+    
+
+
+    &_skilla {
+        height: auto;
+        padding: 40px 40px 0;
+    }
+
+
+    a {
+        color: inherit;
+    }
+
+    a:visited {
+        color: inherit;
+    }
+
+    a:active {
+        color: inherit;
+    }
+
+    @media(min-width: 1980px) {
+        padding: 30px 50px;
+    }
+
 }
 
 .header {
@@ -12,6 +40,11 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+
+    @media(max-width: 1860px) {
+        height: 38px;
+        margin-bottom: 12px;
+    }
 }
 
 .title {
@@ -28,12 +61,20 @@
         opacity: 0.7;
         margin-left: 4px;
     }
+
+    @media(max-width: 1860px) {
+        font-size: 20px;
+        line-height: 20px;
+    }
 }
 
 .buttons {
     height: 44px;
     display: flex;
     gap: 12px;
+    @media(max-width: 1860px) {
+        height: 38px;
+    }
 }
 
 .button {
@@ -45,6 +86,13 @@
     align-items: center;
     cursor: pointer;
     transition: all 0.2s;
+
+    @media(max-width: 1860px) {
+        padding: 7px 16px;
+        height: fit-content;
+        font-size: 14px;
+        line-height: 18px;
+    }
 
     svg {
         margin-left: 8px;
@@ -92,5 +140,35 @@
     &:disabled {
         pointer-events: none;
         opacity: 0.6;
+    }
+}
+
+.pro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+    width: 100%;
+    max-width: calc(100% - 240px);
+    color: var(--color-text-secondary);
+    font-size: 18px;
+
+
+    p {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin-left: 120px;
+        transition: all 0.2s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+
+
+    span {
+        margin: 0 6px;
     }
 }

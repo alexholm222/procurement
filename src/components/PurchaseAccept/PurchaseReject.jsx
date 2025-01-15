@@ -40,10 +40,10 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
-            windowRef.current.style.overflow = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.overflowY = "auto";
+            windowRef.current.style.paddingRight = "0";
         };
     }, [windowRef]);
 
@@ -76,7 +76,6 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
         if (type == 'reject') {
             rejectPurchase({ id, reject_comment: comment })
                 .then(res => {
-                    console.log(res);
                     const purchase = res.data.purchase;
                     const order = res.data.purchase.order;
                     setLoadAccept(false);
@@ -103,7 +102,6 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
         } else {
             rejectPayment({ id, reject_comment: comment })
                 .then(res => {
-                    console.log(res);
                     const purchase = res.data.purchase;
                     const order = res.data.purchase.order;
                     setLoadAccept(false);
@@ -122,7 +120,6 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
                         type: 'add',
                         files: handleExistingFiles(purchase?.order),
                     }
-                    console.log(purchase.logs)
 
                     purchase.order ? setLogs([orderLog, ...order.order_logs?.slice(1), ...purchase.logs]) : setLogs(purchase.logs);
                     dispatch(setUpdateAction());

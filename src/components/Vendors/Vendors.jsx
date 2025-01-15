@@ -36,7 +36,6 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
 
     useEffect(() => {
         const vendor = vendors.find(el => el.id == vendorId);
-        console.log(vendor)
         setVendor(vendor);
         setVendorName(vendor?.name)
     }, [vendorId, vendors])
@@ -153,7 +152,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
             <div className={`${s.container} ${s.container_vendor}`}>
                 <p className={s.sub}>Продавец</p>
                 <div ref={vendorsRef} className={`${s.block} ${disabled && s.block_disabled}`}>
-                    {!loadVendor && <input onFocus={handleFocusVendor} /* onBlur={handleBlurVendor} */ onChange={handleChangeVendorName} type='text' value={vendorName || ''}></input>}
+                    {!loadVendor && <input disabled={vendorsList.length == 0} onFocus={handleFocusVendor} /* onBlur={handleBlurVendor} */ onChange={handleChangeVendorName} type='text' value={vendorName || ''}></input>}
                     {!loadVendor && <div className={s.requisites}>
                         <p>ИНН: {vendor?.inn && vendor?.inn !== '' ? vendor?.inn : 'отсутсвует'}</p>
                         {vendor?.kpp && <p>КПП: {vendor?.kpp}</p>}

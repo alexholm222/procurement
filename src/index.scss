@@ -2,12 +2,24 @@
 @import './vendor/fonts/fonts.css';
 @import './vendor/constants.scss';
 
-body {
-  font-family: 'Inter', 'sans-serif';
-  font-style: normal;
-  background-color: var(--color-bg);
+#root_purchases {
+/*   position: absolute;
+  transition: all 0.2s;
+  top: 64px;
+  right: 0; */
+  background-color: #F1F4F9;
   color: var(--color-text-primary);
 }
+
+body {
+  font-family: 'Inter', 'sans-serif';
+  font-size: 16px;
+  font-style: normal;
+  background-color: #F1F4F9;
+  color: var(--color-text-primary);
+}
+
+
 
 img {
   /* pointer-events: none; */
@@ -46,6 +58,10 @@ p {
 h2 {
   margin: 0;
   padding: 0;
+  height: auto;
+  color: var(--color-text-primary);
+  text-transform: none;
+  font-family: 'Inter', 'sans-serif' !important;
 }
 
 input::-webkit-outer-spin-button,
@@ -113,7 +129,7 @@ ul::-webkit-scrollbar-thumb {
 }
 
 html {
- /*  scroll-behavior: smooth; */
+  /*  scroll-behavior: smooth; */
 }
 
 .infinite-scroll-component {

@@ -1,9 +1,10 @@
 import s from './AppPurchase.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
+import { ReactComponent as IconPro } from '../../image/icon/pro.svg';
 //components
 import Tabs from '../Tabs/Tabs';
 import List from '../List/List';
@@ -28,7 +29,7 @@ const rols = ['administrator', 'hr-assist', 'chief-accountant', 'leader', 'frman
 
 function AppPurchase() {
   const [theme, setTheme] = useState('light');
-  const [role, setRole] = useState('');
+  /*   const [role, setRole] = useState(''); */
   const [profile, setProfile] = useState({});
   const [purchases, setPurchases] = useState([]);
   const [purchaseCountGeneral, setPurchaseCountGeneral] = useState('');
@@ -60,6 +61,7 @@ function AppPurchase() {
   const [personIsView, setPersonIsView] = useState({});
   const [filterPayDate, setFilerPayDate] = useState([null, null]);
   const [isSkilla, setIsSkilla] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(true);
   const dispatch = useDispatch();
   const purchaseNew = useSelector(purchaseUpdateSelector).purchaseNew;
   const orderNew = useSelector(purchaseUpdateSelector).orderNew;
@@ -68,32 +70,21 @@ function AppPurchase() {
   const updateParametrs = useSelector(updateParametrsSelector).update;
   const purchase = useSelector(purchaseSelector).purchase;
   const order = useSelector(purchaseSelector).order;
-  /*   const role = document.getElementById('root_purchases').getAttribute('role'); */
+  const role = document.getElementById('root_purchases').getAttribute('role');
+  const ispro = document.getElementById('root_purchases').getAttribute('ispro');
+  const isskilla = document.getElementById('root_purchases').getAttribute('isskilla') == 1 ? true : false;
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
-  console.log(role)
-
 
   useEffect(() => {
     getProfile()
       .then(res => {
         const data = res.data.data;
         setProfile(data)
-        setRole(data.position)
       })
       .catch(err => console.log(err))
   }, [])
-
-  useEffect(() => {
-    if (role == 'administrator' || role == 'hr-assist' || role == 'leader' || role == 'frmanager' || role == 'moderator' || role == 'chief-accountant' || role == 'event-manager') {
-      setIsSkilla(true)
-    } else {
-      setIsSkilla(false)
-    }
-  }, [role])
-
-  console.log(isSkilla)
 
 
   useEffect(() => {
@@ -145,6 +136,10 @@ function AppPurchase() {
   }, []);
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
+
     getPurchases('', filterPayDate)
       .then(res => {
         const data = res.data.data;
@@ -158,9 +153,12 @@ function AppPurchase() {
         setLoad(false);
       })
       .catch(err => console.log(err))
-  }, [updateAction, filterPayDate])
+  }, [updateAction, filterPayDate, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     getPurchasesAction(filterPayDate)
       .then(res => {
         const data = res.data;
@@ -168,9 +166,12 @@ function AppPurchase() {
         setLoadAction(false);
       })
       .catch(err => console.log(err))
-  }, [updateAction, filterPayDate])
+  }, [updateAction, filterPayDate, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     getPurchases('beznal', filterPayDate)
       .then(res => {
         const data = res.data.data;
@@ -182,9 +183,12 @@ function AppPurchase() {
         setPurchaseBeznalCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction, filterPayDate])
+  }, [updateAction, filterPayDate, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     getPurchases('nal', filterPayDate)
       .then(res => {
         const data = res.data.data;
@@ -196,9 +200,12 @@ function AppPurchase() {
         setPurchaseNalCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction, filterPayDate])
+  }, [updateAction, filterPayDate, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     getPurchases('del', filterPayDate)
       .then(res => {
         const data = res.data.data;
@@ -210,9 +217,12 @@ function AppPurchase() {
         setPurchaseDelCount(total)
       })
       .catch(err => console.log(err))
-  }, [updateAction, filterPayDate])
+  }, [updateAction, filterPayDate, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     query !== '' && getSearchResult(query)
       .then(res => {
         const data = res.data.data;
@@ -221,9 +231,12 @@ function AppPurchase() {
         cursor !== null && setFirstCursorSearch(cursor)
       })
       .catch(err => console.log(err))
-  }, [query])
+  }, [query, isskilla])
 
   useEffect(() => {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
     setLoadParametrs(true)
     Promise.all([getParameters(), getItems()])
       .then(([res1, res2]) => {
@@ -247,13 +260,16 @@ function AppPurchase() {
         setLoadParametrs(false);
       })
       .catch(err => console.log(err))
-  }, [updateParametrs])
-  console.log(purchase)
+  }, [updateParametrs, isskilla])
 
   //загрузка закупки по ссылке
   useEffect(() => {
-    if (path.includes('/purchase=') && !purchase.id) {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
+    if (path.includes('purchases2/purchase=') && !purchase.id) {
       const idPurchase = Number(path.split('purchase=').pop());
+      setHeaderHidden(true)
       const purchaseForOpen = {
         isOrder: false,
         id: idPurchase,
@@ -265,21 +281,25 @@ function AppPurchase() {
       return
     }
 
-  }, [path, purchase])
+  }, [path, purchase, isskilla])
 
   useEffect(() => {
-    if (!path.includes('/purchase=') && !path.includes('/new')) {
+    if (ispro == 0 && !isskilla) {
+      return
+    }
+    if (!path.includes('purchases2/purchase=') && !path.includes('purchases2/new')) {
+      setHeaderHidden(false)
       handleClosePurchase()
       document.title = `Закупки`;
       return
     }
 
-    if (path.includes('/new') && !purchase.id) {
+    if (path.includes('purchases2/new') && !purchase.id) {
       dispatch(setPurchase({ id: '', open: true }))
       document.title = `Закупка`;
       return
     }
-  }, [path])
+  }, [path, isskilla])
 
   //orders
   useEffect(() => {
@@ -295,7 +315,7 @@ function AppPurchase() {
 
   const handleOpenPurchase = (e) => {
     dispatch(setPurchase({ id: '', open: true }))
-    navigate('/new')
+    navigate('purchases2/new')
   }
 
   const handleClosePurchase = () => {
@@ -309,42 +329,51 @@ function AppPurchase() {
     dispatch(setOrder({ id: '', open: true }))
   }
 
-  console.log(purchase)
-
+  const handlePro = () => {
+    document?.getElementById('pro-open')?.click();
+  }
 
   return (
-    <div className={s.app}>
-      <div className={s.header}>
-        <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup> {profile.name} {profile.position}</h2>
-        <div className={s.buttons}>
-          {isSkilla && <button disabled={loadParametrs} onClick={handleOpenOrder} className={`${s.button} ${s.button_add}`}>
-            <p>Создать заявку на закупку</p>
-            <IconCreate />
-          </button>
-          }
+    <>
+      {(ispro == 1 || isskilla) && <div id='purchasesApp' className={`${s.app} ${isskilla && s.app_skilla}`}>
+        {!headerHidden && <div className={s.header}>
+          <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup> {profile.name} {profile.position}</h2>
+          <div className={s.buttons}>
+            {isskilla && <button disabled={loadParametrs} onClick={handleOpenOrder} className={`${s.button} ${s.button_add}`}>
+              <p>Создать заявку на закупку</p>
+              <IconCreate />
+            </button>
+            }
 
-          <button disabled={loadParametrs} onClick={handleOpenPurchase} className={`${s.button} ${s.button_main}`}>
-            <p>Добавить закупку</p>
-            <IconAdd />
-          </button>
+            <button disabled={loadParametrs} onClick={handleOpenPurchase} className={`${s.button} ${s.button_main}`}>
+              <p>Добавить закупку</p>
+              <IconAdd />
+            </button>
+          </div>
         </div>
-      </div>
-      <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction}
-        purchaseBeznalCount={purchaseBeznalCount} purchaseNalCount={purchaseNalCount} purchaseDelCount={purchaseDelCount}
-        loadAction={loadAction} loadOrders={loadOrders} query={query} setQuery={setQuery} orders={orders}
-        filterPayDate={filterPayDate} setFilerPayDate={setFilerPayDate} disabled={loadParametrs} role={role} isSkilla={isSkilla}
-      />
-      {activeTabs == '' && query == '' && <List isSkilla={isSkilla} role={role} purchases={purchases} purchaseCount={purchaseCount} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchases} firstCursor={firstCursor} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-      {activeTabs == 'action' && query == '' && <List isSkilla={isSkilla} role={role} purchases={purchaseAction} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseAction} firstCursor={firstCursorAction} load={loadAction} setLoad={setLoadAction} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-      {activeTabs == 'beznal' && query == '' && <List isSkilla={isSkilla} role={role} purchases={purchaseBeznal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-      {activeTabs == 'nal' && query == '' && <List isSkilla={isSkilla} role={role} purchases={purchaseNal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-      {activeTabs == 'del' && query == '' && <List isSkilla={isSkilla} role={role} purchases={purchaseDel} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-      {query !== '' && <ListSearch role={role} purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
-      {activeTabs == 'orders' && isSkilla && query == '' && <ListOrders role={role} orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
-      {order.open && order.id == '' && <WindowOrder role={role} id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}
-      {purchase.open && (purchase.id == '' || purchase.isOrder) && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} role={role} isSkilla={isSkilla} />}
+        }
+        {!headerHidden && <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction}
+          purchaseBeznalCount={purchaseBeznalCount} purchaseNalCount={purchaseNalCount} purchaseDelCount={purchaseDelCount}
+          loadAction={loadAction} loadOrders={loadOrders} query={query} setQuery={setQuery} orders={orders}
+          filterPayDate={filterPayDate} setFilerPayDate={setFilerPayDate} disabled={loadParametrs} role={role} isSkilla={isskilla}
+        />
+        }
+        {activeTabs == '' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchases} purchaseCount={purchaseCount} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchases} firstCursor={firstCursor} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+        {activeTabs == 'action' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseAction} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseAction} firstCursor={firstCursorAction} load={loadAction} setLoad={setLoadAction} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+        {activeTabs == 'beznal' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseBeznal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+        {activeTabs == 'nal' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseNal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+        {activeTabs == 'del' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseDel} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
+        {query !== '' && <ListSearch role={role} purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
+        {activeTabs == 'orders' && isskilla && query == '' && <ListOrders role={role} orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
+        {order.open && order.id == '' && <WindowOrder role={role} id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}
+        {purchase.open && (purchase.id == '' || purchase.isOrder) && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} role={role} isSkilla={isskilla} />}
 
-    </div>
+      </div>
+      }
+      {(ispro == 0 && !isskilla) && <div className={s.pro}>
+        <p onClick={handlePro}>Закупки доступны только для обладателей <span><IconPro /></span> версии</p>
+      </div>}
+    </>
   );
 }
 

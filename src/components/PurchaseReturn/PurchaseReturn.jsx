@@ -20,11 +20,9 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     const [disabled, setDisabled] = useState(true);
     const [err, setErr] = useState(false);
     const [positionForReturn, setPositionForReturn] = useState([]);
-
     const modalRef = useRef();
     const textRef = useRef();
     const dispatch = useDispatch();
-    console.log(positions, positionForReturn)
 
     useEffect(() => {
         setAnim(true)
@@ -33,10 +31,10 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
-            windowRef.current.style.overflow = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.overflowY = "auto";
+            windowRef.current.style.paddingRight = "0";
         };
     }, [windowRef]);
 
@@ -70,7 +68,6 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
         const result = positionForReturn.filter(el => el.id == id)
         const filter = positionForReturn.filter(el => el.id !== id)
         const position = positions.find(el => el.id == id)
-        console.log(result, id)
 
         if (result.length == 0) {
             setPositionForReturn(prevState => [...prevState, { id: position?.id, quantity: position?.quantity }])
@@ -85,11 +82,9 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
 
     const handleChangeQuantity = (e) => {
         const id = Number(e.currentTarget.id);
-        console.log(id)
         const value = Number(e.currentTarget.value);
         const index = positionForReturn.findIndex(el => el.id == id);
         const maxQuantity = Number(positions.find(el => el.id == id).quantity);
-        console.log(value)
         const copyArr = [...positionForReturn]
         copyArr[index] = { id: id, quantity: value > maxQuantity ? maxQuantity : value <= 0 ? '' : value }
         setPositionForReturn(copyArr)
@@ -142,7 +137,6 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
 
         refund(id, full, comment, full ? [] : positionForReturn)
             .then(res => {
-                console.log(res)
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 const returnPos = purchase.return_items.filter(el => el.status == 'requested')

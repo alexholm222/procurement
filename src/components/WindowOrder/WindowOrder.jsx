@@ -1,6 +1,7 @@
 import s from './WindowOrder.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import uuid from 'react-uuid';
 //icon 
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
@@ -19,7 +20,7 @@ import { ReactComponent as IconButtonClose } from '../../image/icon/purchase/ico
 import { ReactComponent as IconButtonCloseDoc } from '../../image/icon/purchase/iconButtonCloseDoc.svg';
 import { ReactComponent as IconCheck } from '../../image/icon/purchase/iconCheck.svg';
 //API
-import { createOrder, takeOrder, getOrder, createPurchaseFromOrder } from '../../Api/Api';
+import { getOrderFiles, createOrder, takeOrder, getOrder, createPurchaseFromOrder } from '../../Api/Api';
 //components
 import Log from '../Log/Log';
 import Options from '../Options/Options';
@@ -62,7 +63,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     const [payerId, setPayerId] = useState(order?.payerId || '');
     const [categoryId, setCategoryId] = useState(order?.categoryId || '');
     const [isNal, setIsNal] = useState(order.isNal || false);
-    const [documents, setDocuments] = useState(order.existingFiles || []);
+    const [documents, setDocuments] = useState([]);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
     const [deleteFiles, setDeleteFiles] = useState([]);
@@ -77,10 +78,9 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     const [typeReject, setTypeReject] = useState('reject');
     const [owner, setOwner] = useState(order.personId || 0);
     const [personView, setPersonView] = useState(personIsView.id || 0)
+    const [loadDocuments, setLoadDocuments] = useState(false);
     const dispatch = useDispatch();
     const windowRef = useRef();
-    console.log(owner, personView, order)
-
 
     useEffect(() => {
         setTimeout(() => {
@@ -110,12 +110,31 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
         typeof order.status !== 'undefined' && setStatus(order?.status)
     }, [order.status])
 
-    //записываем закупку в локальное хранилище
+    useEffect(() => {
+        id !== '' && setLoadDocuments(true)
+        id !== '' && getOrderFiles(id)
+            .then(res => {
+                console.log(res)
+                const order = res.data.order;
+                const existingFiles = [
+                { id: uuid(), file: order?.bill, name: order?.bill?.includes('uploads') ? order?.bill?.split('/').pop() : order?.bill?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill2, name: order?.bill2?.includes('uploads') ? order?.bill2?.split('/').pop() : order?.bill2?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill3, name: order?.bill3?.includes('uploads') ? order?.bill3?.split('/').pop() : order?.bill3?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill4, name: order?.bill4?.includes('uploads') ? order?.bill4?.split('/').pop() : order?.bill4?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill5, name: order?.bill5?.includes('uploads') ? order?.bill5?.split('/').pop() : order?.bill5?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill6, name: order?.bill6?.includes('uploads') ? order?.bill6?.split('/').pop() : order?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                { id: uuid(), file: order?.bill7, name: order?.bill7?.includes('uploads') ? order?.bill7?.split('/').pop() : order?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                ].filter(order => order.file && order.file !== null);
+                setDocuments(existingFiles)
+                setLoadDocuments(false)
+            })
+            .catch(err => console.log(err))
+    }, [id])
+
+    console.log('документы', documents)
 
     useEffect(() => {
-        const oldFiles = documents.filter(el => el.type == 'existing').map(el => el.file);
         const files = documents.filter(el => el.type !== 'existing').map(el => el.file);
-        setOldFiles(oldFiles)
         setFiles(files)
     }, [documents])
 
@@ -140,7 +159,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                 person_id: order.personId,
                 sub_comment: order.comment,
                 type: 'add',
-                files: order.existingFiles,
+                files: /* order.existingFiles */[],
             }
             setLogs([orderLog]);
             return
@@ -155,7 +174,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                 person_id: order.personId,
                 sub_comment: order.comment,
                 type: 'add',
-                files: order.existingFiles,
+                files: /* order.existingFiles */[],
             }
 
             setLogs(prevState => [orderLog, ...prevState]);
@@ -169,9 +188,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
         if (idCreate) {
             getOrder(idCreate)
                 .then(res => {
-                    console.log(res);
                     const data = res.data;
-                    console.log(data.order.order_logs)
                     const logs = data.order.order_logs.slice(1);
                     setLogs(prevState => [...prevState, ...logs])
                     /*  const orderLog = {
@@ -211,7 +228,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     const handleComment = (e) => {
         const value = e.target.value;
         setComment(value)
-        console.log(value)
     }
 
     const handleCreateOrder = () => {
@@ -230,7 +246,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
         createOrder(formData)
             .then(res => {
                 const order = res.data.purchase_order;
-                console.log(res)
                 idCreate == '' && dispatch(setOrderNew(order))
                 idCreate == '' && setIdCreate(order.id)
                 setStatus(order.status);
@@ -244,7 +259,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                     person_id: order.person_id,
                     sub_comment: order.comment,
                     type: 'add',
-                    files: handleExistingFiles(order)
+                    files: []/*  handleExistingFiles(order) */
                 }
                 setLogs([orderLog])
             })
@@ -258,7 +273,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                 const order = res.data.order;
                 const purchase = res.data.purchase;
                 dispatch(setOrderUpdate(order));
-                console.log(res)
                 setStatus(1);
                 setLoadCreate(false);
 
@@ -287,7 +301,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                       personId: purchase?.person_id,
                       dateCreate: dateNow2(),
                   }
-                  console.log(purchase)
                   dispatch(setPurchaseNew(purchase))
                   dispatch(setPurchase(purchaseForOpen)); */
                 dispatch(setUpdateOrder())
@@ -309,7 +322,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                 const order = res.data.order;
                 const purchase = res.data.purchase;
                 dispatch(setOrderUpdate(order));
-                console.log(res)
                 setStatus(2);
                 setLoadCreate(false);
 
@@ -321,7 +333,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                     person_id: order.person_id,
                     sub_comment: order.comment,
                     type: 'add',
-                    files: handleExistingFiles(order)
+                    files: []/* handleExistingFiles(order) */
                 }
 
                 const purchaseForOpen = {
@@ -338,7 +350,6 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                     personId: purchase?.person_id,
                     dateCreate: dateNow2(),
                 }
-                console.log(purchase)
                 dispatch(setPurchaseNew(purchase))
                 dispatch(setPurchase(purchaseForOpen));
                 dispatch(setUpdateOrder())
@@ -416,9 +427,9 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                         <h3 className={s.title}>Позиции к закупке</h3>
                         <textarea disabled={disabled} onChange={handleComment} value={comment || ''} placeholder='Напиши здесь позиции и описание к ним'></textarea>
                     </div>
-                    <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setCreateSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} />
+                    <Documents documents={documents} setDocuments={setDocuments} disabled={disabled} setDeleteFiles={setDeleteFiles} setSaveSuccess={setCreateSuccess} windowRef={windowRef} scrollTopHeight={scrollTopHeight} loadDocuments={loadDocuments} />
                     <Log logs={logs} setLogs={setLogs} personView={personView} role={order.position} windowRefImage={windowRef} scrollTopHeight={scrollTopHeight} send={status !== -2} id={idCreate} type={'order'} />
-                    {deleteModal ? <DeleteModal setModal={setDeleteModal} id={idCreate} type={deleteType} setLoadDelete={setLoadDelete} loadDelete={loadDelete} setLogs={setLogs} handleClosePurchase={handleCloseOrder} /> : ''}
+                    {deleteModal ? <DeleteModal windowRef={windowRef} setModal={setDeleteModal} id={idCreate} type={deleteType} setLoadDelete={setLoadDelete} loadDelete={loadDelete} setLogs={setLogs} handleClosePurchase={handleCloseOrder} /> : ''}
                 </div>
             </div>
         </div>

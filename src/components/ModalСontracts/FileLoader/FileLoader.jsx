@@ -63,7 +63,6 @@ function FileLoader({ files, setFiles }) {
     const handleDrop = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("File(s) dropped");
         const file = event.dataTransfer.files[0]
         if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
             handleWriteFile(file)

@@ -1,6 +1,7 @@
 .options {
-    max-width: 1002px;
-   
+    /*  max-width: 1002px; */
+    max-width: 100%;
+
     &_disabled {
         pointer-events: none;
     }
@@ -29,6 +30,10 @@
     display: flex;
     align-items: center;
     user-select: none;
+
+    @media(max-width: 1860px) {
+        height: 40px;
+    }
 }
 
 .arrow {
@@ -70,6 +75,7 @@
 .block {
     overflow-x: hidden;
     width: 100%;
+    flex-shrink: 5;
 }
 
 .center {
@@ -81,7 +87,7 @@
     line-height: 20px;
     color: var(--color-text-secondary);
     transition: all 0.2s;
-   
+
 }
 
 .center::-webkit-scrollbar {
@@ -99,11 +105,20 @@
     border-radius: 4px;
     order: 1;
 
+    @media(max-width: 1860px) {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        font-size: 14px;
+        line-height: 16px;
+        padding: 7px 9.4px;
+    }
+
     &:hover {
         background-color: var(--color-tab-hover);
     }
 
-    
+
     &_disabled {
         opacity: 0.8;
     }
@@ -114,7 +129,7 @@
 
         &:hover {
             background-color: var(--color-tab-active);
-            color: var(--color-text-primary); 
+            color: var(--color-text-primary);
         }
     }
 }

@@ -5,7 +5,8 @@ import { ReactComponent as IconFolder } from '../../../image/iconFolder.svg';
 import { ReactComponent as IconDelete } from '../../../image/iconDelete.svg';
 import { ReactComponent as IconCloseShot } from '../../../image/iconCloseShot.svg';
 import iconPdf from '../../../image/icon/order/iconPdf.png';
-import iconWord from '../../../image/icon/order/iconWord.png';
+import iconWord from '../../../image/icon/order/iconWord.png'
+import IconExcel from '../../../image/icon/order/iconExcel.png';
 import FileLoader from '../../FileLoader/FileLoader';
 import ModalImage from './ModalImage/ModalImage';
 import { baseUrl } from '../../../Api/Api';
@@ -60,9 +61,10 @@ const DocumentLog = ({ i, files, file, windowRef, scrollTopHeight, type, send, n
     return (
         <div style={{margin: send ? '12px 16px 0 0' : ''}} className={`${s.file} ${i > 2} ${animFile && s.file_anim}`}>
             {type == 'doc' && <a className={s.link} target={conditionTarget} download={conditionDownload} href={urlFile}>
-                {name.slice(-3) !== 'pdf' && name.slice(-3) !== 'doc' && name.slice(-3) !== 'ocx' && <IconFolder />}
+                {name.slice(-3) !== 'pdf' && name.slice(-3) !== 'doc' && name.slice(-3) !== 'ocx' && name.slice(-3) !== 'xls' && name.slice(-3) !== 'lsx' && <IconFolder />}
                 {name.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
                 {name.slice(-3) == 'doc' || name.slice(-3) == 'ocx' && <img src={iconWord}></img>}
+                {(name.slice(-3) == 'xls' || name.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
                 <div className={s.block_text}>
                     <p>{name}</p>
                     {/*   <span>Размер {file.size.toFixed(2)}</span> */}

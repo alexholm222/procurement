@@ -20,8 +20,7 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
     const [endCursor, setEndCursor] = useState(30);
     const purchase = useSelector(purchaseSelector).purchase;
     const listRef = useRef();
-    console.log(purchases.length, endCursor)
-
+    const isskilla = document.getElementById('root_purchases').getAttribute('isskilla') == 1 ? true : false;
 
     useEffect(() => {
         setAnim(true)
@@ -51,21 +50,21 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    const scrollLoad = () => {
+  /*   const scrollLoad = () => {
         const loadBottom = listRef.current.getBoundingClientRect().bottom - window.innerHeight < 800;
         const loadTop = window.innerHeight - listRef.current.getBoundingClientRect().top < 800;
         loadBottom && setEndCursor(prevState => prevState + 30)
         loadTop && setEndCursor(30);
 
-    }
+    } */
 
-    useEffect(() => {
+   /*  useEffect(() => {
         window.addEventListener('scroll', scrollLoad);
         return () => window.removeEventListener('scroll', scrollLoad)
-    }, [])
+    }, []) */
 
     return (
-        <div style={{ pointerEvents: loadParametrs ? 'none' : '' }} ref={listRef} className={`${s.list} ${anim && s.list_anim}`}>
+        <div style={{ pointerEvents: loadParametrs ? 'none' : '' }} ref={listRef} className={`${s.list} ${!isskilla && s.list_nomargin} ${anim && s.list_anim}`}>
             <div className={s.header}>
                 <div className={`${s.item} ${s.item_date}`}>
                     <p>Дата оплаты</p>
@@ -78,11 +77,11 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
                 </div>
                 <div className={`${s.item} ${s.item_buyer}`}>
                     <p>Покупатель</p>
-                    
+
                 </div>
                 <div className={`${s.item} ${s.item_seller}`}>
                     <p>Продавец</p>
-                    
+
                 </div>
                 <div className={`${s.item} ${s.item_status}`}>
                     <p>Статус</p>
@@ -100,17 +99,18 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
                 dataLength={purchases.length}
                 next={handleLoadList}
                 hasMore={true}
+                scrollableTarget = {!isskilla ? "purchasesApp" : null}
             /*  loader={<h4>Loading...</h4>} */
             >
                 <ul className={s.purchases}>
-                    {purchases.slice(0, endCursor).map((el, i) => {
-                        return <Purchase key={el.id} el={el} role={role} isSkilla={isSkilla}/>
+                    {purchases/* .slice(0, endCursor) */.map((el, i) => {
+                        return <Purchase key={el.id} el={el} role={role} isSkilla={isSkilla} />
                     })}
                 </ul>
             </InfiniteScroll>
             }
-              {purchaseCountGeneral == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
-              {purchases.length == 0 && purchaseCountGeneral !== 0 && <div className={s.empty}><p>По выбранным фильтрам нет закупок</p></div>}
+            {purchaseCountGeneral == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
+            {purchases.length == 0 && purchaseCountGeneral !== 0 && <div className={s.empty}><p>По выбранным фильтрам нет закупок</p></div>}
             {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase role={role} isSkilla={isSkilla} id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
     )

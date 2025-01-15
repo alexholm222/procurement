@@ -12,19 +12,21 @@ import { setUpdateAction } from '../../store/reducer/purchaseUpdate/slice';
 import LoaderButton from '../LoaderButton/LoaderButton';
 
 
-const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, handleClosePurchase }) => {
+const DeleteModal = ({ windowRef, setModal, id, type, loadDelete, setLoadDelete, setLogs, handleClosePurchase }) => {
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch();
     //Фиксация окна при открытии модалки
+   
+
     useEffect(() => {
-        document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = "8px";
+        windowRef.current.style.overflow = "hidden";
+        windowRef.current.style.paddingRight = "8px";
         return () => {
-            document.body.style.overflow = "auto";
-            document.body.style.paddingRight = "0";
+            windowRef.current.style.overflowY = "auto";
+            windowRef.current.style.paddingRight = "0";
         };
-    }, []);
+    }, [windowRef]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -82,7 +84,6 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
             .then(res => {
                 dispatch(setPurchasesDelete(id));
                 handleClosePurchase();
-             
                 setAnim(false);
                 setTimeout(() => {
                     setModal(false);
@@ -100,12 +101,12 @@ const DeleteModal = ({ setModal, id, type, loadDelete, setLoadDelete, setLogs, h
         deleteOrder({ id: id })
             .then(res => {
                 dispatch(setOrderDelete(id));
-                handleClosePurchase();
                 dispatch(setUpdateAction());
                 setAnim(false);
                 setTimeout(() => {
                     setModal(false);
                     setLoadDelete(false);
+                    handleClosePurchase();
                 }, 300)
             })
             .catch(err => {

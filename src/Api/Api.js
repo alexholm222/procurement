@@ -343,6 +343,10 @@ export const getOrder = (id) => {
     return instanceWithToken.get(`${baseUrl}api/purchases/orders/detail/${id}`);
 }
 
+export const getOrderFiles = (id) => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/orders/files/${id}`);
+}
+
 export const getOrders = () => {
     return instanceWithToken.get(`${baseUrl}api/purchases/orders`);
 }

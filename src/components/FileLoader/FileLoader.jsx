@@ -55,7 +55,6 @@ function FileLoader({ files, setFiles, setSaveSuccess }) {
         const files = Object.values(e.currentTarget.files);
         files.forEach((file) => {
             if (file.size > 15 * 1048576) {
-                console.log("большой файл");
                 setError(true)
             }
             else {

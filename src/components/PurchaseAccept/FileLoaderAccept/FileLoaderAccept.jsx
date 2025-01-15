@@ -36,8 +36,7 @@ function FileLoaderAccept({ documents, setDocuments, setSaveSuccess }) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
-            console.log(reader.result)
-
+    
             setDocuments((prevState) =>
                 [...prevState, {
                     id: uuid(),
@@ -50,27 +49,32 @@ function FileLoaderAccept({ documents, setDocuments, setSaveSuccess }) {
         };
     }
 
+
     const handleFile = async (e) => {
-        const file = e.currentTarget.files[0];
-        if (file.size > 15 * 1048576) {
-            console.log("большой файл");
-            setError(true)
-        }
-        else {
-            setError(false);
-            handleWriteFile(file)
-            fileInputRef.current && (fileInputRef.current.value = '');
-        }
+        const files = Object.values(e.currentTarget.files);
+        files.forEach((file) => {
+            if (file.size > 15 * 1048576) {
+                setError(true)
+            }
+            else {
+                setError(false);
+                handleWriteFile(file)
+                fileInputRef.current && (fileInputRef.current.value = '');
+            }
+        })
     }
+
 
     const handleDrop = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("File(s) dropped");
-        const file = event.dataTransfer.files[0]
-        if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
-            handleWriteFile(file)
-        };
+        const files = Object.values(event.dataTransfer.files);
+        files.forEach((file) => {
+            if (file && (file.type === "image/png" || file.type === "application/pdf" || file.type === 'application/msword' || file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === "image/jpg" || file.type === "image/jpeg")) {
+                handleWriteFile(file)
+                
+            };
+        })
     }
 
     function fonDragOver(e) {
@@ -94,7 +98,7 @@ function FileLoaderAccept({ documents, setDocuments, setSaveSuccess }) {
             <div onDrop={handleDrop} className={`${s.loader} ${anim == 'drag' && s.loader_drag} ${(anim == 'loader' || anim == 'drag') && s.loader_anim}`}>
 
                 <div className={`${s.container} ${anim == 'drag' && s.container_hiden}`}>
-                    <input ref={fileInputRef} multiple id="image-input-accept" type='file' accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" onInput={handleFile}></input>
+                    <input ref={fileInputRef} multiple id="image-input-accept" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx, .xls, .xlsx" type='file' onInput={handleFile}></input>
                     <p className={`${s.text}`}>Перетащите <label for="image-input-accept">загрузите документ</label></p>
                     <p className={`${s.sub}`}>Файл обьемом до 20 Mбайт</p>
                 </div>

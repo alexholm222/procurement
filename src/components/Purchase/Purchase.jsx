@@ -19,8 +19,6 @@ function Purchase({ role, el }) {
     const [hidenPurchase, setHidenPurchase] = useState(false);
     const [isView, setIsView] = useState(true);
     const dispatch = useDispatch();
-    console.log(isView, purchase?.logs_view)
-
     const purchaseUpdate = useSelector(purchaseUpdateSelector).purchasesUpdate;
     const purchasesDelete = useSelector(purchaseUpdateSelector).purchasesDelete;
 
@@ -29,7 +27,7 @@ function Purchase({ role, el }) {
 
         if (purchaseUpdate?.length > 0 && purchaseNew) {
             setPurchaseUpdate(purchaseNew);
-            dispatch(setUpdateAction())
+         
             return
         }
     }, [purchaseUpdate])
@@ -69,9 +67,10 @@ function Purchase({ role, el }) {
     }, [purchase]);
 
     useEffect(() => {
+        console.log('отработало')
         const lastView = purchase?.logs_view?.find((item) => item.is_view == 0)
         lastView?.is_view == 0 ? setIsView(false) : setIsView(true)
-    }, [el])
+    }, [purchase, el])
 
 
     const handleOpenPurchase = (e) => {
@@ -104,9 +103,8 @@ function Purchase({ role, el }) {
     //не показываем закупку черновик если роль не совпаадет с ролью в закупке и status == 0
     //не показываем кнопки в закупке leader если статус 1 person_id
     //не показываем кнопки в закупке administarator если статус 2
-    console.log(purchase)
     return (
-        <Link to={`/purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
+        <Link to={`/purchases2/purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
              <div className={`${s.attention} ${isView && s.attention_hidden}`}><IconView /></div>
             <div className={`${s.item} ${s.item_date}`}>
                 {purchase?.pay_date && <p>{HandledatePurchaseList(purchase?.pay_date)}</p>}
@@ -116,7 +114,7 @@ function Purchase({ role, el }) {
                     return <div key={el.id} className={s.pos}>
                         <p>{el.name}</p>
                         {el.item_id !== 0 && <IconFav />}
-                        <span>{el.quantity} {el.type == 'услуга' ? 'услуга' : el.unit} по {el.price} ₽</span>
+                        <span>{el.quantity} {el.type == 'услуга' ? 'услуга' : el.unit} по {addSpaceNumber(el.price)} ₽</span>
                     </div>
                 })}
             </div>
@@ -150,4 +148,4 @@ function Purchase({ role, el }) {
     )
 };
 
-export default memo(Purchase);
+export default Purchase;

@@ -37,8 +37,6 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     const listRef = useRef();
     const listPatternRef = useRef();
     const inputRefFocus = useRef();
-    console.log(patternId)
-
 
     useEffect(() => {
         setAnim(true);
@@ -46,10 +44,10 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-
+        windowRef.current.style.paddingRight = "8px";
         return () => {
             windowRef.current.style.overflowY = "auto";
-            windowRef.current.style.left = "0";
+            windowRef.current.style.paddingRight = "0";
         };
     }, [windowRef]);
 

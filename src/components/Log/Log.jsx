@@ -173,7 +173,7 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
                         </div>
                     }
                 })}
-                <div ref={chatRef}></div>
+                <div key={0} ref={chatRef}></div>
             </div>
 
             {send && <div className={s.container_text}>

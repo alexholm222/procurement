@@ -32,12 +32,19 @@
         transform: scale(1);
         opacity: 1;
     }
+
+    @media(max-width: 1860px) {
+        padding: 22px;
+        width: 500px;
+    }
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+
+
 
     svg {
         cursor: pointer;
@@ -47,12 +54,27 @@
             opacity: 0.7;
         }
     }
+
+    @media(max-width: 1860px) {
+        margin-bottom: 12px;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
 }
 
 .title {
     font-size: 24px;
     font-weight: 600;
     line-height: 28px;
+
+    @media(max-width: 1860px) {
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 500;
+    }
 
     &_success {
         margin: 16px 0 8px;
@@ -81,8 +103,13 @@
     transition: all 0.15s;
     color: var(--color-text-primary);
 
+    @media(max-width: 1860px) {
+        height: 38px;
+    }
+
     input {
         padding: 0;
+
     }
 
     p {
@@ -211,6 +238,11 @@
         pointer-events: none;
         cursor: default;
     }
+
+    @media(max-width: 1860px) {
+     font-size: 14px;
+     line-height: 18px;
+    }
 }
 
 .checkbox {
@@ -241,6 +273,17 @@
             transform: scale(0);
             transition-delay: 0.15s;
             transition: all 0.15s ease-in-out;
+        }
+    }
+
+    @media(max-width: 1860px) {
+        width: 16px;
+        height: 16px;
+
+        svg {
+            width: 80%;
+            height: 80%;
+            margin-bottom: 1px;
         }
     }
 
@@ -278,6 +321,10 @@
     box-sizing: border-box;
     box-shadow: var(--box-shadow2);
     transition: max-height 0.2s;
+
+    @media(max-width: 1860px) {
+        width: 100%; 
+    }
 
     &_inn {
         margin-top: 32px;

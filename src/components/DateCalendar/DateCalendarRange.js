@@ -22,7 +22,6 @@ function DateCalendarRange({ value, setValue, endDisabled}) {
 
 
     function onChange(date) {
-        console.log(date)
         setValue(date)
     };
 

@@ -20,6 +20,11 @@
         box-sizing: border-box;
         background-color: var(--color-bg-card);
         border-radius: 4px;
+
+        @media(max-width: 1860px) {
+            padding: 4px;
+            height: fit-content;
+        }
     }
 }
 
@@ -38,6 +43,13 @@
     font-weight: 400;
     line-height: 22px;
     user-select: none;
+
+
+    @media(max-width: 1860px) {
+        padding: 4px 8px;
+        height: fit-content;
+        font-size: 14px;
+    }
 
     &:hover {
         background-color: var(--color-tab-hover);
@@ -97,9 +109,21 @@
     position: relative;
     transition: all 0.2s;
 
+    @media(max-width: 1860px) {
+        height: 38px;
+        padding: 4px 12px 4px 8px;
+        height: 38px;
+        font-size: 14px;
+    }
+
 
     svg {
         margin-right: 6px;
+        
+    @media(max-width: 1860px) {
+        width: 14px;
+        height: 14px;
+    }
 
         path {
             transition: all 0.2s;
@@ -121,7 +145,7 @@
 
     &_on {
         color: var(--color-button-accent);
-        
+
         svg path {
             fill: var(--color-button-accent);
         }

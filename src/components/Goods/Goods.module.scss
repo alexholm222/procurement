@@ -8,6 +8,10 @@
     background-color: var(--color-bg-card);
     border-radius: 8px;
 
+    @media(max-width: 1860px) {
+        gap: 12px;
+        padding: 22px;
+    }
 }
 
 .title {
@@ -16,6 +20,12 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     margin: 0;
+
+    @media(max-width: 1860px) {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 20px;
+    }
 }
 
 .table {
@@ -35,6 +45,9 @@
     color: var(--color-text-secondary);
     height: 48px;
 
+    @media(max-width: 1860px) {
+        height: 38px;
+    }
 }
 
 .cell {
@@ -43,6 +56,10 @@
     display: flex;
     align-self: center;
     transition: all 0.2s;
+
+    @media(max-width: 1860px) {
+        padding: 12px 8px;
+    }
 }
 
 .sub {
@@ -53,7 +70,9 @@
     box-sizing: border-box;
     height: 100%;
 
-
+    @media(max-width: 1860px) {
+        padding: 12px 8px 8px;
+    }
 }
 
 .pos {
@@ -64,6 +83,7 @@
 
 .name {
     max-width: 440px;
+    margin-right: auto;
     width: 100%;
     overflow: auto;
 }
@@ -124,7 +144,7 @@
     min-height: 54px;
 
     &_first {
-       /*  max-height: 54px; */
+        /*  max-height: 54px; */
     }
 
     &_disabled {
@@ -203,6 +223,11 @@
     cursor: pointer;
     transition: all 0.2s;
 
+    @media(max-width: 1860px) {
+        padding: 6px 16px 6px 8px;
+        height: 34px;
+    }
+
     svg {
         margin-right: 6px;
 
@@ -235,6 +260,12 @@
     font-weight: 500;
     line-height: 22px;
     letter-spacing: 0.15px;
+
+    @media(max-width: 1860px) {
+        font-weight: 400;
+        line-height: 18px;
+    }
+
 }
 
 .return {
@@ -255,7 +286,19 @@
     gap: 12px;
     background-color: rgba(255, 244, 218, 0.50);
     border-radius: 4px;
+
     svg path {
         stroke: #E78B00;
-    } 
+    }
+}
+
+.empity {
+    visibility: hidden;
+    width: 0;
+    padding: 0;
+    transition: all 0.2s;
+
+    &_vis {
+        width: 46px;
+    }
 }

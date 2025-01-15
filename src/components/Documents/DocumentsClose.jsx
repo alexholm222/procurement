@@ -1,6 +1,6 @@
 import s from './Documents.module.scss';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { detect } from 'jschardet'
 import { ReactComponent as IconFolder } from '../../image/iconFolder.svg';
 import { ReactComponent as IconDelete } from '../../image/iconDelete.svg';
 import iconPdf from '../../image/icon/order/iconPdf.png';
@@ -16,9 +16,9 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     const [urlFile, setUrlFile] = useState('');
     const [isImage, setIsImage] = useState(false);
     const [modalImage, setModalImage] = useState(false);
-    const conditionDownload = file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? file?.file : false;
+    const conditionDownload = file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? true : false;
     const conditionTarget = file?.type == 'existing' && file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'png' && file?.file?.slice(-3) !== 'jpg' ? '_self' : '_blank';
-    console.log(file, isImage)
+
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)
@@ -31,9 +31,13 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     }, [file])
 
     useEffect(() => {
-        const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('uploads') ? `${baseUrl}file/${file.file}` : file.file;
+        const name = file.file?.includes('purchases') ? file.file?.split('/').pop() : file.file?.split('filename=').pop().split('&').shift()
+        setFileName(decodeURI(name))
+
+        const link = file.file.slice(0, 5) == 'bill_' ? `https://lk.skilla.ru/images/stock/${file.file}` : file.file.includes('purchases') ? `${baseUrl}file/${file.file}` : file.file;
         setUrlFile(link);
-        setFileName(file.file?.includes('uploads') ? file.file?.split('/').pop() : file.file?.split('filename=').pop().split('&').shift())
+
+
     }, [file])
 
 
@@ -44,10 +48,10 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     return (
         <div style={{ marginTop: i + 1 > 2 && animFile ? '12px' : '', marginLeft: (i + 1) % 2 == 0 && animFile ? '12px' : '' }} className={`${s.file} ${i > 2} ${animFile && s.file_anim}`}>
             {!isImage && <a className={s.link} target={conditionTarget} download={conditionDownload} href={urlFile}>
-                {file?.file?.slice(-3) !== 'pdf' && file?.file?.slice(-3) !== 'doc' && file?.file?.slice(-3) !== 'ocx' && file?.file?.slice(-3) !== 'lsx' && file?.file?.slice(-3) !== 'xls' && <IconFolder />}
-                {file?.file?.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
-                {(file?.file?.slice(-3) == 'xls' || file?.file?.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
-                {file?.file?.slice(-3) == 'doc' || file?.file?.slice(-3) == 'ocx' && <img src={iconWord}></img>}
+                {fileName?.slice(-3) !== 'pdf' && fileName?.slice(-3) !== 'doc' && fileName?.slice(-3) !== 'ocx' && fileName?.slice(-3) !== 'lsx' && fileName?.slice(-3) !== 'xls' && <IconFolder />}
+                {fileName?.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
+                {(fileName?.slice(-3) == 'xls' || fileName?.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
+                {fileName?.slice(-3) == 'doc' || fileName?.slice(-3) == 'ocx' && <img src={iconWord}></img>}
                 <div className={s.block_text}>
                     <p>{fileName}</p>
                     {/*   <span>Размер {file.size.toFixed(2)}</span> */}
@@ -71,8 +75,8 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
 }
 
 
-const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight,  loadDocuments }) => {
-    console.log('закрывающие документы', documents)
+const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight, loadDocuments }) => {
+    console.log(documents)
     return (
         <div className={`${s.window} ${s.window_close} ${(loadDocuments || documents.length == 0) && s.window_disabled}`}>
             <h3 className={s.title}>Закрывающие документы</h3>
