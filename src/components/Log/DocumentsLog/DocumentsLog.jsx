@@ -61,9 +61,9 @@ const DocumentLog = ({ i, files, file, windowRef, scrollTopHeight, type, send, n
     return (
         <div style={{margin: send ? '12px 16px 0 0' : ''}} className={`${s.file} ${i > 2} ${animFile && s.file_anim}`}>
             {type == 'doc' && <a className={s.link} target={conditionTarget} download={conditionDownload} href={urlFile}>
-                {name.slice(-3) !== 'pdf' && name.slice(-3) !== 'doc' && name.slice(-3) !== 'ocx' && name.slice(-3) !== 'xls' && name.slice(-3) !== 'lsx' && <IconFolder />}
+                {name.slice(-3) !== 'pdf' && name.slice(-3) !== 'doc' && name.slice(-3) !== 'ocx' && name.slice(-3) !== 'rtf' && name.slice(-3) !== 'xls' && name.slice(-3) !== 'lsx' && <IconFolder />}
                 {name.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
-                {name.slice(-3) == 'doc' || name.slice(-3) == 'ocx' && <img src={iconWord}></img>}
+                {(name.slice(-3) == 'doc' || name.slice(-3) == 'ocx' || name.slice(-3) == 'rtf') && <img src={iconWord}></img>}
                 {(name.slice(-3) == 'xls' || name.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
                 <div className={s.block_text}>
                     <p>{name}</p>

@@ -23,7 +23,7 @@
 
     @media(max-width: 1860px) {
         gap: 12px;
-        padding: 22px;
+        padding: 24px;
     }
 }
 
@@ -35,12 +35,12 @@
     margin: 0;
     margin-bottom: 16px;
 
-    @media(max-width: 1860px) {
+    /* @media(max-width: 1860px) {
         font-size: 18px;
         font-weight: 500;
         line-height: 20px;
         margin-bottom: 12px;
-    }
+    } */
 }
 
 .files {
@@ -109,7 +109,7 @@
     @media(max-width: 1860px) {
         p {
             max-width: 85%;
-            font-size: 14px;
+           /*  font-size: 14px; */
         }
     }
 

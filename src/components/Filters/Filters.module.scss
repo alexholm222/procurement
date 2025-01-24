@@ -16,6 +16,10 @@
     transform: scale(0.6);
     opacity: 0;
 
+    @media(max-width: 1860px) {
+       gap: 22px;
+    }
+
     &_anim {
         transform: scale(1);
         opacity: 1;
@@ -84,6 +88,10 @@
     align-items: center;
     cursor: pointer;
     transition: all 0.2s;
+
+    @media(max-width: 1860px) {
+        padding: 8px 20px;
+    }
 
     svg {
         margin-left: 8px;

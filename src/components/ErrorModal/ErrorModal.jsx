@@ -25,15 +25,16 @@ const ErrorModal = ({ setError, error, handleClosePurchase, windowRef }) => {
     const handleCloseModal = () => {
         setAnim(false);
         setTimeout(() => {
+            error == 'Закупка не найдена' && handleClosePurchase()
             setError('');
-           /*  handleClosePurchase() */
+           
         }, 300)
     }
 
     const closeModal = (e) => {
         e.stopPropagation()
         if (modalRef.current && !modalRef.current.contains(e.target)) {
-            handleCloseModal();
+            handleCloseModal()
             return
         }
     }

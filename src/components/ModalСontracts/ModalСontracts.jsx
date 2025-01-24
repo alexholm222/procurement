@@ -220,7 +220,7 @@ const ModalСontracts = ({ setModal, payers, vendors, setContractVendorId, setVe
     }, [bayerListOpen, providerListOpen]);
 
     return (
-        <div style={{ top: `${scrollTopHeight}px` }}  className={`${s.overlay} ${anim && s.overlay_anim}`}>
+        <div /* style={{ top: `${scrollTopHeight}px` }} */  className={`${s.overlay} ${anim && s.overlay_anim}`}>
 
             <div ref={modalRef} className={`${s.modal} ${anim && !success && s.modal_anim}`}>
                 <div className={s.header}>

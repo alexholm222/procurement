@@ -41,11 +41,11 @@ function Log({ logs, setLogs, personView, id, role, windowRefImage, scrollTopHei
 
     useEffect(() => {
         if (files.length > 3) {
-            setHeihgtFiles(268);
+            setHeihgtFiles(258);
             return
         }
         if (files.length > 0) {
-            setHeihgtFiles(144);
+            setHeihgtFiles(134);
             return
         }
 

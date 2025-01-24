@@ -12,6 +12,10 @@
     z-index: 6;
     transition: all 0.3s ease-in-out;
     opacity: 0;
+    img {
+        width: 100%;
+        height: auto;
+    }
 
     &_anim {
         background-color: rgba(0, 0, 0, 0.2);  
@@ -42,6 +46,8 @@
     opacity: 0;
     transform: scale(0.2);
     transition: all 0.3s ease-in-out;
+
+   
 
     &_anim {
         opacity: 1;

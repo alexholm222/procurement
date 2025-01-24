@@ -6,13 +6,14 @@ import { useSelector } from 'react-redux';
 //components 
 import Loader from '../Loader/Loader';
 import Filters from '../Filters/Filters';
+import CalendarMonth from '../Calendar/CalendarMonth';
 
 //slice 
 import { purchaseUpdateSelector } from '../../store/reducer/purchaseUpdate/selector';
 
 function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrders, query, setQuery,
     orders, purchaseBeznalCount, purchaseNalCount, purchaseDelCount, filterPayDate, setFilerPayDate,
-    disabled, isSkilla }) {
+    disabled, isSkilla, role, setDateStart, setDateEnd }) {
     const [tabAttention, setTabAttention] = useState(false);
     const [tabAttentionOrders, setTabAttentionOrders] = useState(false);
     const [filtersModal, setFiltersModal] = useState(false);
@@ -88,10 +89,17 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                     <button disabled={purchaseDelCount == 0} onClick={handleChoseTab} id='del' className={`${s.button} ${activeTabs == 'del' && s.button_active}`}>
                         <p>Удаленные</p>
                     </button>
+
+                    {(role == 'director' || role == 'administrator') && <button onClick={handleChoseTab} id='report' className={`${s.button} ${activeTabs == 'report' && s.button_active}`}>
+                        <p>Отчет</p>
+                    </button>
+                    }
+
+
                 </div>
             </div>
-
-            {activeTabs !== 'orders' && <div onClick={handleActiveFilter} className={`${s.filter} ${filtersModal && s.filter_active} ${disabled && s.filter_disabled} ${filterPayDate[0] !== null && !filtersModal && s.filter_on}`}>
+            {activeTabs == 'report' && <CalendarMonth setDateStart={setDateStart} setDateEnd={setDateEnd} isSkilla={isSkilla} />}
+            {activeTabs !== 'orders' && activeTabs !== 'report' && <div onClick={handleActiveFilter} className={`${s.filter} ${filtersModal && s.filter_active} ${disabled && s.filter_disabled} ${filterPayDate[0] !== null && !filtersModal && s.filter_on}`}>
                 <div className={`${s.point}`}></div>
                 <IconFilter />
                 <p>Фильтры</p>

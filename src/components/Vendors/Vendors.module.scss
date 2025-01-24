@@ -44,6 +44,9 @@
     line-height: 18px;
     color: var(--color-text-secondary);
     user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 
@@ -63,7 +66,7 @@
     border: 1px solid #eaf0fa00;
 
     @media(max-width: 1860px) {
-        height: 54px;
+        height: 62px;
         padding: 8px 12px;
         gap: 1px;
     }
@@ -72,6 +75,7 @@
         background: none;
         border: 1px solid #EAF0FA;
         pointer-events: none;
+
         svg {
             opacity: 0;
         }
@@ -88,10 +92,10 @@
         line-height: 22px;
         color: var(--color-text-primary);
 
-        @media(max-width: 1860px) {
+        /* @media(max-width: 1860px) {
             font-size: 14px;
             line-height: 18px;
-        }
+        } */
     }
 
     &_dis {
@@ -131,6 +135,10 @@
     transition: all 0.25s;
     z-index: 1;
 
+    @media(max-width: 1860px) {
+        top: 62px;
+    }
+
     &_open {
         max-height: 335px;
     }
@@ -167,10 +175,29 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    gap: 5px;
+    gap: 6px;
     height: 67px;
-   border: 1px solid #0026e500;
+    border: 1px solid #0026e500;
     width: 100%;
+
+
+}
+
+.act {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    line-height: 20px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s;
+
+    &_vis {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 .button {
@@ -196,7 +223,7 @@
         padding: 6px 16px 6px 8px;
         height: 28px;
         max-width: 190px;
-       
+
     }
 
     svg {
@@ -213,7 +240,7 @@
     }
 
     &:hover {
-        color:var(--color-button-accent-hover);
+        color: var(--color-button-accent-hover);
         border-color: var(--color-button-accent-hover);
 
         svg {
@@ -223,5 +250,5 @@
         }
     }
 
-    
+
 }

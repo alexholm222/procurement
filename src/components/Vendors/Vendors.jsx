@@ -12,8 +12,9 @@ import { HandledateContract } from '../../utils/date';
 import ModalSuplier from '../ModalSupliers/ModalSuplier';
 import ModalСontracts from '../ModalСontracts/ModalСontracts';
 import VendorSceleton from './VendorSceleton/VendorSceleton';
+import Tooltip from '../Tooltip/Tooltip';
 
-const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef, scrollTopHeight }) => {
+const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setContractVendorId, disabled, loadParametrs, windowRef, scrollTopHeight, setIsAct, isAct }) => {
     const vendors = useSelector(purchaseSelector).vendors;
     const contracts = useSelector(purchaseSelector).vendorsContracts;
     const payers = useSelector(purchaseSelector).payers;
@@ -33,6 +34,15 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
     const [loadContract, setLoadContract] = useState(false);
     const vendorsRef = useRef();
     const contractsRef = useRef();
+   
+
+    useEffect(() => {
+        if (vendor?.act == 1) {
+            setIsAct(true)
+        } else {
+            setIsAct(false)
+        }
+    }, [vendor])
 
     useEffect(() => {
         const vendor = vendors.find(el => el.id == vendorId);
@@ -88,7 +98,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
         const id = e.currentTarget.id;
         const vendor = vendors.find(el => el.id == id);
         const firstContract = contracts.find(el => el.vendor_id == vendor?.id);
-       /*  firstContract ? setContractVendorId(firstContract.id) : setContractVendorId(''); */
+        /*  firstContract ? setContractVendorId(firstContract.id) : setContractVendorId(''); */
         setVendorId(vendor.id);
         setVendorName(vendor?.name);
         setOpenVendorsList(false);
@@ -150,7 +160,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
     return (
         <div className={`${s.vendor} ${hiden && s.vendor_hiden}`}>
             <div className={`${s.container} ${s.container_vendor}`}>
-                <p className={s.sub}>Продавец</p>
+                <p className={s.sub}>Продавец  <span className={`${s.act} ${isAct && s.act_vis}`}>учет по акту према-передачи <Tooltip text={'Учет в расходах по данному поставщику, ведется по дате подписания акта према-передачи, а не по дате оплаты'} /></span></p>
                 <div ref={vendorsRef} className={`${s.block} ${disabled && s.block_disabled}`}>
                     {!loadVendor && <input disabled={vendorsList.length == 0} onFocus={handleFocusVendor} /* onBlur={handleBlurVendor} */ onChange={handleChangeVendorName} type='text' value={vendorName || ''}></input>}
                     {!loadVendor && <div className={s.requisites}>
@@ -158,7 +168,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
                         {vendor?.kpp && <p>КПП: {vendor?.kpp}</p>}
                     </div>
                     }
-                    {<VendorSceleton loadVendor={loadVendor}/>}
+                    {<VendorSceleton loadVendor={loadVendor} />}
 
                     <ul className={`${s.list} ${openVendorsList && s.list_open}`}>
                         {vendorsList.map((el) => {
@@ -174,7 +184,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
                 </div>
             </div>
 
-           {/*  <div className={`${s.container} ${s.container_contract}`}>
+            {/*  <div className={`${s.container} ${s.container_contract}`}>
                 <p className={s.sub}>Номер договора</p>
                 <div ref={contractsRef} onClick={handleOpenContractsList} className={`${s.block} ${disabled && s.block_disabled} ${contractsList.length <= 1 && s.block_dis}`}>
                     <div className={`${s.arrow} ${contractsList.length <= 1 && s.arrow_hiden}`}>
@@ -197,18 +207,19 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
             </div> */}
 
             <div className={s.buttons}>
+               
                 <button disabled={disabled} onClick={handleOpenModalVendor} className={`${s.button} ${disabled && s.button_disabled}`}>
                     <IconPlus />
                     <p>Добавить продавца</p>
                 </button>
 
-               {/*  <button disabled={disabled} onClick={handleOpenModalContract} className={`${s.button} ${disabled && s.button_disabled}`}>
+                {/*  <button disabled={disabled} onClick={handleOpenModalContract} className={`${s.button} ${disabled && s.button_disabled}`}>
                     <IconPlus />
                     <p>Добавить договор</p>
                 </button> */}
             </div>
-            {modalVendor ? <ModalSuplier role={role} setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
-            {modalContracts ? <ModalСontracts setModal={setModalContracts} vendors={vendors} setContractVendorId={setContractVendorId} setVendorId={setVendorId} payers={payers} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight}/> : ''}
+            {modalVendor ? <ModalSuplier role={role} setModal={setModalVendor} setVendorId={setVendorId} setContractVendorId={setContractVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight} /> : ''}
+            {modalContracts ? <ModalСontracts setModal={setModalContracts} vendors={vendors} setContractVendorId={setContractVendorId} setVendorId={setVendorId} payers={payers} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={scrollTopHeight} /> : ''}
         </div>
     )
 };

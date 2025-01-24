@@ -184,7 +184,7 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
 
 
     return (
-        <div style={{ top: `${scrollTopHeight}px` }} className={`${s.window} ${anim && s.window_anim}`}>
+        <div /* style={{ top: `${scrollTopHeight}px` }} */ className={`${s.window} ${anim && s.window_anim}`}>
             <div ref={modalRef} className={`${s.add} ${anim && s.add_anim}`}>
                 <div className={s.header}>
                     {!position.name && <p className={s.title}>Добавление позиции</p>}

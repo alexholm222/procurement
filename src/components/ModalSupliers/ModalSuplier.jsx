@@ -35,14 +35,14 @@ const ModalSuplier = ({ role, setModal, setVendorId, setAddType, setContractVend
     }, []);
 
     //Фиксация окна при открытии модалки
-    useEffect(() => {
+    /* useEffect(() => {
         windowRef.current.style.overflow = "hidden";
         windowRef.current.style.paddingRight = "8px";
         return () => {
             windowRef.current.style.overflowY = "auto";
             windowRef.current.style.paddingRight = "0";
         };
-    }, [windowRef]);
+    }, [windowRef]); */
 
     useEffect(() => {
         if (check) {
@@ -88,7 +88,7 @@ const ModalSuplier = ({ role, setModal, setVendorId, setAddType, setContractVend
             .then(res => {
                 dispatch(setParametrsUpdate());
                 setVendorId(res.data.vendor.id);
-                setContractVendorId('');
+                /* setContractVendorId(''); */
                 setSuccess(true);
                 setLoad(false)
             })
@@ -160,7 +160,7 @@ const ModalSuplier = ({ role, setModal, setVendorId, setAddType, setContractVend
     }, [prompOpen]);
 
     return (
-        <div  style={{ top: `${scrollTopHeight}px` }}  className={`${s.overlay} ${anim && s.overlay_anim}`}>
+        <div  /* style={{ top: `${scrollTopHeight}px` }} */  className={`${s.overlay} ${anim && s.overlay_anim}`}>
 
             <div ref={modalRef} className={`${s.modal} ${anim && !success && s.modal_anim}`}>
                 <div className={s.header}>

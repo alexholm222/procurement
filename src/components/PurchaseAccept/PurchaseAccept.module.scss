@@ -28,6 +28,11 @@
     transform: scale(0.6);
     opacity: 0;
 
+   /*  @media(max-width: 1860px) {
+        padding: 24px;
+        width: 462px;
+    } */
+
     &_anim {
         transform: scale(1);
         opacity: 1;
@@ -39,6 +44,7 @@
     justify-content: space-between;
     margin-bottom: 20px;
 
+
     svg {
         cursor: pointer;
         transition: all 0.15s;
@@ -47,12 +53,28 @@
             opacity: 0.7;
         }
     }
+
+   /*  @media(max-width: 1860px) {
+        margin-bottom: 12px;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    } */
 }
 
 .title {
     font-size: 24px;
     font-weight: 600;
     line-height: 28px;
+
+   
+    /* @media(max-width: 1860px) {
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 500;
+    } */
 
     &_success {
         margin: 16px 0 8px;
@@ -99,15 +121,15 @@
     }
 
     &_reject {
-       background: none;
-       border: 1px solid #E75A5A;
-       color: #E75A5A;
-
-       &:hover {
         background: none;
-        border: 1px solid #d13e3e;
-        color: #d13e3e;
-       }
+        border: 1px solid #E75A5A;
+        color: #E75A5A;
+
+        &:hover {
+            background: none;
+            border: 1px solid #d13e3e;
+            color: #d13e3e;
+        }
     }
 
     &:disabled {
@@ -243,7 +265,7 @@
 }
 
 .documents {
-   /*  position: absolute; */
+    /*  position: absolute; */
     width: 100%;
     height: fit-content;
     z-index: 12;
@@ -259,15 +281,15 @@
     overflow: hidden;
     position: relative;
     border-radius: 8px;
-   
+
     box-sizing: border-box;
 
 
-   /*  &_hiden {
+    /*  &_hiden {
         border: 1px dashed #ECF2FC;
     } */
 
-    
+
     &_disabled {
         opacity: 0.4;
         pointer-events: none;

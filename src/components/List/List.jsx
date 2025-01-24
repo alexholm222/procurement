@@ -69,7 +69,7 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
                 <div className={`${s.item} ${s.item_date}`}>
                     <p>Дата оплаты</p>
                 </div>
-                <div className={`${s.item} ${s.item_pos}`}>
+                <div className={`${s.item} ${s.item_pos} ${(role == 'director' || role == 'administrator') && s.item_pos_director}`}>
                     <p>Позиции</p>
                 </div>
                 <div className={`${s.item} ${s.item_sum}`}>
@@ -79,23 +79,29 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
                     <p>Покупатель</p>
 
                 </div>
-                <div className={`${s.item} ${s.item_seller}`}>
+                <div className={`${s.item} ${s.item_seller} ${(role == 'director' || role == 'administrator') && s.item_seller_director}`}>
                     <p>Продавец</p>
-
                 </div>
+
+                {(role == 'director' || role == 'administrator') && <div className={`${s.item} ${s.item_accounting}`}>
+                    <p>Учет в итогах</p>
+                </div>}
+
                 <div className={`${s.item} ${s.item_status}`}>
                     <p>Статус</p>
                     {/* <IconArrow /> */}
                 </div>
-            </div>
-            {load && <ul className={s.purchases}>
+
+                {<ul className={`${s.purchases} ${s.purchases__loader} ${!load && s.purchases__loader_hidden}`}>
                 {[...Array(18)]?.map((el, i) => {
-                    return <PurchaseSceleton key={i} />
+                    return <PurchaseSceleton key={i} role={role}/>
                 })}
             </ul>
             }
+            </div>
+           
 
-            {!load && <InfiniteScroll
+            {/* !load &&  */<InfiniteScroll
                 dataLength={purchases.length}
                 next={handleLoadList}
                 hasMore={true}
@@ -109,7 +115,7 @@ function List({ isSkilla, role, purchases, purchaseCount, purchaseCountGeneral, 
                 </ul>
             </InfiniteScroll>
             }
-            {purchaseCountGeneral == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
+            {purchaseCountGeneral == 0 && purchases.length == 0 && <div className={s.empty}><p>Закупки не добавлены</p></div>}
             {purchases.length == 0 && purchaseCountGeneral !== 0 && <div className={s.empty}><p>По выбранным фильтрам нет закупок</p></div>}
             {purchase.open && purchase.id !== '' && !purchase.isOrder && <WindowPurchase role={role} isSkilla={isSkilla} id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>

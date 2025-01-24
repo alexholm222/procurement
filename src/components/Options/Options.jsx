@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 //selector
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
-function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCategoryId, disabled }) {
+function Options({ payers, type, sub, purchaseId, payerId, setPayerId, categoryId, setCategoryId, disabled }) {
     const [lastType, setLastType] = useState(0);
     const [transformType, setTransformType] = useState(0);
     const [disableRight, setDisabledRight] = useState(true);
@@ -16,7 +16,9 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
     const buttonRef = useRef();
     const buttonLast = useRef();
     const activeRef = useRef();
-    const payers = useSelector(purchaseSelector).payers;
+    /* const payersActive = useSelector(purchaseSelector).payers;
+    const payersAll = useSelector(purchaseSelector).payersAll;
+    const payers = purchaseId == '' ? payersActive : payersAll; */
     const categories = useSelector(purchaseSelector).categories;
     const position3 = buttonLast?.current?.getBoundingClientRect().left;
     const position1 = buttonRef?.current?.getBoundingClientRect().left;
@@ -32,7 +34,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
 
     useEffect(() => {
         if (type == 'categories' && firstLoad) {
-            !purchaseId && setCategoryId(categories[0].id)
+            purchaseId == '' && setCategoryId(categories[0].id)
             setFirstLoad(false);
         }
     }, [categories, firstLoad]);
@@ -49,8 +51,8 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
 
     useEffect(() => {
 
-        if (type == 'payers' && firstLoad) {
-            !purchaseId && setPayerId(payers[0].id)
+        if (type == 'payers' && firstLoad && payers.length > 0) {
+            purchaseId == '' && setPayerId(payers[0].id)
             setFirstLoad(false);
         }
     }, [payers, firstLoad]);
@@ -131,7 +133,7 @@ function Options({ type, sub, purchaseId, payerId, setPayerId, categoryId, setCa
                             {list.map((el, i) => {
                                 return <div key={el.id} ref={lastType === i ? buttonRef : i === list.length - 1 ? buttonLast : activeId === el.id ? activeRef : null}
                                     onClick={handleSelectType} id={el.id}
-                                    className={`${s.button} ${disabled && s.button_disabled} ${activeId === el.id && s.button_active}`}>
+                                    className={`${s.button} ${disabled && s.button_disabled} ${!el.active && s.button_noactove} ${activeId === el.id && s.button_active}`}>
                                     <p>{el.name}</p>
                                 </div>
                             })}

@@ -48,10 +48,10 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
     return (
         <div style={{ marginTop: i + 1 > 2 && animFile ? '12px' : '', marginLeft: (i + 1) % 2 == 0 && animFile ? '12px' : '' }} className={`${s.file} ${i > 2} ${animFile && s.file_anim}`}>
             {!isImage && <a className={s.link} target={conditionTarget} download={conditionDownload} href={urlFile}>
-                {fileName?.slice(-3) !== 'pdf' && fileName?.slice(-3) !== 'doc' && fileName?.slice(-3) !== 'ocx' && fileName?.slice(-3) !== 'lsx' && fileName?.slice(-3) !== 'xls' && <IconFolder />}
+                {fileName?.slice(-3) !== 'pdf' && fileName?.slice(-3) !== 'doc' && fileName?.slice(-3) !== 'ocx' && fileName?.slice(-3) !== 'rtf' && fileName?.slice(-3) !== 'lsx' && fileName?.slice(-3) !== 'xls' && <IconFolder />}
                 {fileName?.slice(-3) == 'pdf' && <img src={iconPdf}></img>}
                 {(fileName?.slice(-3) == 'xls' || fileName?.slice(-3) == 'lsx') && <img src={IconExcel}></img>}
-                {fileName?.slice(-3) == 'doc' || fileName?.slice(-3) == 'ocx' && <img src={iconWord}></img>}
+                {(fileName?.slice(-3) == 'doc' || fileName?.slice(-3) == 'ocx' || fileName?.slice(-3) == 'rtf') && <img src={iconWord}></img>}
                 <div className={s.block_text}>
                     <p>{fileName}</p>
                     {/*   <span>Размер {file.size.toFixed(2)}</span> */}
@@ -76,7 +76,6 @@ const DocumentClose = ({ i, file, disabled, windowRef, scrollTopHeight }) => {
 
 
 const DocumentsClose = ({ documents, disabled, windowRef, scrollTopHeight, loadDocuments }) => {
-    console.log(documents)
     return (
         <div className={`${s.window} ${s.window_close} ${(loadDocuments || documents.length == 0) && s.window_disabled}`}>
             <h3 className={s.title}>Закрывающие документы</h3>

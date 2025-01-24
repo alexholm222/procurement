@@ -1,8 +1,9 @@
 import s from './Search.module.scss';
 import { ReactComponent as IconSearch } from '../../image/iconSearch.svg';
+import { ReactComponent as IconСlose } from '../../image/icon/iconClose.svg';
 import { useState, useRef, useEffect } from 'react';
 
-function Search({ query, setQuery}) {
+function Search({ query, setQuery }) {
     const throttleInProgress = useRef();
 
 
@@ -19,10 +20,18 @@ function Search({ query, setQuery}) {
         });
     }
 
+    const handleReset = () => {
+        setQuery('')
+    }
+
     return (
         <div className={s.search}>
             <IconSearch />
             <input onChange={handleSearch} value={query || ''} placeholder='Искать...' type='text'></input>
+            <div onClick={handleReset} className={`${s.reset} ${query.length > 0 && s.reset_vis}`}>
+                <IconСlose />
+            </div>
+
         </div>
     )
 };

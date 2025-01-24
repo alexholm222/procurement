@@ -97,6 +97,14 @@ export const getParameters = () => {
     return instanceWithToken.get(`${baseUrl}api/purchases/parameters`);
 }
 
+export const getCategories = () => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/stock/settings/categories`);
+}
+
+export const getPayersList = () => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/stock/settings/payers`);
+}
+
 export const getItems = () => {
     return instanceWithToken.get(`${baseUrl}api/purchases/stock/settings/items`);
 }
@@ -463,4 +471,25 @@ export const rejectRefund = (id) => {
 //Редактировать учет в фин итогах внутри закупки
 export const changeTakeAccount = (id) => {
     return instanceWithToken.post(`${baseUrl}api/purchases/change_take_account/${id}`);
+}
+
+//Подсчет фин итогов по закупкам
+ 
+export const getPurchaseReport = (dateStart, dateEnd) => {
+    return instanceWithToken.get(`${baseUrl}api/purchases/expenses?date_start=${dateStart}&date_end=${dateEnd}`);
+}
+
+
+//ручной учет 
+export const getYears = () => {
+    return instanceWithToken.get(`${baseUrl}api/partnerships/financial_years`);
+}
+
+
+export const getManualAcc = (year) => {
+    return instanceWithToken.get(`${baseUrl}api/partnerships/manual_accounting?year=${year}`);
+}
+
+export const saveManualData = (stock_vendor_id, year, month, amount) => {
+    return instanceWithToken.post(`${baseUrl}api/partnerships/manual_accounting/edit?stock_vendor_id=${stock_vendor_id}&year=${year}&month=${month}&amount=${amount}`);
 }

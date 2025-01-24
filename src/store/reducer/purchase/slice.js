@@ -4,6 +4,7 @@ const initialState = {
 	purchase: /* JSON.parse(localStorage.getItem('purchase')) ||  */{},
 	order: {},
 	payers: JSON.parse(localStorage.getItem('payers')) || [],
+	payersAll: JSON.parse(localStorage.getItem('payersAll')) || [],
 	vendors: JSON.parse(localStorage.getItem('vendors')) || [],
 	vendorsContracts: JSON.parse(localStorage.getItem('vendorsContracts')) || [],
 	categories: JSON.parse(localStorage.getItem('categories')) || [],
@@ -24,6 +25,10 @@ const purchaseSlice = createSlice({
 
 		setPayers(state, action) {
 			state.payers = action.payload;
+		},
+
+		setPayersAll(state, action) {
+			state.payersAll = action.payload;
 		},
 
 		setVendors(state, action) {
@@ -48,6 +53,7 @@ export const {
 	setPurchase,
 	setOrder,
 	setPayers,
+	setPayersAll,
 	setVendors,
 	setVendorsContracts,
 	setCategories,

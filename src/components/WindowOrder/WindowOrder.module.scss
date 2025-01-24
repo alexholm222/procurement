@@ -1,9 +1,10 @@
 .window {
-    width: 100%;
+    width: calc(100% - 240px);
     height: 100%;
     position: fixed;
+    min-width: 1260px;
     top: 0;
-    left: 0;
+    left: 240px;
     z-index: 2;
     background-color: var(--color-bg);
     overflow-y: scroll;
@@ -25,8 +26,8 @@
 
 .container {
     width: 100%;
-    max-width: 1558px;
-    margin: 40px auto 40px 300px;
+    padding: 30px;
+    box-sizing: border-box;
     position: relative;
 }
 
@@ -37,9 +38,17 @@
         'pos log'
         'doc log'
         'f   log';
-    grid-template-columns: 1fr 484px;
+   /*  grid-template-columns: 1fr 484px;
+    grid-template-rows: repeat(3, min-content);
+    gap: 16px; */
+
+    grid-template-columns: calc(100% - 500px) 484px;
     grid-template-rows: repeat(3, min-content);
     gap: 16px;
+
+    @media(min-width: 1980px) {
+        grid-template-columns: calc(100% - 600px) 584px;
+    }
 
 }
 

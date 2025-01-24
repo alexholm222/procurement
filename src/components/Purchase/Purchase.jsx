@@ -27,7 +27,7 @@ function Purchase({ role, el }) {
 
         if (purchaseUpdate?.length > 0 && purchaseNew) {
             setPurchaseUpdate(purchaseNew);
-         
+
             return
         }
     }, [purchaseUpdate])
@@ -67,7 +67,6 @@ function Purchase({ role, el }) {
     }, [purchase]);
 
     useEffect(() => {
-        console.log('отработало')
         const lastView = purchase?.logs_view?.find((item) => item.is_view == 0)
         lastView?.is_view == 0 ? setIsView(false) : setIsView(true)
     }, [purchase, el])
@@ -104,12 +103,12 @@ function Purchase({ role, el }) {
     //не показываем кнопки в закупке leader если статус 1 person_id
     //не показываем кнопки в закупке administarator если статус 2
     return (
-        <Link to={`/purchases2/purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
-             <div className={`${s.attention} ${isView && s.attention_hidden}`}><IconView /></div>
+        <Link to={`/purchases2/?purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
+            <div className={`${s.attention} ${isView && s.attention_hidden}`}><IconView /></div>
             <div className={`${s.item} ${s.item_date}`}>
                 {purchase?.pay_date && <p>{HandledatePurchaseList(purchase?.pay_date)}</p>}
             </div>
-            <div className={`${s.item} ${s.item_pos}`}>
+            <div className={`${s.item} ${s.item_pos} ${(role == 'director' || role == 'administrator') && s.item_pos_director}`}>
                 {purchase?.items?.map((el) => {
                     return <div key={el.id} className={s.pos}>
                         <p>{el.name}</p>
@@ -126,10 +125,14 @@ function Purchase({ role, el }) {
                 {(role == 'administrator' || role == 'director') && purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>наличные</span>}
                 {(role == 'administrator' || role == 'director') && !purchase?.is_nal && <span>безнал</span>}
             </div>
-            <div className={`${s.item} ${s.item_seller}`}>
+            <div className={`${s.item} ${s.item_seller} ${(role == 'director' || role == 'administrator') && s.item_seller_director}`}>
                 <p>{purchase?.counterparty_name}</p>
                 <span>{purchase?.counterparty_inn && 'ИНН'} {purchase?.counterparty_inn}  {purchase?.counterparty_kpp && 'КПП'} {purchase?.counterparty_kpp}</span>
             </div>
+
+            {(role == 'director' || role == 'administrator') && <div className={`${s.item} ${s.item_accounting}`}>
+                {!purchase.take_account && <p>нет</p>}
+            </div>}
             {purchase && purchase?.items?.length > 0 && <div className={`${s.item} ${s.item_status}`}>
                 <div className={`${s.status} ${(purchase?.status == -1 || purchase.is_reject) && s.status_red} ${(purchase?.status == 1 || purchase?.status == 2) && s.status_yellow} ${purchase?.status > 2 && s.status_done}`}></div>
                 <div className={`${s.status} ${purchase?.status == 6 && s.status_yellow} ${purchase?.status >= 3 && purchase?.status !== 6 && s.status_done}`}></div>

@@ -23,7 +23,7 @@ import { handleExistingFiles } from '../../utils/handleExistingFiles';
 
 
 
-const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, type, handleConfirmAproval, handleAproval, setPayDate }) => {
+const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, setLoadAccept, acceptSuccess, setAcceptSuccess, setLogs, type, handleConfirmAproval, handleAproval, setPayDate, isAct }) => {
     const [anim, setAnim] = useState(false);
     const [check, setCheck] = useState(false);
     const [date, setDate] = useState('');
@@ -130,12 +130,12 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
             <div ref={modalRef} className={`${s.modal} ${anim && !acceptSuccess && s.modal_anim}`}>
                 <div className={s.header}>
                     <h2 className={s.title}>
-                        Подтверждение оплаты
+                        Подтверждение {isAct ? 'подписания' : 'оплаты'}
                     </h2>
                     <IconClose onClick={handleCloseModal} />
                 </div>
 
-                <p className={s.sub}>Дата оплаты</p>
+                <p className={s.sub}>Дата {isAct ? 'подписания' : 'оплаты'}</p>
                 <DataPicker queryDate={date} setQueryDate={setDate} disabled={false} check={check} editStop={false} />
 
 
@@ -147,14 +147,14 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
                     {!loadAccept && <p>Подтвердить</p>}
                     {loadAccept && <LoaderButton color={'#FFFFFF'} />}
                 </button>
-                <span className={s.text_err}>{err ? 'Произошла ошибка при добавлении поставщика' : ''}</span>
+                <span className={s.text_err}>{err ? 'Произошла ошибка при подтверждении оплаты' : ''}</span>
             </div>
 
             <div className={`${s.success} ${acceptSuccess && s.success_anim}`}>
                 <div className={s.close}><IconClose /></div>
                 <IconSuccess />
                 <h2 className={`${s.title} ${s.title_success}`}>
-                    Закупка оплачена
+                    {isAct ? 'Акт подписан' : 'Закупка оплачена'}
                 </h2>
                 <p className={s.text}></p>
 

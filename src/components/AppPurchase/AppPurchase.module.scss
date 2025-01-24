@@ -1,19 +1,25 @@
 .app {
     /* height: 100%; */
-   /*    max-width: 1558px; */
-        min-width: 1260px;
+    /*    max-width: 1558px; */
+    min-width: 1340px;
     /*   margin: 40px auto 40px 300px; */
-    padding: 30px 30px 0;
-    height: calc(100vh - 94px);
+    padding: 30px;
+    height: calc(100vh - 124px);
     overflow: overlay;
     overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.15s;
 
-    
+    &_anim {
+        opacity: 1;
+    }
+
+
 
 
     &_skilla {
         height: auto;
-        padding: 40px 40px 0;
+        min-height: 100vh;
     }
 
 
@@ -41,10 +47,10 @@
     justify-content: space-between;
     margin-bottom: 16px;
 
-    @media(max-width: 1860px) {
+    /* @media(max-width: 1860px) {
         height: 38px;
         margin-bottom: 12px;
-    }
+    } */
 }
 
 .title {
@@ -61,20 +67,15 @@
         opacity: 0.7;
         margin-left: 4px;
     }
-
-    @media(max-width: 1860px) {
-        font-size: 20px;
-        line-height: 20px;
-    }
 }
 
 .buttons {
     height: 44px;
     display: flex;
     gap: 12px;
-    @media(max-width: 1860px) {
+    /* @media(max-width: 1860px) {
         height: 38px;
-    }
+    } */
 }
 
 .button {
@@ -87,12 +88,12 @@
     cursor: pointer;
     transition: all 0.2s;
 
-    @media(max-width: 1860px) {
+    /*  @media(max-width: 1860px) {
         padding: 7px 16px;
         height: fit-content;
         font-size: 14px;
         line-height: 18px;
-    }
+    } */
 
     svg {
         margin-left: 8px;
@@ -170,5 +171,56 @@
 
     span {
         margin: 0 6px;
+    }
+}
+
+.tabs {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 44px;
+
+
+}
+
+.tab {
+    position: absolute;
+    opacity: 0.8;
+    height: 100%;
+    left: 116px;
+    top: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 148px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: var(--color-text-secondary);
+    user-select: none;
+
+    &:hover {
+        opacity: 0.6;
+    }
+
+    &_active {
+        opacity: 1;
+        top: 0;
+        left: 0;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 28px;
+        color: var(--color-text-primary);
+
+        sup {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18px;
+            letter-spacing: 0.056px;
+            opacity: 0.7;
+            margin-left: 4px;
+        }
+
+        
     }
 }

@@ -1,50 +1,38 @@
 import s from './WindowOrder.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import uuid from 'react-uuid';
 //icon 
-import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
+
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
 import { ReactComponent as IconTakeWork } from '../../image/icon/order/iconTakeWork.svg';
-import { ReactComponent as IconButtonAgreement } from '../../image/icon/purchase/iconButtonAgreement.svg';
-import { ReactComponent as IconButtonAgreementAdmin } from '../../image/icon/purchase/iconButtonAgreementAdmin.svg';
-import { ReactComponent as IconButtonAgreementRepeat } from '../../image/icon/purchase/iconButtonAgreementRepeat.svg';
-import { ReactComponent as IconButtonCancel } from '../../image/icon/purchase/iconButtonCancel.svg';
-import { ReactComponent as IconButtonReject } from '../../image/icon/purchase/iconButtonReject.svg';
-import { ReactComponent as IconButtonSave } from '../../image/icon/purchase/iconButtonSave.svg';
-import { ReactComponent as IconDone } from '../../image/iconDone.svg';
+
 import { ReactComponent as IconArrowBack } from '../../image/icon/purchase/iconArrowBack.svg';
 import { ReactComponent as IconButtonDelete } from '../../image/icon/purchase/iconButtonDelete.svg';
-import { ReactComponent as IconButtonAccept } from '../../image/icon/purchase/iconButtonAccept.svg';
-import { ReactComponent as IconButtonClose } from '../../image/icon/purchase/iconButtonClose.svg';
-import { ReactComponent as IconButtonCloseDoc } from '../../image/icon/purchase/iconButtonCloseDoc.svg';
-import { ReactComponent as IconCheck } from '../../image/icon/purchase/iconCheck.svg';
 //API
 import { getOrderFiles, createOrder, takeOrder, getOrder, createPurchaseFromOrder } from '../../Api/Api';
 //components
 import Log from '../Log/Log';
 import Options from '../Options/Options';
-import Goods from '../Goods/Goods';
 import Documents from '../Documents/Documents';
 import StatusBage from './StatusBage/StatusBage';
 import LoaderButton from '../LoaderButton/LoaderButton';
-import Vendors from '../Vendors/Vendors';
-import PurchaseAccept from '../PurchaseAccept/PurchaseAccept';
-import PurchaseCloseDoc from '../PurchaseAccept/PurchaseCloseDoc';
-import PurchaseConfirmPay from '../PurchaseAccept/PurchaseConfirmPay';
-import PurchaseReject from '../PurchaseAccept/PurchaseReject';
 import DeleteModal from '../DeleteModal/DeleteModal';
 //slice
 import { setOrder } from '../../store/reducer/purchase/slice';
 import { setOrderUpdate, setOrderNew, setUpdateOrder } from '../../store/reducer/purchaseUpdate/slice';
 import { setPurchase } from '../../store/reducer/purchase/slice';
 import { setPurchaseNew } from '../../store/reducer/purchaseUpdate/slice';
+//selector
+import { purchaseSelector } from '../../store/reducer/purchase/selector';
 //utils 
 import { handleExistingFiles } from '../../utils/handleExistingFiles';
 import { HandledatePurchase, dateNow2 } from '../../utils/date';
 
 
 function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
+    const payersActive = useSelector(purchaseSelector).payers;
+    const payersAll = useSelector(purchaseSelector).payersAll;
     const [anim, setAnim] = useState(false);
     const [paymentType, setPaymentType] = useState('');
     const [personId, setPersonId] = useState(order.personId || -1);
@@ -65,20 +53,14 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     const [isNal, setIsNal] = useState(order.isNal || false);
     const [documents, setDocuments] = useState([]);
     const [files, setFiles] = useState([]);
-    const [oldFiles, setOldFiles] = useState([]);
     const [deleteFiles, setDeleteFiles] = useState([]);
-    const [isPattern, setIsPattern] = useState(false);
-    const [isNormalPrice, setIsNormalPrice] = useState(true);
-    const [modalAccept, setModalAccept] = useState(false);
-    const [modalDoc, setModalDoc] = useState(false);
-    const [modalPay, setModalPay] = useState(false);
-    const [modalReject, setModalReject] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [deleteType, setDeleteType] = useState('save');
     const [typeReject, setTypeReject] = useState('reject');
     const [owner, setOwner] = useState(order.personId || 0);
     const [personView, setPersonView] = useState(personIsView.id || 0)
     const [loadDocuments, setLoadDocuments] = useState(false);
+    const [payers, setPayers] = useState([])
     const dispatch = useDispatch();
     const windowRef = useRef();
 
@@ -87,6 +69,13 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
             setAnim(true)
         })
     }, []);
+
+    useEffect(() => {
+        const result = payersActive.find(el => el.id == payerId);
+
+        const payers = (result?.id || id == '') ? payersActive : payersAll;
+        setPayers(payers)
+    }, [payersAll, payersActive])
 
     useEffect(() => {
         status !== -2 && setDisabled(true)
@@ -114,16 +103,16 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
         id !== '' && setLoadDocuments(true)
         id !== '' && getOrderFiles(id)
             .then(res => {
-                console.log(res)
+
                 const order = res.data.order;
                 const existingFiles = [
-                { id: uuid(), file: order?.bill, name: order?.bill?.includes('uploads') ? order?.bill?.split('/').pop() : order?.bill?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill2, name: order?.bill2?.includes('uploads') ? order?.bill2?.split('/').pop() : order?.bill2?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill3, name: order?.bill3?.includes('uploads') ? order?.bill3?.split('/').pop() : order?.bill3?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill4, name: order?.bill4?.includes('uploads') ? order?.bill4?.split('/').pop() : order?.bill4?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill5, name: order?.bill5?.includes('uploads') ? order?.bill5?.split('/').pop() : order?.bill5?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill6, name: order?.bill6?.includes('uploads') ? order?.bill6?.split('/').pop() : order?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
-                { id: uuid(), file: order?.bill7, name: order?.bill7?.includes('uploads') ? order?.bill7?.split('/').pop() : order?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill, name: order?.bill?.includes('uploads') ? order?.bill?.split('/').pop() : order?.bill?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill2, name: order?.bill2?.includes('uploads') ? order?.bill2?.split('/').pop() : order?.bill2?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill3, name: order?.bill3?.includes('uploads') ? order?.bill3?.split('/').pop() : order?.bill3?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill4, name: order?.bill4?.includes('uploads') ? order?.bill4?.split('/').pop() : order?.bill4?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill5, name: order?.bill5?.includes('uploads') ? order?.bill5?.split('/').pop() : order?.bill5?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill6, name: order?.bill6?.includes('uploads') ? order?.bill6?.split('/').pop() : order?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
+                    { id: uuid(), file: order?.bill7, name: order?.bill7?.includes('uploads') ? order?.bill7?.split('/').pop() : order?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
                 ].filter(order => order.file && order.file !== null);
                 setDocuments(existingFiles)
                 setLoadDocuments(false)
@@ -131,7 +120,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
             .catch(err => console.log(err))
     }, [id])
 
-    console.log('документы', documents)
+
 
     useEffect(() => {
         const files = documents.filter(el => el.type !== 'existing').map(el => el.file);
@@ -420,8 +409,8 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
                     <div className={s.param}>
 
                         <h3 className={s.title}>Параметры</h3>
-                        <Options type={'categories'} sub={'Тип закупки'} categoryId={Number(categoryId)} setCategoryId={setCategoryId} purchaseId={id} disabled={disabled /* || loadSave */} />
-                        <Options type={'payers'} sub={'Покупатель'} payerId={Number(payerId)} setPayerId={setPayerId} isNal={isNal} setPaymentType={setPaymentType} purchaseId={id} disabled={disabled /* || loadSave || loadAproval */} />
+                        <Options type={'categories'} sub={'Тип закупки'} payers={payers} categoryId={Number(categoryId)} setCategoryId={setCategoryId} purchaseId={id} disabled={disabled /* || loadSave */} />
+                        <Options type={'payers'} sub={'Покупатель'} payers={payers} payerId={Number(payerId)} setPayerId={setPayerId} isNal={isNal} setPaymentType={setPaymentType} purchaseId={id} disabled={disabled /* || loadSave || loadAproval */} />
                     </div>
                     <div className={s.comment}>
                         <h3 className={s.title}>Позиции к закупке</h3>

@@ -10,7 +10,7 @@
 
     @media(max-width: 1860px) {
         gap: 12px;
-        padding: 22px;
+        padding: 24px;
     }
 }
 
@@ -21,11 +21,11 @@
     letter-spacing: 0.15px;
     margin: 0;
 
-    @media(max-width: 1860px) {
+ /*    @media(max-width: 1860px) {
         font-size: 18px;
         font-weight: 500;
         line-height: 20px;
-    }
+    } */
 }
 
 .table {
@@ -58,7 +58,7 @@
     transition: all 0.2s;
 
     @media(max-width: 1860px) {
-        padding: 12px 8px;
+        padding: 12px;
     }
 }
 
@@ -71,7 +71,7 @@
     height: 100%;
 
     @media(max-width: 1860px) {
-        padding: 12px 8px 8px;
+        padding: 12px 12px 8px;
     }
 }
 
@@ -121,6 +121,7 @@
 .delete {
     transition: all 0.2s;
     cursor: pointer;
+    flex-shrink: 0;
 
 
     &_disabled {
@@ -142,10 +143,6 @@
     display: flex;
     flex-direction: column;
     min-height: 54px;
-
-    &_first {
-        /*  max-height: 54px; */
-    }
 
     &_disabled {
         pointer-events: none;
@@ -186,13 +183,14 @@
             height: 54px;
             max-height: 54px;
 
+
         }
     }
 
     &_anim {
         border-top: 1px solid var(--color-line-border);
         opacity: 1;
-        max-height: 54px;
+        min-height: 54px;
         height: fit-content;
     }
 
@@ -296,6 +294,7 @@
     visibility: hidden;
     width: 0;
     padding: 0;
+    flex-shrink: 0;
     transition: all 0.2s;
 
     &_vis {

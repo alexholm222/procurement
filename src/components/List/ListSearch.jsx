@@ -61,15 +61,15 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
                 </div>
                 <div className={`${s.item} ${s.item_buyer}`}>
                     <p>Покупатель</p>
-                    <IconArrow />
+                    {/* <IconArrow /> */}
                 </div>
                 <div className={`${s.item} ${s.item_seller}`}>
                     <p>Продавец</p>
-                    <IconArrow />
+                    {/* <IconArrow /> */}
                 </div>
                 <div className={`${s.item} ${s.item_status}`}>
                     <p>Статус</p>
-                    <IconArrow />
+                    {/* <IconArrow /> */}
                 </div>
             </div>
             {load && <ul className={s.purchases}>

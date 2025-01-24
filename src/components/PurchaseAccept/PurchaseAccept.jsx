@@ -141,7 +141,6 @@ const PurchaseAccept = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
 
         acceptPurchase(formData)
             .then(res => {
-                console.log(res)
                 const purchase = res.data.purchase;
                 const order = res.data.purchase.order;
                 setCloseDocs(purchase.files)

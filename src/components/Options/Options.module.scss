@@ -31,9 +31,9 @@
     align-items: center;
     user-select: none;
 
-    @media(max-width: 1860px) {
+    /* @media(max-width: 1860px) {
         height: 40px;
-    }
+    } */
 }
 
 .arrow {
@@ -105,14 +105,13 @@
     border-radius: 4px;
     order: 1;
 
-    @media(max-width: 1860px) {
+  /*   @media(max-width: 1860px) {
         display: flex;
         align-items: center;
         height: 32px;
-        font-size: 14px;
-        line-height: 16px;
+          font-size: 15px;
         padding: 7px 9.4px;
-    }
+    } */
 
     &:hover {
         background-color: var(--color-tab-hover);
@@ -121,7 +120,9 @@
 
     &_disabled {
         opacity: 0.8;
+       
     }
+
 
     &_active {
         background-color: var(--color-tab-active);
@@ -131,5 +132,11 @@
             background-color: var(--color-tab-active);
             color: var(--color-text-primary);
         }
+    }
+
+    
+    &_noactove {
+        opacity: 0.6;
+        pointer-events: none;
     }
 }

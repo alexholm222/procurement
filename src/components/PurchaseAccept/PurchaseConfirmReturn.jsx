@@ -98,7 +98,7 @@ const PurchaseConfirmReturn = ({ setModal, windowRef, id, setStatus, loadAccept,
             })
             .catch(err => {
                 const data = err.response?.data?.message;
-                console.log(data)
+          
                 if(data?.message.includes('Quantity')) {
                     setError(`Невозможно провести возврат, проверьте остатки позиций на складе`)
                 } else {

@@ -50,7 +50,6 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
     const [openAdd, setOpenAdd] = useState(false);
     const [position, setPosition] = useState({});
     const [isFull, setIsFull] = useState(false);
-    console.log(sum)
 
     useEffect(() => {
         const sum = positions.reduce((acc, el) => acc + Number(el.sum), 0);

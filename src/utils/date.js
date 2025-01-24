@@ -213,3 +213,79 @@ export const handleCompareDateOrder = (f) => {
     return false
   }
 }
+
+
+export function setDateForCalendarMonth(monthNum) {
+  const date = new Date();
+  //даты при выборе 2 недель
+  const dateStart = new Date();
+  const dateEnd = new Date();
+  dateStart.setDate(date.getDate() - 6);
+  dateEnd.setDate(date.getDate() + 7);
+
+
+  date.setMonth(date.getMonth() + (monthNum == 12 ? 0 : monthNum));
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const dayStart = dateStart.getDate();
+  const dayInMonth = 33 - new Date(year, month, 33).getDate();
+
+  let fMonth;
+  switch (month) {
+    case 0: fMonth = "январь"; break;
+    case 1: fMonth = "февраль"; break;
+    case 2: fMonth = "март"; break;
+    case 3: fMonth = "апрель"; break;
+    case 4: fMonth = "май"; break;
+    case 5: fMonth = "июнь"; break;
+    case 6: fMonth = "июль"; break;
+    case 7: fMonth = "август"; break;
+    case 8: fMonth = "сентябрь"; break;
+    case 9: fMonth = "октябрь"; break;
+    case 10: fMonth = "ноябрь"; break;
+    case 11: fMonth = "декабрь"; break;
+    default:
+  }
+
+  let fMonth2;
+  switch (month) {
+    case 0: fMonth2 = "января"; break;
+    case 1: fMonth2 = "февраля"; break;
+    case 2: fMonth2 = "марта"; break;
+    case 3: fMonth2 = "апреля"; break;
+    case 4: fMonth2 = "мая"; break;
+    case 5: fMonth2 = "июня"; break;
+    case 6: fMonth2 = "июля"; break;
+    case 7: fMonth2 = "августа"; break;
+    case 8: fMonth2 = "сентября"; break;
+    case 9: fMonth2 = "октября"; break;
+    case 10: fMonth2 = "ноября"; break;
+    case 11: fMonth2 = "декабря"; break;
+    default:
+  }
+
+  const dateSend = {
+    date: `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}-${day < 10 ? '0' : ''}${day}`,
+    dateStart: monthNum === 12 ? dateStart.toISOString().slice(0, 10)
+      :
+      `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}-01`,
+    dateEnd: monthNum === 12 ? dateEnd.toISOString().slice(0, 10)
+      :
+      `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}-${dayInMonth}`,
+    dateStartNum: monthNum === 12 ? dayStart : 1,
+    dateStartDefault: year ? `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}-01` : '',
+    dateEndDefault: `${year}-${month + 1 < 10 ? '0' : ''}${month + 1}-${dayInMonth}`,
+    month: fMonth,
+    month2: monthNum == 12 ? '' : fMonth2,
+    day: day,
+    dayInMonth: dayInMonth
+  };
+  return dateSend;
+}
+
+export const setYearNow = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  return year
+}
