@@ -32,10 +32,10 @@ function Purchase({ role, el }) {
         }
     }, [purchaseUpdate])
 
-    useEffect(() => {
+/*     useEffect(() => {
         const purchaseDeleteFind = purchasesDelete?.find(el => el == purchase?.id);
         purchaseDeleteFind ? setHidenPurchase(true) : setHidenPurchase(false);
-    }, [purchasesDelete])
+    }, [purchasesDelete]) */
 
     useEffect(() => {
 
@@ -122,8 +122,8 @@ function Purchase({ role, el }) {
             </div>
             <div className={`${s.item} ${s.item_buyer}`}>
                 <p>{purchase?.payer ? purchase?.payer?.name : ''}</p>
-                {(role == 'administrator' || role == 'director') && purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>наличные</span>}
-                {(role == 'administrator' || role == 'director') && !purchase?.is_nal && <span>безнал</span>}
+
+                {(role == 'administrator' || role == 'director') && !purchase?.is_nal && purchase?.payer?.name !== 'Наличные' && <span>безнал</span>}
             </div>
             <div className={`${s.item} ${s.item_seller} ${(role == 'director' || role == 'administrator') && s.item_seller_director}`}>
                 <p>{purchase?.counterparty_name}</p>

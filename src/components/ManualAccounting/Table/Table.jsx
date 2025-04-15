@@ -6,11 +6,11 @@ const months = ['Январь', 'Февраль', 'Март', 'Апрель', '�
 
 
 
-const Row = memo(({ data, vendorId, year, setVendorId }) => {
+const Row = memo(({ data, vendorId, year, setVendorId, lastRow }) => {
     return (
         <div className={s.row}>
             {data.map((el, index) => {
-                return < Cell key={year + index} month={index + 1} year={year} data={el} vendorId={vendorId} setVendorId={setVendorId} />
+                return <Cell key={year + index} month={index + 1} year={year} data={el} vendorId={vendorId} setVendorId={setVendorId} lastRow={lastRow}/>
             }
             )}
         </div>
@@ -23,6 +23,8 @@ const Table = ({ vendors, year, firstLoad, load, vendorId }) => {
     const [mouseHook, setMouseHook] = useState(false);
     const [leftWidth, setLeftWidth] = useState(300);
     const tableRef = useRef();
+    const leftRef = useRef();
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -31,7 +33,8 @@ const Table = ({ vendors, year, firstLoad, load, vendorId }) => {
     }, [firstLoad])
 
     const handleMouseMove = (event) => {
-        const x = event.clientX - 28;
+        const domRectX = leftRef.current.getBoundingClientRect().x;
+        const x = event.clientX - domRectX;
         mouseHook && setLeftWidth(x)
     }
 
@@ -84,22 +87,25 @@ const Table = ({ vendors, year, firstLoad, load, vendorId }) => {
     return (
         <div onMouseMove={handleMouseMove} className={`${s.container} ${anim && s.container_anim} ${mouseHook && s.slide_grab}`}>
 
-            <div style={{ width: `${leftWidth}px` }} className={s.left}>
+            <div ref={leftRef} style={{ width: `${leftWidth}px` }} className={`${s.left}`}>
                 <div className={s.header}></div>
 
                 {vendors.map(el => {
-                    return <div key={el.id} id={el.id} className={`${s.vendor} ${el.id == vendorId && s.vendor_new}`}>
+                    return <div key={el.id} id={el.id} className={`${s.vendor} ${!el.inn && s.vendor_2} ${el.id == vendorId && s.vendor_new}`}>
                         <p><span className={`${s.bage} ${el.id == vendorId && s.bage_vis}`}>Новый</span> {el.name}</p>
                         <div>
-                            <span>ИНН {el.inn}</span>
-                            <span >КПП {el.kpp}</span>
+                            {el?.inn?.length > 0 && <span>ИНН {el.inn}</span>}
+                            {el?.kpp?.length > 0 && <span >КПП {el.kpp}</span>}
                         </div>
 
                     </div>
                 })}
 
+       {/*          {vendors.length == 0 && !load && <div className={s.vendor}></div>} */}
+
                 <div className={`${s.slide} ${mouseHook && s.slide_active}`} onMouseDown={handleHookMouse}><div></div></div>
             </div>
+
 
 
             <div ref={tableRef} className={`${s.right} ${load && s.right_load}`}>
@@ -110,9 +116,12 @@ const Table = ({ vendors, year, firstLoad, load, vendorId }) => {
                     )}
                 </div>
 
-                {vendors.map(el => {
-                    return <Row data={el.manual_accounting} vendorId={el.id} year={year} />
+                {vendors.map((el, index) => {
+                    return <Row lastRow={vendors.length == (index + 1)} data={el.manual_accounting} vendorId={el.id} year={year} />
                 })}
+
+                {vendors.length == 0 && !load && <div className={`${s.empty}`}><p>Нет поставщиков для учета</p></div>}
+                
 
             </div>
 

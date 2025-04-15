@@ -34,7 +34,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
     const [loadContract, setLoadContract] = useState(false);
     const vendorsRef = useRef();
     const contractsRef = useRef();
-   
+
 
     useEffect(() => {
         if (vendor?.act == 1) {
@@ -47,7 +47,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
     useEffect(() => {
         const vendor = vendors.find(el => el.id == vendorId);
         setVendor(vendor);
-        setVendorName(vendor?.name)
+        vendor?.name && setVendorName(vendor?.name)
     }, [vendorId, vendors])
 
     useEffect(() => {
@@ -160,9 +160,9 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
     return (
         <div className={`${s.vendor} ${hiden && s.vendor_hiden}`}>
             <div className={`${s.container} ${s.container_vendor}`}>
-                <p className={s.sub}>Продавец  <span className={`${s.act} ${isAct && s.act_vis}`}>учет по акту према-передачи <Tooltip text={'Учет в расходах по данному поставщику, ведется по дате подписания акта према-передачи, а не по дате оплаты'} /></span></p>
+                <p className={s.sub}>Продавец</p>
                 <div ref={vendorsRef} className={`${s.block} ${disabled && s.block_disabled}`}>
-                    {!loadVendor && <input disabled={vendorsList.length == 0} onFocus={handleFocusVendor} /* onBlur={handleBlurVendor} */ onChange={handleChangeVendorName} type='text' value={vendorName || ''}></input>}
+                    {!loadVendor && <input disabled={vendors.length == 0} onFocus={handleFocusVendor} /* onBlur={handleBlurVendor} */ onChange={handleChangeVendorName} type='text' value={vendorName || ''}></input>}
                     {!loadVendor && <div className={s.requisites}>
                         <p>ИНН: {vendor?.inn && vendor?.inn !== '' ? vendor?.inn : 'отсутсвует'}</p>
                         {vendor?.kpp && <p>КПП: {vendor?.kpp}</p>}
@@ -207,7 +207,7 @@ const Vendors = ({ hiden, role, vendorId, contractVendorId, setVendorId, setCont
             </div> */}
 
             <div className={s.buttons}>
-               
+
                 <button disabled={disabled} onClick={handleOpenModalVendor} className={`${s.button} ${disabled && s.button_disabled}`}>
                     <IconPlus />
                     <p>Добавить продавца</p>

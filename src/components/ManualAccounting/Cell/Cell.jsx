@@ -6,7 +6,7 @@ import { saveManualData } from '../../../Api/Api';
 //utils
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 
-const Cell = memo(({ data, month, year, vendorId }) => {
+const Cell = memo(({ data, month, year, vendorId, lastRow }) => {
     const [editMode, setEditMode] = useState(false);
     const [value, setValue] = useState(data || 0);
     const [valueEdit, setValueEdit] = useState(data || 0);
@@ -56,22 +56,20 @@ const Cell = memo(({ data, month, year, vendorId }) => {
     }
 
     const handleEnter = (e) => {
-        console.log(e.code)
         e.code == 'Enter' && handleSave();
     }
 
     const handleSave = () => {
         const amount = valueEdit == '' ? 0 : valueEdit;
-
         saveManualData(vendorId, year, month, amount)
             .then(res => {
                 const data = res.data.data;
                 setValue(data.amount)
-                console.log(res)
                 setTimeout(() => {
                     setEditMode(false)
                 }, 50)
                 value !== valueEdit && setChangeState(true)
+
             })
             .catch(err => {
                 setErr(true)
@@ -96,7 +94,7 @@ const Cell = memo(({ data, month, year, vendorId }) => {
                     {addSpaceNumber(value)}
                 </p>
             </div>
-            <div onKeyDown={handleEnter} ref={modalRef} className={`${s.modal} ${editMode && s.modal_vis}`}>
+            <div onKeyDown={handleEnter} ref={modalRef} className={`${s.modal} ${lastRow && s.modal_top} ${editMode && s.modal_vis}`}>
                 <input type='number' ref={inputRef} onChange={handleChangeValue} value={valueEdit || ''}></input>
                 {!err && <button className={s.save} onClick={handleSave}>Cохранить <IconDone /></button>}
                 {err && <p className={s.error}>Ошибка!</p>}

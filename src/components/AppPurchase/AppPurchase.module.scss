@@ -161,9 +161,16 @@
         cursor: pointer;
         margin-left: 120px;
         transition: all 0.2s;
+        opacity: 0;
 
         &:hover {
             opacity: 0.8;
+        }
+    }
+
+    &_vis {
+        p {
+            opacity: 1;
         }
     }
 
@@ -199,6 +206,19 @@
     color: var(--color-text-secondary);
     user-select: none;
 
+    sup {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0.056px;
+        opacity: 0;
+        margin-left: 4px;
+        transition: all 0.15s;
+        min-width: 30px;
+    }
+
+
+
     &:hover {
         opacity: 0.6;
     }
@@ -217,10 +237,18 @@
             font-weight: 500;
             line-height: 18px;
             letter-spacing: 0.056px;
-            opacity: 0.7;
+            opacity: 0;
             margin-left: 4px;
+            min-width: 30px;
         }
 
-        
+
+    }
+
+    &_load {
+        sup {
+            opacity: 0.7;
+        }
+
     }
 }

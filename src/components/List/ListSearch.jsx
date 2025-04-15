@@ -14,7 +14,7 @@ import PurchaseSceleton from '../Purchase/PurchaseSceleton/PurchaseSceleton';
 import { purchaseSelector } from '../../store/reducer/purchase/selector';
 
 
-function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs, query }) {
+function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load, setLoad, activeTabs, query, role, isSkilla }) {
     const [anim, setAnim] = useState(false)
     const [cursorNext, setCursorNext] = useState('');
     const purchase = useSelector(purchaseSelector).purchase;
@@ -94,7 +94,7 @@ function ListSearch({ purchases, setPurchases, firstCursor, loadParametrs, load,
             }
 
             {!load && purchases == 0 && <div className={s.empty}><p>Ничего не найдено</p></div>}
-            {purchase.open && purchase.id !== '' && <WindowPurchase id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
+            {purchase.open && purchase.id !== '' && <WindowPurchase role={role} isSkilla={isSkilla} id={purchase.id} purchase={purchase} loadParametrs={loadParametrs} />}
         </div>
     )
 };

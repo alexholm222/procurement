@@ -142,7 +142,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
 
 
 
-                <button onClick={handleConfirmAll} className={s.button}>
+                <button disabled={loadAccept} onClick={handleConfirmAll} className={s.button}>
                     {loadAccept && <p>Подтверждаем</p>}
                     {!loadAccept && <p>Подтвердить</p>}
                     {loadAccept && <LoaderButton color={'#FFFFFF'} />}

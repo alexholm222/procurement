@@ -56,6 +56,10 @@ function AddGood({ scrollTopHeight, setOpenAdd, goods, setGoods, windowRef, isNa
     }, [items])
 
     useEffect(() => {
+        type === 'услуга' && setUnit('услуга')
+    }, [type, patternState])
+
+    useEffect(() => {
         if (name == '' || num <= 0 || num == '' || price <= 0 || price == '') {
             setButtonDisabled(true);
         } else {

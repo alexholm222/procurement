@@ -15,7 +15,7 @@ import Table from './Table/Table';
 const ManualAccounting = ({ modalVendor, setModalVendor, manualFirstData, firstLoad }) => {
     const [years, setYears] = useState([setYearNow()] || []);
     const [selected, setSelected] = useState(years[0] || '');
-    
+
     const [load, setLoad] = useState(false);
     const [vendors, setVendors] = useState(manualFirstData || []);
     const [vendorsSearch, setVendorsSearch] = useState([]);
@@ -24,10 +24,11 @@ const ManualAccounting = ({ modalVendor, setModalVendor, manualFirstData, firstL
     const [addType, setAddType] = useState('');
     const windowRef = useRef();
 
+
     useEffect(() => {
         getYears()
             .then(res => {
-                const data = res.data.data;
+                const data = Object.values(res.data.data);
                 console.log(data)
                 data.length > 0 && setYears(data)
 
@@ -41,7 +42,7 @@ const ManualAccounting = ({ modalVendor, setModalVendor, manualFirstData, firstL
             .then(res => {
                 const data = res.data.data;
                 setVendors(data)
-                
+
                 setLoad(false)
             })
             .catch(err => console.log(err))
@@ -59,7 +60,7 @@ const ManualAccounting = ({ modalVendor, setModalVendor, manualFirstData, firstL
                 <Search query={query} setQuery={setQuery} />
                 <Years years={years} selected={selected} setSelected={setSelected} />
             </div>
-            <Table vendorId={vendorId} firstLoad={firstLoad} load={load} vendors={query.length == 0 ? vendors : vendorsSearch} year={selected}/>
+            <Table vendorId={vendorId} firstLoad={firstLoad} load={load} vendors={query.length == 0 ? vendors : vendorsSearch} year={selected} />
 
             {modalVendor ? <ModalSuplier role={'director'} setModal={setModalVendor} setVendorId={setVendorId} setAddType={setAddType} windowRef={windowRef} scrollTopHeight={0} /> : ''}
         </div>

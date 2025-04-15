@@ -19,7 +19,7 @@ const Document = ({ i, file, files, setFiles, type, disabled, setDeleteFiles, se
     const [conditionDownload, setConditionDownload] = useState(false);
     const [modalImage, setModalImage] = useState(false);
     const conditionTarget = file.type == 'existing' && file.name.slice(-3) !== 'pdf' && file.name.slice(-3) !== 'png' && file.name.slice(-3) !== 'jpg' ? '_self' : '_blank';
-
+    
     useEffect(() => {
         setTimeout(() => {
             setAnimFile(true)

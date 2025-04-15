@@ -18,8 +18,7 @@ const DeleteModal = ({ windowRef, setModal, id, type, loadDelete, setLoadDelete,
     const dispatch = useDispatch();
     //Фиксация окна при открытии модалки
    
-
-    useEffect(() => {
+     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
         windowRef.current.style.paddingRight = "8px";
         return () => {
@@ -46,11 +45,12 @@ const DeleteModal = ({ windowRef, setModal, id, type, loadDelete, setLoadDelete,
         deletePurchase({ id: id })
             .then(res => {
                 dispatch(setPurchasesDelete(id));
-                handleClosePurchase();
+               
                 setLoadDelete(false);
                
                 setAnim(false);
                 setTimeout(() => {
+                    handleClosePurchase();
                     setModal(false);
                     dispatch(setUpdateAction());
                 }, 300)
@@ -65,9 +65,10 @@ const DeleteModal = ({ windowRef, setModal, id, type, loadDelete, setLoadDelete,
         deleteRejectPurchase(id)
             .then(res => {
                 dispatch(setPurchasesDelete(id));
-                handleClosePurchase();
+              
                 setAnim(false);
                 setTimeout(() => {
+                    handleClosePurchase();
                     setModal(false);
                     setLoadDelete(false);
                     dispatch(setUpdateAction());
@@ -83,9 +84,10 @@ const DeleteModal = ({ windowRef, setModal, id, type, loadDelete, setLoadDelete,
         deletePurchaseAdmin({ id: id })
             .then(res => {
                 dispatch(setPurchasesDelete(id));
-                handleClosePurchase();
+             
                 setAnim(false);
                 setTimeout(() => {
+                    handleClosePurchase();
                     setModal(false);
                     setLoadDelete(false);
                     dispatch(setUpdateAction());

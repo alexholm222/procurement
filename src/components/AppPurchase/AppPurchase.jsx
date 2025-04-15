@@ -1,6 +1,6 @@
 import s from './AppPurchase.module.scss';
 import { useEffect, useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconAdd } from '../../image/iconAdd.svg';
 import { ReactComponent as IconCreate } from '../../image/iconCreate.svg';
@@ -65,7 +65,6 @@ function AppPurchase() {
   const [orders, setOrders] = useState([]);
   const [personIsView, setPersonIsView] = useState({});
   const [filterPayDate, setFilerPayDate] = useState([null, null]);
-  const [isSkilla, setIsSkilla] = useState(false);
   const [headerHidden, setHeaderHidden] = useState(true);
   const [categoriesAll, setCategoriesAll] = useState([]);
   const [dateStart, setDateStart] = useState('2025-01-01');
@@ -86,6 +85,8 @@ function AppPurchase() {
   const role = document.getElementById('root_purchases').getAttribute('role');
   const ispro = document.getElementById('root_purchases').getAttribute('ispro');
   const isskilla = document.getElementById('root_purchases').getAttribute('isskilla') == 1 ? true : false;
+  const token = document.getElementById('root_purchases').getAttribute('token');
+  const isTest = token == 'Bearer 2109|7d9OHVhjO02gY9rrbjV5rTfCpFs4iVShk6TtSrCg' ? true : false;
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname + location.search;
@@ -318,10 +319,20 @@ function AppPurchase() {
   }, [path, purchase, isskilla])
 
   useEffect(() => {
-    if (ispro == 0 && !isskilla) {
+
+    if (path.includes('purchases2/?manual') && (role == 'director' || role == 'accountant' || role == 'administrator')) {
+      setManualAcc(true)
+      setHeaderHidden(false)
+      document.title = `Ручной учет`;
       return
     }
-    if (!path.includes('purchases2/?purchase=') && !path.includes('purchases2/?new')) {
+
+    if (ispro == 0 && !isskilla && !path.includes('purchases2/?manual')) {
+      return
+    }
+
+
+    if (!path.includes('purchases2/?purchase=') && !path.includes('purchases2/?new') && !path.includes('purchases2/?manual')) {
       setHeaderHidden(false)
       handleClosePurchase()
       document.title = `Закупки`;
@@ -333,6 +344,8 @@ function AppPurchase() {
       document.title = `Закупка`;
       return
     }
+
+
   }, [path, isskilla])
 
   //orders
@@ -392,13 +405,13 @@ function AppPurchase() {
 
   return (
     <>
-      {(ispro == 1 || isskilla) && <div id='purchasesApp' className={`${s.app} ${anim && s.app_anim} ${isskilla && s.app_skilla}`}>
+      {(ispro == 1 || isskilla || (ispro == 0 && manualAcc)) && <div id='purchasesApp' className={`${s.app} ${anim && s.app_anim} ${isskilla && s.app_skilla}`}>
         {!headerHidden && <div className={s.header}>
           {isskilla && <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup></h2>}
           {!isskilla &&
             <div className={s.tabs}>
-              <div onClick={handleManualOpen} id='1' className={`${s.tab} ${!manualAcc && s.tab_active}`}>Закупки<sup>{purchaseCount}</sup></div>
-              <div onClick={handleManualOpen} id='2' className={`${s.tab} ${manualAcc && s.tab_active}`}>Ручной учет</div>
+              <Link to={'purchases2'}><div id='1' onClick={handleManualOpen} className={`${s.tab} ${purchaseCountGeneral !== '' && s.tab_load} ${!manualAcc && s.tab_active}`}>Закупки<sup>{purchaseCount}</sup></div></Link>
+              {(role == 'director' || role == 'accountant' || role == 'administrator') && <Link to={'purchases2/?manual'}><div id='2' onClick={handleManualOpen} className={`${s.tab} ${manualAcc && s.tab_active}`}>Ручной учет</div></Link>}
             </div>}
 
           <div className={s.buttons}>
@@ -414,7 +427,7 @@ function AppPurchase() {
             </button>
             }
 
-            {manualAcc && <button onClick={handleOpenVendorModal} disabled={loadParametrs} className={`${s.button} ${s.button_add}`}>
+            {manualAcc && <button onClick={handleOpenVendorModal} className={`${s.button} ${s.button_add}`}>
               <p>Добавить поставщика</p>
               <IconPlus />
             </button>
@@ -424,7 +437,7 @@ function AppPurchase() {
         </div>
         }
 
-        {manualAcc && <ManualAccounting modalVendor={modalVendor} setModalVendor={setModalVendor} manualFirstData={manualFirstData} firstLoad={firstLoad}/>}
+        {manualAcc && <ManualAccounting modalVendor={modalVendor} setModalVendor={setModalVendor} manualFirstData={manualFirstData} firstLoad={firstLoad} />}
 
         {!manualAcc && <>
           {!headerHidden && <Tabs activeTabs={activeTabs} setActiveTabs={setActiveTabs} purchaseAction={purchaseAction}
@@ -439,7 +452,7 @@ function AppPurchase() {
           {activeTabs == 'beznal' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseBeznal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseBeznal} firstCursor={firstCursorBeznal} load={loadBeznal} setLoad={setLoadBeznal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
           {activeTabs == 'nal' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseNal} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseNal} firstCursor={firstCursorNal} load={loadNal} setLoad={setLoadNal} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
           {activeTabs == 'del' && query == '' && <List isSkilla={isskilla} role={role} purchases={purchaseDel} purchaseCountGeneral={purchaseCountGeneral} setPurchases={setPurchaseDel} firstCursor={firstCursorDel} load={loadDel} setLoad={setLoadDel} loadParametrs={loadParametrs} activeTabs={activeTabs} filterPayDate={filterPayDate} />}
-          {query !== '' && <ListSearch role={role} purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
+          {query !== '' && <ListSearch role={role} isSkilla={isskilla} purchases={purchasesSearch} setPurchases={setPurchasesSearch} firstCursor={firstCursorSearch} load={load} setLoad={setLoad} loadParametrs={loadParametrs} activeTabs={activeTabs} query={query} />}
           {activeTabs == 'orders' && isskilla && query == '' && <ListOrders role={role} orders={orders} loadParametrs={loadParametrs} load={loadOrders} personIsView={personIsView} />}
           {activeTabs == 'report' && <Report isSkilla={isskilla} categoriesAll={categoriesAll} dateStart={dateStart} dateEnd={dateEnd} />}
           {order.open && order.id == '' && <WindowOrder role={role} id={order.id} order={order} loadParametrs={loadParametrs} personIsView={personIsView} />}
@@ -450,7 +463,7 @@ function AppPurchase() {
 
       </div>
       }
-      {(ispro == 0 && !isskilla) && <div className={s.pro}>
+      {ispro == 0 && !isskilla && !manualAcc && <div className={`${s.pro} ${anim && s.pro_vis}`}>
         <p onClick={handlePro}>Закупки доступны только для обладателей <span><IconPro /></span> версии</p>
       </div>}
     </>

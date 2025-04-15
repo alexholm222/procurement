@@ -12,7 +12,7 @@
     }
 
     &:hover {
-        border-color: var(--color-button-accent);
+        border-color: #002CFB;
         opacity: 0.8;
     }
 
@@ -40,8 +40,8 @@
     }
 
     &_active {
-        background-color: var(--color-button-accent);
-        border-color: var(--color-button-accent);
+        background-color: #002CFB;
+        border-color: #002CFB;
 
         div {
             svg {

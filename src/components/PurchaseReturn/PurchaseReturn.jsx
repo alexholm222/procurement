@@ -24,6 +24,8 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     const textRef = useRef();
     const dispatch = useDispatch();
 
+    console.log(positionForReturn)
+
     useEffect(() => {
         setAnim(true)
     }, []);
@@ -88,8 +90,16 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
         const copyArr = [...positionForReturn]
         copyArr[index] = { id: id, quantity: value > maxQuantity ? maxQuantity : value <= 0 ? '' : value }
         setPositionForReturn(copyArr)
+    }
 
-
+    const handleChangeSumm = (e) => {
+        const id = Number(e.currentTarget.id);
+        const value = Number(e.currentTarget.value);
+        const index = positionForReturn.findIndex(el => el.id == id);
+        const maxQuantity = Number(positions.find(el => el.id == id).quantity);
+        const copyArr = [...positionForReturn]
+        copyArr[index] = { id: id, quantity: maxQuantity, sum: value}
+        setPositionForReturn(copyArr)
     }
 
     const handleCloseModal = () => {
@@ -153,6 +163,8 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
             .catch(err => setErr(false));
     }
 
+    console.log(positions, positionForReturn)
+
 
 
     return (
@@ -187,7 +199,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                                 <div className={s.block}>
                                     <p className={s.sub}>Количество</p>
                                     <div className={s.count}>
-                                        <input id={el.id} onChange={handleChangeQuantity} max={el.quantity} type='number' value={positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
+                                        <input disabled={el.type === 'услуга'} id={el.id} onChange={handleChangeQuantity} max={el.quantity} type='number' value={positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
                                         <p className={`${s.sub} ${s.sub_count}`}>{el.unit}</p>
                                     </div>
                                 </div>
@@ -203,7 +215,16 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                                 <div className={s.block}>
                                     <p className={s.sub}>Итого</p>
                                     <div className={s.count}>
-                                        <input disabled max={el.quantity} type='number' placeholder={`${el.quantity}`} value={el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
+                                        <input 
+                                        id={el.id}
+                                         disabled={el.type !== 'услуга'} 
+                                         max={el.quantity} 
+                                         onChange={handleChangeSumm} 
+                                         type='number' 
+                                         placeholder={`${el.quantity}`} 
+                                         value={el.type !== 'услуга' ? el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity : positionForReturn.find(elem => elem.id == el.id)?.sum}
+
+                                         ></input>
                                         <p className={`${s.sub} ${s.sub_count}`}>руб</p>
                                     </div>
                                 </div>

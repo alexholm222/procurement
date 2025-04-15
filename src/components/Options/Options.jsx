@@ -118,7 +118,7 @@ function Options({ payers, type, sub, purchaseId, payerId, setPayerId, categoryI
     }
 
     return (
-        <div className={`${s.options} ${disabled && s.options_disabled}`}>
+        <div className={`${s.options}`}>
 
             <div className={s.container}>
                 <p className={s.sub}>
@@ -128,7 +128,7 @@ function Options({ payers, type, sub, purchaseId, payerId, setPayerId, categoryI
                     <div onClick={handleTypeLeft} className={`${s.arrow} ${s.arrow_left} ${lastType === 0 && s.disarrow}`}>
                         <IconChewron />
                     </div>
-                    <div className={s.block}>
+                    <div className={`${s.block} ${disabled && s.block_disabled}`}>
                         <div className={s.center} style={{ transform: `translateX(${transformType}px)` }}>
                             {list.map((el, i) => {
                                 return <div key={el.id} ref={lastType === i ? buttonRef : i === list.length - 1 ? buttonLast : activeId === el.id ? activeRef : null}

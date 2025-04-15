@@ -31,14 +31,14 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role,
     }
 
     return (
-        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim} ${((status > 2  && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.item_disabled}`}>
+        <li key={el.id} id={el.id} className={`${s.item} ${anim && s.item_anim} ${((status > 2 && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.item_disabled}`}>
             <div onClick={handleOpenPosition} className={`${s.pos} ${s.cell}`}>{i + 1}</div>
             <div onClick={handleOpenPosition} className={`${s.name} ${s.cell}`}>{el.name}</div>
             <div onClick={handleOpenPosition} className={`${s.type} ${s.cell}`}>{el.item_id !== 0 ? 'шаблон' : el.type}</div>
             <div onClick={handleOpenPosition} className={`${s.num} ${s.cell}`}>{el.quantity}</div>
             <div onClick={handleOpenPosition} className={`${s.price} ${s.cell}`}>{addSpaceNumber(el.price)}</div>
             <div onClick={handleOpenPosition} className={`${s.total} ${disabled && s.total_} ${s.cell}`}>{addSpaceNumber(el.sum)}</div>
-            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2  && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.delete_disabled}`}>
+            <div className={`${s.delete} ${s.cell} ${disabled && s.delete_disabled} ${((status > 2 && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1) && s.delete_disabled}`}>
                 <IconDelete id={el.id} onClick={handleDeleteGood} />
             </div>
 
@@ -46,10 +46,12 @@ function Good({ el, i, goods, setGoods, disabled, setOpenAdd, setPosition, role,
     )
 }
 
-function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice, status, role, positionReturn, positionReturnDone}) {
+function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSum, isNal, disabled, setIsNormalPrice, status, role, positionReturn, positionReturnDone }) {
     const [openAdd, setOpenAdd] = useState(false);
     const [position, setPosition] = useState({});
     const [isFull, setIsFull] = useState(false);
+
+    console.log(positions)
 
     useEffect(() => {
         const sum = positions.reduce((acc, el) => acc + Number(el.sum), 0);
@@ -66,6 +68,8 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
         setPosition({})
         setOpenAdd(true)
     }
+
+
 
     return (
         <div className={s.goods}>
@@ -96,15 +100,15 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                         <p>Итого</p>
                     </div>
 
-                    <div className={` ${s.empity} ${!disabled && s.empity_vis}`}>
-    
+                    <div className={` ${s.empity} ${((status > 2 && (role == 'administrator' || role == 'director')) || (status > 0 && (role == 'administrator' || role == 'director')) || status == -1 || disabled) && s.empity_dis}`}>
+
                     </div>
                 </div>
                 <ul className={`${s.list} ${disabled && s.list_disabled} ${positions.length <= 1 && s.list_first}`}>
                     {<li className={`${s.item} ${s.item_empty} ${positions.length === 0 && s.item_empty_anim}`}>Нет позиций</li>}
 
                     {positions.map((el, i) => {
-                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd} role={role} status={status}/>
+                        return <Good key={el.id} el={el} i={i} goods={positions} setGoods={setPositions} setPosition={setPosition} disabled={disabled} setOpenAdd={setOpenAdd} role={role} status={status} />
                     })}
                 </ul>
             </div>
@@ -114,7 +118,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
                     return el.status !== 'confirmed' && <li className={`${s.position} ${el.status == 'confirmed' && s.position_confirmed}`} key={el.id}><IconWarning24 />Запрошен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
                 })}
             </ul>}
-            
+
 
             {isFull && <ul className={s.return}>
                 <li className={`${s.position}`}><IconWarning24 />Запрошен полный возврат закупки</li>
@@ -122,10 +126,10 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
 
             {positionReturnDone?.[0]?.is_full !== 1 && <ul className={s.return}>
                 {positionReturnDone.map(el => {
-                    return  <li className={`${s.position}`} key={el.id}><IconDone />Получен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
+                    return <li className={`${s.position}`} key={el.id}><IconDone />Получен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
                 })}
             </ul>}
-            
+
 
             {positionReturnDone?.[0]?.is_full == 1 && positionReturnDone.length > 0 && <ul className={s.return}>
                 <li className={`${s.position}`}><IconDone />Получен полный возврат закупки</li>
