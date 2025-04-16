@@ -20,6 +20,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     const [disabled, setDisabled] = useState(true);
     const [err, setErr] = useState(false);
     const [positionForReturn, setPositionForReturn] = useState([]);
+    const [sumState, setSumState] = useState([])
     const modalRef = useRef();
     const textRef = useRef();
     const dispatch = useDispatch();
@@ -41,6 +42,11 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     }, [windowRef]);
 
     useEffect(() => {
+
+        if (positionForReturn.some(el => { return (el.quantity === '' || el.price === '') })) {
+            setDisabled(true)
+            return
+        }
         if (comment.length > 0 && positionForReturn.length > 0 && !full) {
             setDisabled(false)
             return
@@ -50,6 +56,8 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
             setDisabled(true)
             return
         }
+
+
 
         if (comment.length > 0 && full) {
             setDisabled(false)
@@ -62,6 +70,8 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
         }
 
 
+
+
     }, [positionForReturn, comment, full])
 
 
@@ -72,7 +82,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
         const position = positions.find(el => el.id == id)
 
         if (result.length == 0) {
-            setPositionForReturn(prevState => [...prevState, { id: position?.id, quantity: position?.quantity }])
+            setPositionForReturn(prevState => [...prevState, { id: position?.id, quantity: position?.quantity, sum: position?.sum, type: position?.type }])
             return
         }
 
@@ -85,20 +95,43 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
     const handleChangeQuantity = (e) => {
         const id = Number(e.currentTarget.id);
         const value = Number(e.currentTarget.value);
+        const item = positions.find(el => el.id == id)
         const index = positionForReturn.findIndex(el => el.id == id);
-        const maxQuantity = Number(positions.find(el => el.id == id).quantity);
+        const maxQuantity = Number(item.quantity);
+        const price = Number(item.price);
+        const type = item.type;
+        const actualValue = value > maxQuantity ? maxQuantity : value <= 0 ? '' : value;
         const copyArr = [...positionForReturn]
-        copyArr[index] = { id: id, quantity: value > maxQuantity ? maxQuantity : value <= 0 ? '' : value }
+        copyArr[index] = { id: id, quantity: actualValue, sum: actualValue * price, type }
         setPositionForReturn(copyArr)
     }
 
     const handleChangeSumm = (e) => {
         const id = Number(e.currentTarget.id);
         const value = Number(e.currentTarget.value);
+        const item = positions.find(el => el.id == id)
         const index = positionForReturn.findIndex(el => el.id == id);
-        const maxQuantity = Number(positions.find(el => el.id == id).quantity);
+        const maxQuantity = Number(item.quantity)
+        const price = Number(item.price);
+        const actualValue = value > price * maxQuantity ? price * maxQuantity : value <= 0 ? '' : value;
+        const type = item.type;
         const copyArr = [...positionForReturn]
-        copyArr[index] = { id: id, quantity: maxQuantity, sum: value}
+        copyArr[index] = { id: id, quantity: maxQuantity, sum: actualValue, type }
+        setPositionForReturn(copyArr)
+    }
+
+
+    const handleChangeSummService = (e) => {
+        const id = Number(e.currentTarget.id);
+        const value = Number(e.currentTarget.value);
+        const item = positions.find(el => el.id == id)
+        const index = positionForReturn.findIndex(el => el.id == id);
+        const maxQuantity = Number(item.quantity)
+        const price = Number(item.price);
+        const actualValue = value > price * maxQuantity ? price * maxQuantity : value <= 0 ? '' : value;
+        const type = item.type;
+        const copyArr = [...positionForReturn]
+        copyArr[index] = { id: id, sum: actualValue, type }
         setPositionForReturn(copyArr)
     }
 
@@ -163,7 +196,19 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
             .catch(err => setErr(false));
     }
 
-    console.log(positions, positionForReturn)
+    console.log(positions, positionForReturn, sumState)
+
+    const handleWriteSumState = (e) => {
+        const id = Number(e.currentTarget.id);
+        console.log(id)
+        setSumState((prev) => [...prev, id])
+        const position = positions.find(el => el.id == id)
+    }
+
+    const handleDeleteSumState = (e) => {
+        const id = Number(e.currentTarget.id);
+        setSumState((prev) => [...prev.filter(el => el !== id)])
+    }
 
 
 
@@ -185,6 +230,7 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
 
                 <ul className={`${s.position} ${full && s.position_hidden}`}>
                     {positions.map(el => {
+                        console.log(sumState, el.id, sumState.find(elem => elem == el.id))
                         return <li id={el.id}>
                             <div className={s.position__header}>
                                 <div onClick={handleAddPosition} id={el.id} className={`${s.checkbox} ${positionForReturn.find(elem => elem.id == el.id) && s.checkbox_check}`}>
@@ -192,14 +238,29 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                                         <IconCheck />
                                     </div>
                                 </div>
+
                                 <p>{el.name}</p>
+                                <div className={`${s.container_sub} ${positionForReturn.find(elem => elem.id == el.id && elem.type === 'услуга') && s.container_sub_vis}`}>
+                                    <p id={el.id} onClick={handleDeleteSumState} className={`${s.sub_sum} ${!sumState.find(elem => elem == el.id) && s.sub_sum_active}`}>Кол-во</p>
+                                    <p id={el.id} onClick={handleWriteSumState} className={`${s.sub_sum} ${sumState.find(elem => elem == el.id) && s.sub_sum_active}`}>Сумма</p>
+                                </div>
+
                             </div>
 
-                            <div className={`${s.container} ${positionForReturn.find(elem => elem.id == el.id) && s.container_vis}`}>
+
+
+                            {!sumState.find(elem => elem == el.id) && <div className={`${s.container} ${positionForReturn.find(elem => elem.id == el.id) && s.container_vis}`}>
+
                                 <div className={s.block}>
                                     <p className={s.sub}>Количество</p>
                                     <div className={s.count}>
-                                        <input disabled={el.type === 'услуга'} id={el.id} onChange={handleChangeQuantity} max={el.quantity} type='number' value={positionForReturn.find(elem => elem.id == el.id)?.quantity}></input>
+                                        <input
+                                            id={el.id}
+                                            onChange={handleChangeQuantity}
+                                            max={el.quantity}
+                                            type='number'
+                                            value={positionForReturn.find(elem => elem.id == el.id)?.quantity}>
+                                        </input>
                                         <p className={`${s.sub} ${s.sub_count}`}>{el.unit}</p>
                                     </div>
                                 </div>
@@ -207,7 +268,14 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                                 <div className={s.block}>
                                     <p className={s.sub}>Цена</p>
                                     <div className={s.count}>
-                                        <input disabled max={el.quantity} value={el.price} type='number' placeholder={`${el.price}`}></input>
+                                        <input
+                                            disabled
+                                            max={el.quantity}
+                                            /*   value={el.price} */
+                                            type='number'
+                                            /*  placeholder={`${el.price}`} */
+                                            value={el.type !== 'услуга' ? el.price : positionForReturn.find(elem => elem.id == el.id)?.sum / positionForReturn.find(elem => elem.id == el.id)?.quantity}
+                                        ></input>
                                         <p className={`${s.sub} ${s.sub_count}`}>руб</p>
                                     </div>
                                 </div>
@@ -215,20 +283,44 @@ const PurchaseReturn = ({ windowRef, setModal, id, setStatus, loadAccept, setLoa
                                 <div className={s.block}>
                                     <p className={s.sub}>Итого</p>
                                     <div className={s.count}>
-                                        <input 
-                                        id={el.id}
-                                         disabled={el.type !== 'услуга'} 
-                                         max={el.quantity} 
-                                         onChange={handleChangeSumm} 
-                                         type='number' 
-                                         placeholder={`${el.quantity}`} 
-                                         value={el.type !== 'услуга' ? el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity : positionForReturn.find(elem => elem.id == el.id)?.sum}
+                                        <input
+                                            id={el.id}
+                                            disabled/* ={el.type !== 'услуга'} */
+                                            max={el.quantity}
+                                            onChange={handleChangeSumm}
+                                            type='number'
+                                            placeholder={`${el.quantity}`}
+                                            value={el.type !== 'услуга' ? el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity : positionForReturn.find(elem => elem.id == el.id)?.sum}
 
-                                         ></input>
+                                        ></input>
                                         <p className={`${s.sub} ${s.sub_count}`}>руб</p>
                                     </div>
                                 </div>
                             </div>
+                            }
+
+                            {sumState.find(elem => elem == el.id) && <div className={`${s.container} ${positionForReturn.find(elem => elem.id == el.id) && s.container_vis}`}>
+
+
+
+                                <div className={s.block}>
+                                    <p className={s.sub}>Сумма возврата</p>
+                                    <div className={s.count}>
+                                        <input
+                                            id={el.id}
+
+                                            max={el.quantity}
+                                            onChange={handleChangeSummService}
+                                            type='number'
+
+                                            value={el.type !== 'услуга' ? el.price * positionForReturn.find(elem => elem.id == el.id)?.quantity : positionForReturn.find(elem => elem.id == el.id)?.sum}
+
+                                        ></input>
+                                        <p className={`${s.sub} ${s.sub_count}`}>руб</p>
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </li>
                     })}
                 </ul>

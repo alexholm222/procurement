@@ -69,7 +69,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
         setOpenAdd(true)
     }
 
-
+    console.log(positionReturn)
 
     return (
         <div className={s.goods}>
@@ -115,7 +115,9 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
 
             {!isFull && <ul className={s.return}>
                 {positionReturn.map(el => {
-                    return el.status !== 'confirmed' && <li className={`${s.position} ${el.status == 'confirmed' && s.position_confirmed}`} key={el.id}><IconWarning24 />Запрошен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
+                    return el.status !== 'confirmed' && <li
+                        className={`${s.position} ${el.status == 'confirmed' && s.position_confirmed}`}
+                        key={el.id}><IconWarning24 />Запрошен возврат позиции - {el.purchases_item?.name} - {el.quantity} {/* {el.purchases_item?.unit} */} на сумму {el?.quantity == null ? addSpaceNumber(el?.sum) : addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
                 })}
             </ul>}
 
@@ -126,7 +128,7 @@ function Goods({ scrollTopHeight, positions, setPositions, windowRef, sum, setSu
 
             {positionReturnDone?.[0]?.is_full !== 1 && <ul className={s.return}>
                 {positionReturnDone.map(el => {
-                    return <li className={`${s.position}`} key={el.id}><IconDone />Получен возврат позиции - {el.purchases_item?.name} - {el.quantity} {el.purchases_item?.unit} на сумму {addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
+                    return <li className={`${s.position}`} key={el.id}><IconDone />Получен возврат позиции - {el.purchases_item?.name} - {el.quantity} {/* {el.purchases_item?.unit} */} на сумму  {el?.quantity == null ? addSpaceNumber(el?.sum) : addSpaceNumber(el.quantity * el.purchases_item?.price)} ₽</li>
                 })}
             </ul>}
 
