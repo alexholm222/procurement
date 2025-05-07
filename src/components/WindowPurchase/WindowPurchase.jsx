@@ -90,8 +90,11 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     const [payerId, setPayerId] = useState(purchase?.payerId || '');
     const [paymentType, setPaymentType] = useState(false)
     const [categoryId, setCategoryId] = useState(purchase?.categoryId || '');
+    const [categoryIdFirst, setCategoryIdFirst] = useState(purchase?.categoryId || '');
     const [inStock, setInStock] = useState(purchase?.inStock || false);
     const [takeAccount, setTakeAccount] = useState(purchase?.takeAccount || false)
+    const [inStockFirst, setInStockFirst] = useState(purchase?.inStock || false);
+    const [takeAccountFirst, setTakeAccountFirst] = useState(purchase?.takeAccount || false)
     const [documents, setDocuments] = useState(/* purchase.existingFiles ||  */[]);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
@@ -127,7 +130,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const windowRef = useRef();
-   
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -150,13 +153,17 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
 
     //определяем настройки категории
     useEffect(() => {
-        if (categoryId !== purchase?.categoryId && purchase?.categoryId) {
+        console.log(categories, categoryId, categoryIdFirst)
+        if (categoryId !== categoryIdFirst) {
             const result = categories.find(el => el.id == categoryId);
+
             result?.in_stock == 1 ? setInStock(true) : setInStock(false)
             result?.take_account_cat == 1 ? setTakeAccount(true) : setTakeAccount(false)
-            return
+        } else {
+            setInStock(inStockFirst)
+            setTakeAccount(takeAccountFirst)
         }
-    }, [categoryId])
+    }, [categoryId, purchase, categories])
 
     //определяем настрйоки покупателя
     useEffect(() => {
@@ -211,8 +218,11 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                     setDateCreate(purchase.date_create)
                     setPayerId(purchase.payer_id)
                     setCategoryId(purchase.cat_id)
+                    setCategoryIdFirst(purchase.cat_id)
                     setInStock((role == 'administrator' || role == 'director') ? purchase.in_stock : null)
                     setTakeAccount((role == 'administrator' || role == 'director') ? purchase.take_account : null)
+                    setInStockFirst((role == 'administrator' || role == 'director') ? purchase.in_stock : null)
+                    setTakeAccountFirst((role == 'administrator' || role == 'director') ? purchase.take_account : null)
                     setStatus(purchase?.status)
                     setReject(purchase?.is_reject)
                     setVendorId(purchase?.stock_vendor_id)
@@ -256,7 +266,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                 })
                 .catch(err => {
                     const message = err.response?.data?.message;
-                
+
                     setLoadPurchasePage(false)
                     if (message.includes("Закупка не найдена")) {
                         setError(message)
@@ -268,7 +278,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
 
             getPurchaseFiles(id)
                 .then(res => {
-               
+
                     const data = res.data;
                     const purchase = data.purchase;
                     const docs = data.files;
@@ -282,7 +292,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                         { id: uuid(), file: purchase?.bill6, name: purchase?.bill6?.includes('uploads') ? purchase?.bill6?.split('/').pop() : purchase?.bill6?.split('filename=').pop().split('&').shift(), type: 'existing' },
                         { id: uuid(), file: purchase?.bill7, name: purchase?.bill7?.includes('uploads') ? purchase?.bill7?.split('/').pop() : purchase?.bill7?.split('filename=').pop().split('&').shift(), type: 'existing' },
                     ].filter(purchase => purchase.file && purchase.file !== null);
-                  
+
                     setDocuments(existingFiles)
                     setLoadDocuments(false)
                 })
@@ -772,7 +782,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
         setModalConfirmReturn(true)
     }
 
-    
+
 
 
     return (
@@ -994,7 +1004,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
                         }
 
                         {(role == 'administrator' || role == 'director') && (status == 1 || status == 2)/*  && !reject  */ &&
-                            <button  onClick={() => paymentType ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
+                            <button onClick={() => paymentType ? setModalPayNal(true) : handleConfirmAproval()} disabled={loadSave || loadAproval || disabledButton} className={`${s.button} ${s.button_main} ${aprovalSuccess && s.button_success}`}>
                                 {loadAproval && <p>{paymentType ? 'Проводим закупку' : 'Отправляем на оплату'}</p>}
                                 {!loadAproval && !aprovalSuccess && <p>{paymentType ? 'Провести закупку' : 'Согласовать и отправить на оплату'}</p>}
                                 {!loadAproval && aprovalSuccess && <p>{paymentType ? 'Закупка проведена' : 'Отправлено на оплату'}</p>}

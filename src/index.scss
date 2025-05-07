@@ -1,5 +1,5 @@
-@import './vendor/normalize.css';
-@import './vendor/fonts/fonts.css';
+/* @import './vendor/normalize.css';
+@import './vendor/fonts/fonts.css'; */
 @import './vendor/constants.scss';
 
 #root_purchases {
@@ -53,6 +53,8 @@ button {
 p {
   margin: 0;
   padding: 0;
+/*   line-height: 100% !important;
+  text-align: start !important; */
 }
 
 h2 {

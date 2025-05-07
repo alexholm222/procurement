@@ -90,10 +90,10 @@ function Tabs({ activeTabs, setActiveTabs, purchaseAction, loadAction, loadOrder
                         <p>Удаленные</p>
                     </button>
 
-                    {(role == 'director' || role == 'administrator') && <button onClick={handleChoseTab} id='report' className={`${s.button} ${activeTabs == 'report' && s.button_active}`}>
+                    {/* {(role == 'director' || role == 'administrator') && <button onClick={handleChoseTab} id='report' className={`${s.button} ${activeTabs == 'report' && s.button_active}`}>
                         <p>Отчет</p>
                     </button>
-                    }
+                    } */}
 
 
                 </div>
