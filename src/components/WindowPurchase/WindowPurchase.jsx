@@ -194,7 +194,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
     //Фиксация окна при открытии закупки
     useEffect(() => {
         document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = "8px";
+     /*    document.body.style.paddingRight = "8px"; */
         return () => {
             document.body.style.overflow = "auto";
             document.body.style.paddingRight = "0";
@@ -338,7 +338,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
 
     const handleClosePurchase = () => {
         setAnim(false)
-        navigate('/purchases2/')
+        navigate('/new/purchases')
 
         /*   setTimeout(() => {
               dispatch(setPurchase({ id: '', open: false }))
@@ -790,7 +790,7 @@ function WindowPurchase({ id, purchase, loadParametrs, role, isSkilla }) {
             {loadPurchasePage && <div className={s.loader}><LoaderButton /></div>}
             <div className={`${s.container} ${loadPurchasePage && s.container_hidden}`}>
                 <div className={s.header}>
-                    <h2 style={{ pointerEvents: 'auto' }}><Link onClick={handleClosePurchase} to={`/purchases2/`}><IconArrowBack /></Link>
+                    <h2 style={{ pointerEvents: 'auto' }}><Link onClick={handleClosePurchase} to={`/new/purchases`}><IconArrowBack /></Link>
                         {id && `Закупка от`}
                         {dateCreate !== '' && <p className={`${s.elload} ${loadPurchasePage && s.elload_hidden}`}>{HandledatePurchase(dateCreate)}</p>}
                         {!id && `Создание закупки`}

@@ -103,7 +103,7 @@ function Purchase({ role, el }) {
     //не показываем кнопки в закупке leader если статус 1 person_id
     //не показываем кнопки в закупке administarator если статус 2
     return (
-        <Link to={`/purchases2/?purchase=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
+        <Link to={`/new/purchases/detail=${purchase.id}`} onClick={handleOpenPurchase} id={purchase?.id} className={`${s.purchase} ${hidenPurchase && s.purchase_hiden}`}>
             <div className={`${s.attention} ${isView && s.attention_hidden}`}><IconView /></div>
             <div className={`${s.item} ${s.item_date}`}>
                 {purchase?.pay_date && <p>{HandledatePurchaseList(purchase?.pay_date)}</p>}

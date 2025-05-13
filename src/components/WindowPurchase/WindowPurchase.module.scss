@@ -21,7 +21,7 @@
         filter 0.25s;
 
     &_partner {
-        height: calc(100vh - 30px);
+        height: calc(100vh/*  - 30px */);
         position: absolute;
         top: 0;
         left: auto;

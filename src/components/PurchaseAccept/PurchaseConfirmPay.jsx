@@ -48,7 +48,7 @@ const PurchaseConfirmPay = ({ setModal, windowRef, id, setStatus, loadAccept, se
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-        windowRef.current.style.paddingRight = "8px";
+        /* windowRef.current.style.paddingRight = "8px"; */
         return () => {
             windowRef.current.style.overflowY = "auto";
             windowRef.current.style.paddingRight = "0";

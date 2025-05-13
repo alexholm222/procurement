@@ -130,7 +130,7 @@ function WindowOrder({ id, role, order, personIsView, loadParametrs }) {
     //Фиксация окна при открытии закупки
     useEffect(() => {
         document.body.style.overflow = "hidden";
-        document.body.style.paddingRight = "8px";
+   /*      document.body.style.paddingRight = "8px"; */
         return () => {
             document.body.style.overflow = "auto";
             document.body.style.paddingRight = 0;

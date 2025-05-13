@@ -40,7 +40,7 @@ const PurchaseReject = ({ setModal, windowRef, id, setStatus, loadAccept, setLoa
     //Фиксация окна при открытии модалки
     useEffect(() => {
         windowRef.current.style.overflow = "hidden";
-        windowRef.current.style.paddingRight = "8px";
+        /* windowRef.current.style.paddingRight = "8px"; */
         return () => {
             windowRef.current.style.overflowY = "auto";
             windowRef.current.style.paddingRight = "0";

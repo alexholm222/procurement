@@ -7,6 +7,7 @@
   transition: all 0.2s;
   top: 64px;
   right: 0; */
+  height: 100vh;
   background-color: #F1F4F9;
   color: var(--color-text-primary);
 }
@@ -73,7 +74,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
   /* <-- Apparently some margin are still there even though it's hidden */
 }
-
+/* 
 body::-webkit-scrollbar {
   width: 8px;
 }
@@ -86,9 +87,9 @@ body::-webkit-scrollbar-thumb {
   background-color: var(--color-bg-disabled);
   border-radius: 20px;
   border: 1px solid var(--color-bg-disabled);
-}
+} */
 
-div::-webkit-scrollbar {
+/* div::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -128,7 +129,7 @@ ul::-webkit-scrollbar-thumb {
   background-color: var(--color-bg-disabled);
   border-radius: 20px;
   border: 1px solid var(--color-bg-disabled);
-}
+} */
 
 html {
   /*  scroll-behavior: smooth; */

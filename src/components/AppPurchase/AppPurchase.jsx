@@ -302,8 +302,8 @@ function AppPurchase() {
     if (ispro == 0 && !isskilla) {
       return
     }
-    if (path.includes('purchases2/?purchase=') && !purchase.id) {
-      const idPurchase = Number(path.split('purchase=').pop());
+    if (path.includes('/purchases/detail=') && !purchase.id) {
+      const idPurchase = Number(path.split('detail=').pop());
       setHeaderHidden(true)
       const purchaseForOpen = {
         isOrder: false,
@@ -320,26 +320,26 @@ function AppPurchase() {
 
   useEffect(() => {
 
-    if (path.includes('purchases2/?manual') && (role == 'director' || role == 'accountant' || role == 'administrator')) {
+    if (path.includes('/purchases/manual') && (role == 'director' || role == 'accountant' || role == 'administrator')) {
       setManualAcc(true)
       setHeaderHidden(false)
       document.title = `Ручной учет`;
       return
     }
 
-    if (ispro == 0 && !isskilla && !path.includes('purchases2/?manual')) {
+    if (ispro == 0 && !isskilla && !path.includes('/purchases/manual')) {
       return
     }
 
 
-    if (!path.includes('purchases2/?purchase=') && !path.includes('purchases2/?new') && !path.includes('purchases2/?manual')) {
+    if (!path.includes('/purchases/detail=') && !path.includes('/purchases/create') && !path.includes('/purchases/manual')) {
       setHeaderHidden(false)
       handleClosePurchase()
       document.title = `Закупки`;
       return
     }
 
-    if (path.includes('purchases2/?new') && !purchase.id) {
+    if (path.includes('/purchases/create') && !purchase.id) {
       dispatch(setPurchase({ id: '', open: true }))
       document.title = `Закупка`;
       return
@@ -376,7 +376,7 @@ function AppPurchase() {
 
   const handleOpenPurchase = (e) => {
     dispatch(setPurchase({ id: '', open: true }))
-    navigate('purchases2/?new')
+    navigate('new/purchases/create')
   }
 
   const handleClosePurchase = () => {
@@ -410,8 +410,9 @@ function AppPurchase() {
           {isskilla && <h2 className={s.title}>Закупки<sup>{purchaseCount}</sup></h2>}
           {!isskilla &&
             <div className={s.tabs}>
-              <Link to={'purchases2'}><div id='1' onClick={handleManualOpen} className={`${s.tab} ${purchaseCountGeneral !== '' && s.tab_load} ${!manualAcc && s.tab_active}`}>Закупки<sup>{purchaseCount}</sup></div></Link>
-              {(role == 'director' || role == 'accountant' || role == 'administrator') && <Link to={'purchases2/?manual'}><div id='2' onClick={handleManualOpen} className={`${s.tab} ${manualAcc && s.tab_active}`}>Ручной учет</div></Link>}
+              <Link to={'/new/purchases'}><div id='1' onClick={handleManualOpen} className={`${s.tab} ${purchaseCountGeneral !== '' && s.tab_load} ${!manualAcc && s.tab_active}`}>Закупки<sup>{purchaseCount}</sup></div></Link>
+           {/*    <Link to={'/new/purchases/stock'}><div id='3' className={`${s.tab} ${manualAcc && s.tab_actie}`}>Склад</div></Link> */}
+              {(role == 'director' || role == 'accountant' || role == 'administrator') && <Link to={'/new/purchases/manual'}><div id='2' onClick={handleManualOpen} className={`${s.tab} ${manualAcc && s.tab_active}`}>Ручной учет</div></Link>}
             </div>}
 
           <div className={s.buttons}>
