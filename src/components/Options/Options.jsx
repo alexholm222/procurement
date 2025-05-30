@@ -34,7 +34,7 @@ function Options({ payers, type, sub, purchaseId, payerId, setPayerId, categoryI
 
     useEffect(() => {
         if (type == 'categories' && firstLoad) {
-            purchaseId == '' && setCategoryId(categories[0].id)
+            purchaseId == '' && setCategoryId(categories?.[0]?.id)
             setFirstLoad(false);
         }
     }, [categories, firstLoad]);
@@ -52,7 +52,7 @@ function Options({ payers, type, sub, purchaseId, payerId, setPayerId, categoryI
     useEffect(() => {
 
         if (type == 'payers' && firstLoad && payers.length > 0) {
-            purchaseId == '' && setPayerId(payers[0].id)
+            purchaseId == '' && setPayerId(payers?.[0]?.id)
             setFirstLoad(false);
         }
     }, [payers, firstLoad]);
